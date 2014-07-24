@@ -25,5 +25,16 @@ module Locomotive
       respond_with @membership, location: edit_current_site_path
     end
 
+    def show
+      @membership = current_site.memberships.find(params[:id])
+    end
+
+    def update
+      @membership = current_site.memberships.find(params[:id])
+      @membership.pages = params[:pages]
+      @membership.update_attributes(params[:membership])
+      respond_with @membership, location: membership_path
+    end
+
   end
 end

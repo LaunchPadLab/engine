@@ -42,6 +42,9 @@ module Locomotive
       can :touch, ThemeAsset
 
       can [:read, :create, :update], Page
+      can :edit, Page do |page|
+        @membership.pages.include?(page.id.to_s)
+      end
       cannot :destroy, Page
       cannot :customize, Page
 

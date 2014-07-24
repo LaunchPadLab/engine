@@ -15,7 +15,10 @@
     - unless page.index_or_not_found?
       %em
 
-    = link_to truncate(page.title, length: 80), edit_page_url(page)
+    - if can?(:edit, page)
+      = link_to truncate(page.title, length: 80), edit_page_url(page)
+    - else
+      = link_to truncate(page.title, length: 80), '#', style: "color: #ccc; pointer-events: none; cursor: default;"
 
     - if page.templatized?
       %i.icon-cog

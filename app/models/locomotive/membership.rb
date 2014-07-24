@@ -5,6 +5,7 @@ module Locomotive
 
     ## fields ##
     field :role, default: 'author'
+    field :pages, type: Array, default: []
 
     ## associations ##
     belongs_to  :account, class_name: 'Locomotive::Account', validate: false

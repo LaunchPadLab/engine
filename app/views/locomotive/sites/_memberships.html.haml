@@ -3,7 +3,9 @@
   = hidden_field_tag 'site[memberships_attributes][{{index}}][id]', '{{id}}'
   = hidden_field_tag 'site[memberships_attributes][{{index}}][_destroy]'
 
+  {{#if can_update}}
   %strong= link_to "{{name}}", "/locomotive/memberships/{{id}}"
+  {{/if}}
 
   %em.email {{email}}
 

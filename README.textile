@@ -1,3 +1,18 @@
+h1. Tukaiz Branch Instructions
+
+We forked the LocomotiveCMS gem to make certain customizations that would be too difficult to perform via Monkey Patching. We list these key differences below. Further, the Tukaiz branch was created based on the v2.5.x branch of LocomotiveCMS. This is the last stable branch for Rails 3.2.
+
+**Key Customizations**
+
+1. Advanced permissions: LocomotiveCMS comes with three roles out of the box: Admin, Designer, and Author. For our purposes, we needed four roles: Super Admin, Site Admin, Advanced User, Beginner User. We customized the gem to work correctly for these four user types.
+2. Approval system: Edits to pages made by beginner users must be approved. This system includes page preview, versioning, and notification functionality.
+
+**Roles**
+* Super Admin: Full access to all sites and members
+* Site Admin: Full access to one site and that site's members that are not Super Admins
+* Advanced User: Can only access pages assigned by an Admin. Ability to manage all aspects of the pages they have access to.
+* Beginner User: Can only access pages assigned by an Admin. Ability to contribute to pages but contributions must be approved by an Advanced User, or Admin.
+
 h1. LocomotiveCMS
 
 "!https://secure.travis-ci.org/locomotivecms/engine.png!":http://travis-ci.org/locomotivecms/engine

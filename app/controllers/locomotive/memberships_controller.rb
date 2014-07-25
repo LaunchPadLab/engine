@@ -5,7 +5,6 @@ module Locomotive
 
     def create
       @membership = current_site.memberships.build(params[:membership])
-      @membership.role = 'author' # force author by default
 
       case @membership.process!
       when :create_account
@@ -23,6 +22,17 @@ module Locomotive
       @membership = current_site.memberships.find(params[:id])
       @membership.destroy
       respond_with @membership, location: edit_current_site_path
+    end
+
+    def show
+      @membership = current_site.memberships.find(params[:id])
+    end
+
+    def update
+      @membership = current_site.memberships.find(params[:id])
+      @membership.pages = params[:pages]
+      @membership.update_attributes(params[:membership])
+      respond_with @membership, location: membership_path
     end
 
   end

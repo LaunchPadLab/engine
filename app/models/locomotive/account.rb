@@ -35,6 +35,7 @@ module Locomotive
     ## callbacks ##
     before_validation :api_key_should_not_be_empty
     before_destroy    :remove_memberships!
+    after_save      :create_other_site_memberships
 
     ## scopes ##
     scope :ordered, order_by(name: :asc)
@@ -143,6 +144,24 @@ module Locomotive
           raise ::I18n.t('errors.messages.needs_admin_account')
         else
           membership.destroy
+        end
+      end
+    end
+
+    def member_of_all_sites?
+      Locomotive::Site.count == sites.count
+    end
+
+    def not_member_of_all_sites?
+      !member_of_all_sites?
+    end
+
+    def create_other_site_memberships
+      if admin? && not_member_of_all_sites?
+        Locomotive::Site.all.each do |site|
+          unless site.memberships.where(account_id: self._id).first
+            site.memberships.create(account: self)
+          end
         end
       end
     end

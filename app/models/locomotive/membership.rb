@@ -4,7 +4,8 @@ module Locomotive
     include Locomotive::Mongoid::Document
 
     ## fields ##
-    field :role, default: 'author'
+    field :role, default: Locomotive::Ability::DEFAULT_ROLE
+    field :pages, type: Array, default: []
 
     ## associations ##
     belongs_to  :account, class_name: 'Locomotive::Account', validate: false

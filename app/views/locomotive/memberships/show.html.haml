@@ -1,0 +1,14 @@
+- title "Edit User's Page Access"
+
+- content_for :submenu do
+  = render_cell 'locomotive/settings_menu', :show
+
+- if Locomotive::Ability::REQUIRE_PAGE_PERMISSION.include?(@membership.role)
+  = form_for @membership do |f|
+    - @membership.site.pages.each do |page|
+      = check_box_tag "pages[]", page.id, (:checked if @membership.pages.include?(page.id.to_s))
+      = label_tag page.title
+      %br
+    = render 'locomotive/shared/form_actions', back_url: edit_current_site_path, button_label: :update
+- else
+  %h3= "This user is an Admin and has access to all pages. If you need to limit the pages this user has access to, please change their account type in #{link_to 'settings', edit_current_site_path}.".html_safe

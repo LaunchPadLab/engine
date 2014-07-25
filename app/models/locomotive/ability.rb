@@ -2,13 +2,16 @@ module Locomotive
   class Ability
     include CanCan::Ability
 
-    ROLES = %w(admin designer author)
+    GLOBAL_ADMIN = "admin"
+    DEFAULT_ROLE = "beginner_user"
+    REQUIRE_PAGE_PERMISSION = ["beginner_user", "advanced_user"]
+
+    ROLES = %w(admin site_admin advanced_user beginner_user)
 
     def initialize(account, site)
       @account, @site = account, site
 
       alias_action :index, :show, :edit, :update, to: :touch
-
       if @site
         @membership = @site.memberships.where(account_id: @account.id).first
       elsif @account.admin?
@@ -17,14 +20,9 @@ module Locomotive
 
       if @membership.nil?
         setup_account_without_a_site
-      elsif @membership.admin?
-        setup_admin_permissions!
       else
         setup_default_permissions!
-
-        setup_designer_permissions! if @membership.designer?
-
-        setup_author_permissions!  if @membership.author?
+        send("setup_#{@membership.role}_permissions!")
       end
     end
 
@@ -38,15 +36,14 @@ module Locomotive
       cannot :manage, :all
     end
 
-    def setup_author_permissions!
+    def setup_beginner_user_permissions!
       can :touch, ThemeAsset
 
-      can [:read, :create, :update], Page
-      cannot :edit, Page do |page|
-        !@membership.pages.include?(page.id.to_s)
+      cannot :manage, Page
+      can [:edit, :read], Page do |page|
+        @membership.pages.include?(page.id.to_s)
       end
-      cannot :destroy, Page
-      cannot :customize, Page
+      cannot [:update, :create, :destroy, :customize], Page
 
       can :manage, [ContentEntry, ContentAsset, Translation]
 
@@ -55,7 +52,23 @@ module Locomotive
       can :read, ContentType
     end
 
-    def setup_designer_permissions!
+    def setup_advanced_user_permissions!
+      cannot :manage, Page
+      can :touch, ThemeAsset
+
+      can [:edit, :read, :customize, :update], Page do |page|
+        @membership.pages.include?(page.id.to_s)
+      end
+      cannot :destroy, Page
+
+      can :manage, [ContentEntry, ContentAsset, Translation]
+
+      can :touch, Site, _id: @site._id
+
+      can :read, ContentType
+    end
+
+    def setup_site_admin_permissions!
       can :manage, Page
 
       can :manage, ContentEntry

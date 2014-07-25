@@ -5,7 +5,6 @@ module Locomotive
 
     def create
       @membership = current_site.memberships.build(params[:membership])
-      @membership.role = 'author' # force author by default
 
       case @membership.process!
       when :create_account

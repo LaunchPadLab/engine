@@ -22,6 +22,7 @@ Locomotive::Engine.routes.draw do
   resources :pages do
     put :sort, on: :member
     get :get_path, on: :collection
+    resources :previews
   end
 
   resources :snippets

@@ -40,6 +40,14 @@ module Locomotive
           super
         end
 
+        def top_page_active?
+          @page == top_page
+        end
+
+        def has_active_child?(page)
+          page.children.include?(@page)
+        end
+
         def render(context)
           children_output = []
 
@@ -59,6 +67,7 @@ module Locomotive
             list_class  = !@options[:class].blank? ? %( class="#{@options[:class]}") : ''
             output      = %{<nav id="#{@options[:id]}"#{list_class}><ul>\n#{output}</ul></nav>}
           end
+          output.prepend(%{<li class="parent #{'active' if top_page_active?}"><a href="/#{top_page.fullpath}">#{top_page.title}</a></li>})
 
           output
         end
@@ -68,10 +77,9 @@ module Locomotive
         # Determines root node for the list
         def fetch_entries(context)
           @site, @page = context.registers[:site], context.registers[:page]
-
           children = (case @source
           when 'site'     then @site.pages.root.minimal_attributes(@options[:add_attributes]).first # start from home page
-          when 'parent'   then @page.parent || @page
+          when 'parent'   then @page.ancestors[1] || @page
           when 'page'     then @page
           else
             @site.pages.fullpath(@source).minimal_attributes(@options[:add_attributes]).first
@@ -82,7 +90,8 @@ module Locomotive
 
         # Returns a list element, a link to the page and its children
         def render_entry_link(context, page, css, depth)
-          selected = @page.fullpath =~ /^#{page.fullpath}(\/.*)?$/ ? " #{@options[:active_class]}" : ''
+          selected = @page == page ? " #{@options[:active_class]}" : ''
+          # selected = @page.fullpath =~ /^#{page.fullpath}(\/.*)?$/ ? " #{@options[:active_class]}" : ''
 
           icon  = @options[:icon] ? '<span></span>' : ''
           title = render_title(context, page)
@@ -98,12 +107,16 @@ module Locomotive
             caret         = %{ <b class="caret"></b>}
           end
 
-          output  = %{<li id="#{page.slug.to_s.dasherize}-link" class="link#{selected} #{css}">}
+          output  = %{<li id="#{page.slug.to_s.dasherize}-link" class="link#{selected} #{css} depth-#{page.depth} #{'has-active-child' if has_active_child?(page)}">}
           output << %{<a href="#{href}"#{link_options}>#{label}#{caret}</a>}
           output << render_entry_children(context, page, depth.succ) if (depth.succ <= @options[:depth].to_i)
           output << %{</li>}
 
           output.strip
+        end
+
+        def top_page
+          @page.ancestors[1] || @page
         end
 
         def render_children_for_page?(page, depth)

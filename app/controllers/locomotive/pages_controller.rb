@@ -63,5 +63,12 @@ module Locomotive
       }
     end
 
+    def preview
+      page = current_site.pages.find(params[:id])
+      @page = @page.dup
+      @page.attributes = params[:page]
+      respond_with @page
+    end
+
   end
 end

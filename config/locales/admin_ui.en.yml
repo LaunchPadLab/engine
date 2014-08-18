@@ -57,6 +57,7 @@ en:
         back: Back without saving
         create: Create
         update: Save
+        preview: Preview
         send: Send
         disable_with: Pending...
       list:

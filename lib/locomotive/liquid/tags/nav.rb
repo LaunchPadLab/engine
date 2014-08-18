@@ -40,6 +40,10 @@ module Locomotive
           super
         end
 
+        def top_page
+          @page.ancestors[1] || @page
+        end
+
         def top_page_active?
           @page == top_page
         end
@@ -91,7 +95,6 @@ module Locomotive
         # Returns a list element, a link to the page and its children
         def render_entry_link(context, page, css, depth)
           selected = @page == page ? " #{@options[:active_class]}" : ''
-          # selected = @page.fullpath =~ /^#{page.fullpath}(\/.*)?$/ ? " #{@options[:active_class]}" : ''
 
           icon  = @options[:icon] ? '<span></span>' : ''
           title = render_title(context, page)
@@ -113,10 +116,6 @@ module Locomotive
           output << %{</li>}
 
           output.strip
-        end
-
-        def top_page
-          @page.ancestors[1] || @page
         end
 
         def render_children_for_page?(page, depth)

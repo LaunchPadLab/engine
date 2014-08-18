@@ -40,10 +40,9 @@ module Locomotive
       can :touch, ThemeAsset
 
       cannot :manage, Page
-      can [:edit, :read], Page do |page|
+      can [:edit, :read, :update], Page do |page|
         @membership.pages.include?(page.id.to_s)
       end
-      cannot [:update, :create, :destroy, :customize], Page
 
       can :manage, [ContentEntry, ContentAsset, Translation]
 

@@ -159,9 +159,7 @@ module Locomotive
     def create_other_site_memberships
       if admin? && not_member_of_all_sites?
         Locomotive::Site.all.each do |site|
-          unless site.memberships.where(account_id: self._id).first
-            site.memberships.create(account: self)
-          end
+          site.memberships.find_or_create_by(account_id: self._id)
         end
       end
     end

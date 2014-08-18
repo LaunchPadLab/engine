@@ -13,7 +13,7 @@ module Locomotive
       end
 
       def create
-        @membership.from_presenter(params[:membership].merge(role: Locomotive::Ability::DEFAULT_ROLE)) # force author by default
+        @membership.from_presenter(params[:membership])
         @membership.save
         respond_with(@membership)
       end

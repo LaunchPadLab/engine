@@ -18,14 +18,12 @@ module Locomotive
       if request.fullpath =~ /^\/#{Locomotive.mounted_on}\//
         render template: '/locomotive/errors/404', layout: '/locomotive/layouts/not_logged_in', status: :not_found
       else
-        @page ||= self.locomotive_page(path)
-
-        if @page.present? && @page.redirect?
+        @page ||= (assigns[:page] || self.locomotive_page(path))
+        should_redirect = assigns[:no_redirect].present? ? !assigns[:no_redirect] : true
+        if @page.present? && @page.redirect? && should_redirect
           self.redirect_to_locomotive_page and return
         end
-
         render_no_page_error and return if @page.nil?
-
         output = @page.render(self.locomotive_context(assigns))
 
         self.prepare_and_set_response(output)

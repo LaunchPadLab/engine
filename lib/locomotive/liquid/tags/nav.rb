@@ -52,6 +52,10 @@ module Locomotive
           page.children.include?(@page)
         end
 
+        def has_children?(page)
+          page.children.any?
+        end
+
         def render(context)
           children_output = []
 
@@ -110,7 +114,11 @@ module Locomotive
             caret         = %{ <b class="caret"></b>}
           end
 
-          output  = %{<li id="#{page.slug.to_s.dasherize}-link" class="link#{selected} #{css} depth-#{page.depth} #{'has-active-child' if has_active_child?(page)}">}
+          has_children_class = has_children?(page) ? 'has-children' : nil
+          has_active_child_class = has_active_child?(page) ? 'has-active-child' : nil
+          has_dropdown_class = page.depth == 1 && @source == 'site' ? 'has-dropdown not-click' : nil
+          css_classes_string = ["link#{selected}", "#{css}", "depth-#{page.depth}", has_children_class, has_active_child_class, has_dropdown_class].compact.join(" ")
+          output  = %{<li id="#{page.slug.to_s.dasherize}-link" class="#{css_classes_string}">}
           output << %{<a href="#{href}"#{link_options}>#{label}#{caret}</a>}
           output << render_entry_children(context, page, depth.succ) if (depth.succ <= @options[:depth].to_i)
           output << %{</li>}
@@ -128,7 +136,8 @@ module Locomotive
 
           children = page.children_with_minimal_attributes(@options[:add_attributes]).reject { |c| !include_page?(c) }
           if children.present?
-            output = %{<ul id="#{@options[:id]}-#{page.slug.to_s.dasherize}" class="#{bootstrap? ? 'dropdown-menu' : ''}">}
+            dropdown_class = @source == 'site' && page.depth == 1 ? 'dropdown' : ''
+            output = %{<ul id="#{@options[:id]}-#{page.slug.to_s.dasherize}" class="#{bootstrap? ? 'dropdown-menu' : dropdown_class}">}
             children.each do |c, page|
               css = []
               css << 'first' if children.first == c

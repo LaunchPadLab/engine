@@ -26,6 +26,7 @@ module Locomotive
     field :published,           type: Boolean, default: false
     field :cache_strategy,      default: 'none'
     field :response_type,       default: 'text/html'
+    field :template_name
 
     ## associations ##
     belongs_to :site, class_name: 'Locomotive::Site', validate: false, autosave: false

@@ -19,7 +19,7 @@ module Locomotive
         render template: '/locomotive/errors/404', layout: '/locomotive/layouts/not_logged_in', status: :not_found
       else
         @page ||= (assigns[:page] || self.locomotive_page(path))
-        should_redirect = assigns[:no_redirect].present? ? !assigns[:no_redirect] : true
+        should_redirect = assigns[:no_redirect].nil?
         if @page.present? && @page.redirect? && should_redirect
           self.redirect_to_locomotive_page and return
         end

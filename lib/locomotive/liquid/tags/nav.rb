@@ -82,9 +82,15 @@ module Locomotive
 
         private
 
+        def set_defaults
+          css_classes = { active_class: 'active', has_children_class: 'has-children', has_active_child_class: 'has-active-child', has_dropdown_class: 'has-dropdown', depth_class: 'depth', dropdown_class: 'dropdown'}
+          @options = @options.merge(css_classes)
+        end
+
         # Determines root node for the list
         def fetch_entries(context)
           @site, @page = context.registers[:site], context.registers[:page]
+          set_defaults
           children = (case @source
           when 'site'     then @site.pages.root.minimal_attributes(@options[:add_attributes]).first # start from home page
           when 'parent'   then @page.ancestors[1] || @page
@@ -114,10 +120,10 @@ module Locomotive
             caret         = %{ <b class="caret"></b>}
           end
 
-          has_children_class = has_children?(page) ? 'has-children' : nil
-          has_active_child_class = has_active_child?(page) ? 'has-active-child' : nil
-          has_dropdown_class = page.depth == 1 && @source == 'site' ? 'has-dropdown not-click' : nil
-          css_classes_string = ["link#{selected}", "#{css}", "depth-#{page.depth}", has_children_class, has_active_child_class, has_dropdown_class].compact.join(" ")
+          has_children_class = has_children?(page) ? @options[:has_children_class] : nil
+          has_active_child_class = has_active_child?(page) ? @options[:has_active_child_class] : nil
+          has_dropdown_class = page.depth == 1 && @source == 'site' ? @options[:has_dropdown_class] : nil
+          css_classes_string = ["link#{selected}", "#{css}", "#{@options[:depth_class]}-#{page.depth}", has_children_class, has_active_child_class, has_dropdown_class].compact.join(" ")
           output  = %{<li id="#{page.slug.to_s.dasherize}-link" class="#{css_classes_string}">}
           output << %{<a href="#{href}"#{link_options}>#{label}#{caret}</a>}
           output << render_entry_children(context, page, depth.succ) if (depth.succ <= @options[:depth].to_i)
@@ -136,7 +142,7 @@ module Locomotive
 
           children = page.children_with_minimal_attributes(@options[:add_attributes]).reject { |c| !include_page?(c) }
           if children.present?
-            dropdown_class = @source == 'site' && page.depth == 1 ? 'dropdown' : ''
+            dropdown_class = @source == 'site' && page.depth == 1 ? @options[:dropdown_class] : ''
             output = %{<ul id="#{@options[:id]}-#{page.slug.to_s.dasherize}" class="#{bootstrap? ? 'dropdown-menu' : dropdown_class}">}
             children.each do |c, page|
               css = []

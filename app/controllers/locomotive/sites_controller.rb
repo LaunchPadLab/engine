@@ -12,7 +12,9 @@ module Locomotive
 
     def create
       @site = Site.new(params[:site])
-      @site.memberships.build account: self.current_locomotive_account, role: 'admin'
+      current_site.memberships.where(role: Locomotive::Ability::GLOBAL_ADMIN).each do |m|
+        @site.memberships.build account: m.account, role: Locomotive::Ability::GLOBAL_ADMIN
+      end
       @site.save
       respond_with @site, location: edit_my_account_path
     end

@@ -9,7 +9,7 @@ module Locomotive
 
     def new
       @page = current_site.pages.find(params[:page_id])
-      @preview = current_site.previews.build(page_params: params[:page])
+      @preview = current_site.previews.build(page_params: params[:page].to_json)
       @page.attributes = params[:page]
       prepare_toolbar
       render_locomotive_page(nil, { page: @page, no_redirect: true, toolbar: @toolbar })
@@ -29,6 +29,7 @@ module Locomotive
       if can?(:update, @page)
         new_attributes = JSON.parse(@preview.page_params)
         @page.update_attributes(new_attributes)
+        current_site.previews.where(page: @page).destroy_all
       else
         @preview.page_id = @page.id
         @preview.account_id = current_locomotive_account.id

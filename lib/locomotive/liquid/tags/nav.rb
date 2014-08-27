@@ -75,7 +75,7 @@ module Locomotive
             list_class  = !@options[:class].blank? ? %( class="#{@options[:class]}") : ''
             output      = %{<nav id="#{@options[:id]}"#{list_class}><ul>\n#{output}</ul></nav>}
           end
-          output.prepend(%{<li class="parent #{'active' if top_page_active?}"><a href="/#{top_page.fullpath}">#{top_page.title}</a></li>})
+          output.prepend(%{<li class="parent #{'active' if top_page_active?}"><a href="/#{top_page.fullpath}">#{top_page.title}</a></li>}) if @source != 'site'
 
           output
         end

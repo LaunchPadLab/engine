@@ -1,0 +1,28 @@
+- title "My Pending Approvals"
+
+- content_for :submenu do
+  = render 'locomotive/shared/menu/contents'
+
+- content_for :actions do
+  = render 'locomotive/shared/actions/contents'
+
+%table#previews-table
+  %thead
+    %tr
+      %th
+        Page
+      %th
+        User Requesting Approval
+      %th
+        Actions
+  %tbody
+    - @previews.each do |preview|
+      - if can?(:update, preview.page)
+        %tr
+          %td
+            = preview.page.title
+          %td
+            = preview.account.name
+          %td
+            = link_to 'View', page_preview_path(preview.page, preview), target: "_blank"
+

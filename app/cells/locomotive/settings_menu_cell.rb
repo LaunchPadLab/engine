@@ -8,6 +8,7 @@ module Locomotive
       add :theme_assets,  url: theme_assets_path
       add :translations,  url: translations_path
       add :account,       url: edit_my_account_path
+      add :approvals,     url: previews_pages_path
     end
 
   end

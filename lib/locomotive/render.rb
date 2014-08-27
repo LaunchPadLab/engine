@@ -24,8 +24,7 @@ module Locomotive
           self.redirect_to_locomotive_page and return
         end
         render_no_page_error and return if @page.nil?
-        output = @page.render(self.locomotive_context(assigns))
-
+        output = @page.render(self.locomotive_context(assigns), toolbar: assigns[:toolbar])
         self.prepare_and_set_response(output)
       end
     end

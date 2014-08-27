@@ -1,0 +1,38 @@
+<style>
+body {
+  margin-top: 0px;
+}
+.fixed {
+  top: 60px !important;
+}
+.preview-toolbar {
+  height: 60px;
+  width: 100%;
+  background-color: white;
+  position: fixed;
+  top: 0;
+  z-index: 100;
+}
+.preview-toolbar .button {
+  margin-top: 8px;
+  margin-left: 50px;
+  height: 40px;
+  padding-top: 12px;
+}
+.preview-toolbar .back-button {
+  margin-left: 50px;
+}
+.toolbar-margin {
+  height: 60px;
+  margin-bottom: 45px;
+}
+</style>
+<body class="previews-controller">
+  <div class="toolbar-margin"></div>
+  <div class="preview-toolbar">
+    <%= form_for @preview, url: page_previews_path(@page) do |f| %>
+      <%= f.hidden_field :page_params, value: f.object.page_params.to_json %>
+      <%= link_to ('&larr;&nbsp; Back').html_safe, edit_page_path(@page), class: 'back-button' %>
+      <%= f.submit "Save And Propagate Changes", class: 'button' %>
+    <% end %>
+  </div>

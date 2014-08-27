@@ -10,5 +10,6 @@ module Locomotive
 
     # belongs_to  :account, class_name: 'Locomotive::Account', validate: false
     # validates_presence_of :account
+
   end
 end

@@ -63,6 +63,12 @@ module Locomotive
 
     ## methods ##
 
+    def render(context, options = {})
+      output = super(context)
+      output.gsub!("<body>", options[:toolbar]) if options[:toolbar]
+      return output
+    end
+
     def index?
       self.slug == 'index' && self.depth.to_i == 0
     end

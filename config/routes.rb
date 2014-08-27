@@ -23,7 +23,11 @@ Locomotive::Engine.routes.draw do
     put :sort, on: :member
     get :get_path, on: :collection
     resources :previews
+    collection do
+      get 'previews' => 'previews#index'
+    end
   end
+
 
   resources :snippets
 

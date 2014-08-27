@@ -39,8 +39,11 @@ module Locomotive
     def setup_beginner_user_permissions!
       can :touch, ThemeAsset
 
+      can :manage, Preview
+
       cannot :manage, Page
-      can [:edit, :read, :update], Page do |page|
+
+      can [:edit, :read], Page do |page|
         @membership.pages.include?(page.id.to_s)
       end
 

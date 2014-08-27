@@ -1,11 +1,13 @@
 <style>
-body {
+
+body.previews-controller {
   margin-top: 0px;
 }
-.fixed {
-  top: 60px !important;
+body.previews-controller .fixed {
+    top: 60px !important;
 }
-.preview-toolbar {
+
+body.previews-controller .preview-toolbar {
   height: 60px;
   width: 100%;
   background-color: white;
@@ -13,26 +15,41 @@ body {
   top: 0;
   z-index: 100;
 }
-.preview-toolbar .button {
+body.previews-controller .button {
   margin-top: 8px;
   margin-left: 50px;
   height: 40px;
   padding-top: 12px;
 }
-.preview-toolbar .back-button {
+body.previews-controller .back-button {
   margin-left: 50px;
 }
-.toolbar-margin {
+
+body.previews-controller .toolbar-margin {
   height: 60px;
   margin-bottom: 45px;
 }
+
+body.previews-controller  a#reject-link {
+  color: red !important;
+  margin-left: 50px;
+}
+
+body.previews-controller form {
+  float: left;
+}
+
 </style>
 <body class="previews-controller">
   <div class="toolbar-margin"></div>
   <div class="preview-toolbar">
-    <%= form_for @preview, url: page_previews_path(@page) do |f| %>
+    <% target_path = action_name == "show" ? page_preview_path(@page, @preview) : page_previews_path(@page) %>
+    <%= form_for @preview, url: target_path do |f| %>
       <%= f.hidden_field :page_params, value: f.object.page_params.to_json %>
-      <%= link_to ('&larr;&nbsp; Back').html_safe, edit_page_path(@page), class: 'back-button' %>
-      <%= f.submit "Save And Propagate Changes", class: 'button' %>
+      <%= link_to 'Edit Page', edit_page_path(@page), class: 'back-button' %>
+      <%= f.submit (can?(:update, @page) ? "Save And Propagate Changes" : "Request Approval"), class: 'button' %>
+      <% if can?(:update, @page) && action_name != 'new' %>
+        <%= f.submit Locomotive::Preview::REJECT_TEXT, class: 'button', style: 'background-color:red;', data: { confirm: "Are you sure you want to reject these changes?" } %>
+      <% end %>
     <% end %>
   </div>

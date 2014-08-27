@@ -15,13 +15,13 @@ body.previews-controller .preview-toolbar {
   top: 0;
   z-index: 100;
 }
-body.previews-controller .button {
+body.previews-controller form .toolbar-button {
   margin-top: 8px;
   margin-left: 50px;
   height: 40px;
   padding-top: 12px;
 }
-body.previews-controller .back-button {
+body.previews-controller form .back-button {
   margin-left: 50px;
 }
 
@@ -47,9 +47,9 @@ body.previews-controller form {
     <%= form_for @preview, url: target_path do |f| %>
       <%= f.hidden_field :page_params, value: f.object.page_params.to_json %>
       <%= link_to 'Edit Page', edit_page_path(@page), class: 'back-button' %>
-      <%= f.submit (can?(:update, @page) ? "Save And Propagate Changes" : "Request Approval"), class: 'button' %>
+      <%= f.submit (can?(:update, @page) ? "Save And Propagate Changes" : "Request Approval"), class: 'button toolbar-button' %>
       <% if can?(:update, @page) && action_name != 'new' %>
-        <%= f.submit Locomotive::Preview::REJECT_TEXT, class: 'button', style: 'background-color:red;', data: { confirm: "Are you sure you want to reject these changes?" } %>
+        <%= f.submit Locomotive::Preview::REJECT_TEXT, class: 'button toolbar-button', style: 'background-color:red;', data: { confirm: "Are you sure you want to reject these changes?" } %>
       <% end %>
     <% end %>
   </div>

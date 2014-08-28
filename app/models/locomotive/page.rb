@@ -65,7 +65,7 @@ module Locomotive
 
     def render(context, options = {})
       output = super(context)
-      output.gsub!("<body>", options[:toolbar]) if options[:toolbar]
+      output.sub!("<body>", options[:toolbar]) if options[:toolbar]
       return output
     end
 

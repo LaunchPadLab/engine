@@ -54,7 +54,7 @@ body.previews-controller form {
   <div class="toolbar-margin"></div>
   <div class="preview-toolbar">
     <% target_path = action_name == "show" ? page_preview_path(@page, @preview) : page_previews_path(@page) %>
-    <%= form_tag edit_page_path(@page), method: :get do %>
+    <%= form_tag edit_from_preview_page_path(@page), method: :post do %>
       <%= hidden_field_tag :page_params, @preview.page_params %>
       <%= submit_tag 'Change Revisions', class: 'back-button toolbar-button button gray-button' %>
     <% end %>

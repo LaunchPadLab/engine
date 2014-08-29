@@ -49,7 +49,8 @@ module Locomotive
         end
 
         def has_active_child?(page)
-          page.children.include?(@page)
+          return false if page.children.blank?
+          page.children.include?(@page) || page.children.map(&:children).flatten.include?(@page)
         end
 
         def has_children?(page)

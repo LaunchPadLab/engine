@@ -131,6 +131,10 @@ module Locomotive
       self.children.map(&:save) if self.slug_changed? or self.fullpath_changed?
     end
 
+    def descendants
+
+    end
+
     def record_current_locale
       self.locales ||= []
       self.locales << ::Mongoid::Fields::I18n.locale

@@ -1,13 +1,17 @@
 <style>
 
-body.previews-controller {
+.previews-toolbar {
   margin-top: 0px;
 }
-body.previews-controller .fixed {
+
+body {
+  margin-top: 0px;
+}
+body .fixed {
     top: 60px !important;
 }
 
-body.previews-controller .preview-toolbar {
+.previews-toolbar .preview-toolbar {
   height: 60px;
   width: 100%;
   background-color: white;
@@ -15,42 +19,42 @@ body.previews-controller .preview-toolbar {
   top: 0;
   z-index: 100;
 }
-body.previews-controller form .toolbar-button {
+.previews-toolbar form .toolbar-button {
   margin-top: 8px;
   margin-left: 50px;
   height: 40px;
   padding-top: 12px;
 }
 
-body.previews-controller form .gray-button {
+.previews-toolbar form .gray-button {
   background-color: #bbb;
 }
 
-body.previews-controller form .red-button {
+.previews-toolbar form .red-button {
   background-color: red;
 }
 
-body.previews-controller form .back-button {
+.previews-toolbar form .back-button {
   margin-left: 50px;
 }
 
-body.previews-controller .toolbar-margin {
+.previews-toolbar .toolbar-margin {
   height: 60px;
   margin-bottom: 45px;
 }
 
 
-body.previews-controller  a#reject-link {
+.previews-toolbar  a#reject-link {
   color: red !important;
   margin-left: 50px;
 }
 
-body.previews-controller form {
+.previews-toolbar form {
   float: left;
 }
 
 </style>
-<body class="previews-controller">
+<div class="previews-toolbar">
   <div class="toolbar-margin"></div>
   <div class="preview-toolbar">
     <% target_path = action_name == "show" ? page_preview_path(@page, @preview) : page_previews_path(@page) %>
@@ -66,3 +70,4 @@ body.previews-controller form {
       <% end %>
     <% end %>
   </div>
+</div>

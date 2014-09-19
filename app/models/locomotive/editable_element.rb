@@ -1,8 +1,6 @@
 module Locomotive
   class EditableElement
 
-    WIDGET_TYPES = ["None", "Video", "Photo", "Testimonial", "Event", "Text"]
-
     # include ::Mongoid::Document
     include Locomotive::Mongoid::Document
 
@@ -133,9 +131,7 @@ module Locomotive
         "template_dependencies.#{locale}" => { '$in' => [self.page._id] },
         'editable_elements.fixed'         => true,
         'editable_elements.block'         => self.block,
-        'editable_elements.slug'          => self.slug,
-        'editable_elements.widget_type'   => self.widget_type,
-        'editable_elements.widget_index'  => self.widget_index
+        'editable_elements.slug'          => self.slug
       }
     end
 

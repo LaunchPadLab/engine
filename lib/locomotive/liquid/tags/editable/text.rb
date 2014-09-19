@@ -47,7 +47,9 @@ module Locomotive
               content_from_default: self.render_default_content(nil),
               format:               @options[:format] || 'html',
               rows:                 @options[:rows] || 10,
-              line_break:           @options[:line_break].blank? ? true : @options[:line_break]
+              line_break:           @options[:line_break].blank? ? true : @options[:line_break],
+              widget_type:          @options[:widget_type],
+              widget_index:         @options[:widget_index]
             )
           end
 

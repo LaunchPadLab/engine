@@ -31,7 +31,7 @@ module Locomotive
         end
 
         def enabled_editable_elements
-          self.editable_elements.by_priority.find_all{ |e| e.editable? }
+          self.editable_elements.by_priority.find_all(&:editable?)
         end
 
         def editable_elements_grouped_by_blocks

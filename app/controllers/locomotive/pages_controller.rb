@@ -33,6 +33,7 @@ module Locomotive
     def edit
       @page = current_site.pages.find(params[:id])
       @page.attributes = JSON.parse(params[:page_params]) if params[:page_params]
+      # raise @page.inspect
       respond_with @page
     end
 

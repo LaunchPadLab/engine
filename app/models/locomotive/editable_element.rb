@@ -1,6 +1,8 @@
 module Locomotive
   class EditableElement
 
+    WIDGET_TYPES = ["None", "Video", "Photo", "Testimonial", "Event", "Text"]
+
     # include ::Mongoid::Document
     include Locomotive::Mongoid::Document
 
@@ -13,6 +15,8 @@ module Locomotive
     field :disabled,          type: Boolean, default: false, localize: true
     field :from_parent,       type: Boolean, default: false
     field :locales,           type: Array,   default: []
+    field :widget_type
+    field :widget_index,      type: Integer
 
     ## associations ##
     embedded_in :page, class_name: 'Locomotive::Page', inverse_of: :editable_elements
@@ -77,7 +81,7 @@ module Locomotive
     # @param [ EditableElement] el The source element
     #
     def copy_attributes_from(el)
-      self.attributes   = el.attributes.reject { |attr| !%w(slug block hint priority fixed disabled locales from_parent).include?(attr) }
+      self.attributes   = el.attributes.reject { |attr| !%w(slug block hint priority fixed disabled locales from_parent widget_type widget_index).include?(attr) }
       self.from_parent  = true
     end
 
@@ -130,6 +134,8 @@ module Locomotive
         'editable_elements.fixed'         => true,
         'editable_elements.block'         => self.block,
         'editable_elements.slug'          => self.slug,
+        'editable_elements.widget_type'   => self.widget_type,
+        'editable_elements.widget_index'  => self.widget_index
       }
     end
 

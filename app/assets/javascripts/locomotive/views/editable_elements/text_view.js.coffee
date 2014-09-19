@@ -10,7 +10,6 @@ class Locomotive.Views.EditableElements.TextView extends Backbone.View
 
   render: ->
     $(@el).html(ich.editable_text_input(@model.toJSON()))
-
     return @
 
   after_render: ->
@@ -20,6 +19,7 @@ class Locomotive.Views.EditableElements.TextView extends Backbone.View
       @$('textarea').bind 'keyup', (event) =>
         input = $(event.target)
         @model.set(content: input.val())
+    @$('')
 
   tinymce_settings: ->
     base_settings = window.Locomotive.tinyMCE.defaultSettings

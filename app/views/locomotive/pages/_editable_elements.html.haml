@@ -18,8 +18,7 @@
 
   %label{ for: 'page_editable_elements_attributes_{{index}}_content' } {{label}}
 
-  = text_area_tag 'page[editable_elements_attributes][{{index}}][content]', '{{content}}', id: 'page_editable_elements_attributes_{{index}}_content', rows: '{{rows}}'
-
+  = text_area_tag 'page[editable_elements_attributes][{{index}}][content]', '{{content}}', id: 'page_editable_elements_attributes_{{index}}_content', class: "widget-type-{{widget_type}} widget-index-{{widget_index}}", rows: '{{rows}}'
   {{#if hint}}
   %p.inline-hints {{hint}}
   {{/if}}
@@ -28,7 +27,7 @@
 
 %script{ type: 'text/html', id: 'editable_file_input' }
 
-  %label{ for: 'page_editable_elements_attributes_{{index}}_content' } {{label}}
+  %label{ for: 'page_editable_elements_attributes_{{index}}_content', class: "widget-type-{{widget_type}} widget-index-{{widget_index}}" } {{label}}
 
   %span.file
     {{#if content}}
@@ -55,7 +54,7 @@
 
   %label{ for: 'page_editable_elements_attributes_{{index}}_content' } {{label}}
 
-  = select_tag 'page[editable_elements_attributes][{{index}}][content]', raw('{{#each options}}<option value="{{this.value}}" {{#if this.selected}}selected="selected"{{/if}}>{{this.text}}</option>{{/each}}'), id: 'page_editable_elements_attributes_{{index}}_content', class: 'content'
+  = select_tag 'page[editable_elements_attributes][{{index}}][content]', raw('{{#each options}}<option value="{{this.value}}" {{#if this.selected}}selected="selected"{{/if}}>{{this.text}}</option>{{/each}}'), id: 'page_editable_elements_attributes_{{index}}_content', class: 'content widget-type-{{widget_type}}', data: { widget_index: "{{widget_index}}" }
 
   {{#if hint}}
   %p.inline-hints {{hint}}

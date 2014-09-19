@@ -7,6 +7,8 @@ module Locomotive
 
     with_options required: false, allow_nil: true do |presenter|
       presenter.property  :hint
+      presenter.property  :widget_type
+      presenter.property  :widget_index
       presenter.property  :priority, type: 'Integer'
     end
 

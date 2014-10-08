@@ -16,7 +16,9 @@ module Locomotive
 
     ## associations ##
     has_many    :pages,           class_name: 'Locomotive::Page',           validate: false, autosave: false
-    has_many    :previews,        class_name: 'Locomotive::Preview',           validate: false, autosave: false
+    has_many    :users,           class_name: 'Locomotive::User',           validate: false, autosave: false
+    has_many    :invitations,     class_name: 'Locomotive::Invitation',     validate: false, autosave: false
+    has_many    :previews,        class_name: 'Locomotive::Preview',        validate: false, autosave: false
     has_many    :snippets,        class_name: 'Locomotive::Snippet',        dependent: :destroy, validate: false, autosave: false
     has_many    :theme_assets,    class_name: 'Locomotive::ThemeAsset',     dependent: :destroy, validate: false, autosave: false
     has_many    :content_assets,  class_name: 'Locomotive::ContentAsset',   dependent: :destroy, validate: false, autosave: false

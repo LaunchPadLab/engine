@@ -1,8 +1,8 @@
 Locomotive.Views.Pages ||= {}
 
 class Locomotive.Views.Pages.EditView extends Locomotive.Views.Pages.FormView
+$(window).bind "load", ->
 
-  $(window).bind "load", ->
 
     $controls = $("body").find(".widget-type-control")
     console.log $controls

@@ -1,0 +1,53 @@
+- title "Manage Intranet Users"
+
+- content_for :submenu do
+  = render_cell 'locomotive/intranet_menu', :show
+
+%h4
+  =link_to "Import From CSV ", '#'
+  =" or "
+  =link_to " Invite Individual User", new_invitation_path
+%h2 Users
+
+%table#users-table
+  %thead
+    %tr
+      %th
+        Name
+      %th
+        Type
+      %th
+        Email
+      %th
+        Actions
+  %tbody
+    - @users.each do |user|
+      %tr
+        %td=user.full_name
+        %td=user.type
+        %td=user.email
+        %td
+          =link_to 'show'
+          =link_to 'edit'
+          =link_to 'delete'
+
+%h2 Invitations
+
+%table#invitations-table
+  %thead
+    %tr
+      %th
+        Name
+      %th
+        Type
+      %th
+        Email
+      %th
+        Status
+  %tbody
+    - Locomotive::Invitation.all.each do |invitation|
+      %tr
+        %td=invitation.full_name
+        %td=invitation.type
+        %td=invitation.email
+        %td=invitation.status

@@ -1,0 +1,27 @@
+- title "Invite User"
+
+- content_for :submenu do
+  = render_cell 'locomotive/intranet_menu', :show
+
+= form_for @invitation do |f|
+  %p
+    .label= f.label :first_name
+    .field= f.text_field :first_name, required: true
+  %p
+    .label= f.label :last_name
+    .field= f.text_field :last_name, required: true
+  %p
+    .label= f.label :email
+    .field= f.email_field :email, required: true
+  %p
+    .label= f.label :type
+    .field= f.select :type, options_for_select(Locomotive::User::TYPES)
+
+  #local-actions-bottom-bar
+    .span-12
+      %p
+        = link_to escape_once('&larr;&nbsp;') + t('.back'), users_path
+        &nbsp;
+    .span-12.last
+      %p
+        = f.submit "Invite"

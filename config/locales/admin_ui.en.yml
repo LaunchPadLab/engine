@@ -52,8 +52,8 @@ en:
         translations: Translations
         intranet: Intranet
         users: Manage Intranet Users
-        new_invitation: Invite Users
-        import: Import Users
+        invitations: Invite Users
+        imports: Import Users
       form:
         change_file: change
         delete_file: delete

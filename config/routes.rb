@@ -38,13 +38,8 @@ Locomotive::Engine.routes.draw do
 
   get '/users/confirm' => 'users#confirm', as: "confirm_user"
   resources :invitations
-  resources :users do
-    collection do
-      get '/invite' => 'users#invite', as: "invite"
-    end
-  end
-  get '/users' => 'intranet#users'
-  get '/intranet/invite_user' => 'intranet#invite_user', as: 'invite_user'
+  resources :imports
+  resources :users
 
   resources :snippets
 

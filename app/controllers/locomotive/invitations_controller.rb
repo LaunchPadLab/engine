@@ -1,10 +1,6 @@
 module Locomotive
   class InvitationsController < BaseController
 
-    include Locomotive::Routing::SiteDispatcher
-    include Locomotive::Render
-    include Locomotive::ActionController::LocaleHelpers
-
     sections 'intranet'
 
     def new

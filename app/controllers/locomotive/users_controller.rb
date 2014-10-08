@@ -1,8 +1,5 @@
 module Locomotive
   class UsersController < BaseController
-    include Locomotive::Routing::SiteDispatcher
-    include Locomotive::Render
-    include Locomotive::ActionController::LocaleHelpers
 
     sections 'intranet'
 
@@ -22,6 +19,7 @@ module Locomotive
     end
 
     def confirm
+      raise "hello"
       token = params[:token]
       invitation = Locomotive::Invitation.where(token: token).first
       invitation.accepted = true

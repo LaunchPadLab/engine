@@ -5,8 +5,8 @@ module Locomotive
 
     def build_list
       add :users, url: users_path
-      add :new_invitation, url: new_invitation_path
-      add :import, url: '#'
+      add :invitations, url: new_invitation_path
+      add :imports, url: new_import_path
     end
 
   end

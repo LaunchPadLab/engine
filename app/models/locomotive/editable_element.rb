@@ -24,6 +24,7 @@ module Locomotive
 
     ## callbacks ##
     after_save :propagate_content, if: :fixed?
+    after_update :propagate_defaults, if: :propagate_defaults?
 
     ## scopes ##
     scope :by_priority, order_by(priority: :desc)
@@ -122,6 +123,12 @@ module Locomotive
       # needs to be overridden for each kind of elements
     end
 
+    def dependents
+      page.dependents.map do |p|
+        p.editable_elements.where(_type: self._type).where(slug: self.slug).where(block: self.block).where(from_parent: true).first
+      end.compact!
+    end
+
     protected
 
     def _selector
@@ -133,6 +140,32 @@ module Locomotive
         'editable_elements.block'         => self.block,
         'editable_elements.slug'          => self.slug
       }
+    end
+
+    def on_template?
+      !from_parent
+    end
+
+    def propagate_defaults?
+      on_template? && changed?
+    end
+
+    def not_transferrable_attributes
+      ["_id", "from_parent", "content", "default_source_url"]
+    end
+
+    def transferrable_attributes
+      attributes.reject {|attr| not_transferrable_attributes.include?(attr) }
+    end
+
+    def propagate_defaults
+      dependents.each do |e|
+        e.transferrable_attributes.each do |attr, val|
+          e.send(:"#{attr}=", self.send(attr.to_sym))
+        end
+        e.from_parent = true
+        e.save
+      end
     end
 
     # Update the value (or content) of the elements matching the same block/slug

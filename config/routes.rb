@@ -36,10 +36,16 @@ Locomotive::Engine.routes.draw do
     end
   end
 
-  get '/users/confirm' => 'users#confirm', as: "confirm_user"
-  resources :invitations
+  resources :invitations do
+    member do
+      get :resend
+    end
+  end
   resources :imports
   resources :users
+  resources :events
+  resources :announcements
+  resources :resources
 
   resources :snippets
 

@@ -51,9 +51,12 @@ en:
         theme_assets: Theme files
         translations: Translations
         intranet: Intranet
-        users: Manage Intranet Users
-        invitations: Invite Users
+        users: Users
+        invitations: Invite User
         imports: Import Users
+        events: Events
+        resources: Resources
+        announcements: Announcements
       form:
         change_file: change
         delete_file: delete

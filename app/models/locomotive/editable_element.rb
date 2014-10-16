@@ -124,9 +124,10 @@ module Locomotive
     end
 
     def dependents
-      page.dependents.map do |p|
+      elements = page.dependents.map do |p|
         p.editable_elements.where(_type: self._type).where(slug: self.slug).where(block: self.block).where(from_parent: true).first
-      end.compact!
+      end
+      elements.compact || []
     end
 
     protected

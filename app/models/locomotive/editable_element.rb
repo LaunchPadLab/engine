@@ -29,6 +29,9 @@ module Locomotive
     ## scopes ##
     scope :by_priority, order_by(priority: :desc)
 
+    # constants
+    NOT_TRANSFERRABLE_ATTRIBUTES = ["_id", "from_parent", "content", "default_source_url"]
+
     ## methods ##
 
     def disabled?
@@ -151,12 +154,8 @@ module Locomotive
       on_template? && changed?
     end
 
-    def not_transferrable_attributes
-      ["_id", "from_parent", "content", "default_source_url"]
-    end
-
     def transferrable_attributes
-      attributes.reject {|attr| not_transferrable_attributes.include?(attr) }
+      attributes.reject {|attr| NOT_TRANSFERRABLE_ATTRIBUTES.include?(attr) }
     end
 
     def propagate_defaults

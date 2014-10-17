@@ -43,6 +43,10 @@ describe Locomotive::EditableText do
         @sub_page_1.editable_elements.first.content.should == 'Lorem ipsum'
       end
 
+      it 'should be from parent' do
+        @sub_page_1.editable_elements.first.from_parent.should == true
+      end
+
     end
 
     describe 'locales' do
@@ -166,6 +170,22 @@ describe Locomotive::EditableText do
         @sub_page_1_1.editable_elements.size.should == 0
       end
 
+    end
+
+    describe "element#dependents" do
+      before(:each) do
+        @sub_page_1.update_attributes raw_template: "{% extends 'parent' %}{% block main %}{% editable_text 'test', fixed: true %}Lorem ipsum{% endeditable_text %}{% editable_text 'test 2' %}This is the header{% endeditable_text %}{% endblock %}"
+      end
+
+      it "should return an empty array if there are no dependents" do
+        el = @sub_page_2.editable_elements.first
+        el.dependents.should == []
+      end
+
+      it "should return all dependent elements" do
+        @home.editable_elements.first.dependents.count.should == @home.dependents.count
+        @sub_page_1.editable_elements.where(slug: 'test').first.dependents.count.should == 1
+      end
     end
 
   end

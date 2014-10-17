@@ -104,6 +104,10 @@ module Locomotive
       self.title_translations.try(:keys)
     end
 
+    def dependents
+      site.pages.any_in("template_dependencies.#{::Mongoid::Fields::I18n.locale}" => [self.id]).to_a
+    end
+
     protected
 
     def do_not_remove_index_and_404_pages

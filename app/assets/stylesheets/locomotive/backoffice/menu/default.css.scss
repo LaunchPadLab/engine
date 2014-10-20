@@ -3,7 +3,7 @@
 #menu {
   li.contents { }
   li.settings { }
-  li.shared_resources { }
+  li.super-admin { }
 }
 
 body.contents {
@@ -32,8 +32,8 @@ body.settings {
   }
 }
 
-body.shared_resources {
-  #menu li.shared_resources {
+body.super_admin {
+  #menu li.super-admin {
     // @include locomotive-blue-entry;
     // @include locomotive_black_menu;
     @include locomotive-orange-entry;

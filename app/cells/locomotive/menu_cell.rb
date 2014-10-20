@@ -2,6 +2,10 @@ module Locomotive
   class MenuCell < Cell::Rails
 
     include ::Locomotive::Engine.routes.url_helpers
+    include ::CanCan::ControllerAdditions
+    delegate :current_ability, :to => :controller
+    include ::Devise::Controllers::Helpers
+    ::Devise::Controllers::Helpers.define_helpers(::Devise::Mapping.new("Locomotive/Account", {}))
 
     delegate :main_app, :sections, to: :parent_controller
 

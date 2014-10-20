@@ -20,6 +20,7 @@ module Locomotive
     has_many    :invitations,     class_name: 'Locomotive::Invitation',     validate: false, autosave: false
     has_many    :events,          class_name: 'Locomotive::Event',          validate: false, autosave: false
     has_many    :announcements,   class_name: 'Locomotive::Announcement',   validate: false, autosave: false
+    has_many    :resources,       class_name: 'Locomotive::Resource',       validate: false, autosave: false
     has_many    :previews,        class_name: 'Locomotive::Preview',        validate: false, autosave: false
     has_many    :snippets,        class_name: 'Locomotive::Snippet',        dependent: :destroy, validate: false, autosave: false
     has_many    :theme_assets,    class_name: 'Locomotive::ThemeAsset',     dependent: :destroy, validate: false, autosave: false

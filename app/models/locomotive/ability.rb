@@ -43,6 +43,8 @@ module Locomotive
 
       cannot :manage, Page
 
+      cannot :manage, SharedResource
+
       can [:edit, :read], Page do |page|
         @membership.pages.include?(page.id.to_s)
       end
@@ -56,6 +58,7 @@ module Locomotive
 
     def setup_advanced_user_permissions!
       cannot :manage, Page
+      cannot :manage, SharedResource
       can :touch, ThemeAsset
 
       can [:edit, :read, :customize, :update], Page do |page|
@@ -72,6 +75,8 @@ module Locomotive
 
     def setup_site_admin_permissions!
       can :manage, Page
+
+      cannot :manage, SharedResource
 
       can :manage, ContentEntry
 

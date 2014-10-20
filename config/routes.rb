@@ -41,6 +41,8 @@ Locomotive::Engine.routes.draw do
 
   resources :sites
 
+  resources :shared_resources
+
   resource :current_site, controller: 'current_site'
 
   resources :accounts

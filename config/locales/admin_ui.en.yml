@@ -47,6 +47,7 @@ en:
         snippets: Snippets
         account: My account
         approvals: My Pending Approvals
+        shared_resources: Super Admin
         site: Site
         theme_assets: Theme files
         translations: Translations

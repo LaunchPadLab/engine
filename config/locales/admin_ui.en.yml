@@ -48,6 +48,7 @@ en:
         account: My account
         approvals: My Pending Approvals
         super_admin: Super Admin
+        shared_resources: Shared Resources
         site: Site
         theme_assets: Theme files
         translations: Translations

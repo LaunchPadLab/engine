@@ -16,7 +16,7 @@ class Locomotive.Views.Pages.EditView extends Locomotive.Views.Pages.FormView
       if widget_type != 'None'
         $input_to_show = $(".widget-index-" + widget_index + "." + "widget-type" + "-" + widget_type)
         console.log $input_to_show
-        $input_to_show.parents('li').first().show()
+        $input_to_show.parents('li').show()
 
   $ ->
 
@@ -29,4 +29,4 @@ class Locomotive.Views.Pages.EditView extends Locomotive.Views.Pages.FormView
         $(value).parents("li").first().hide()
       $input_to_show = $(".widget-index-" + widget_index + "." + "widget-type" + "-" + widget_type)
       console.log $input_to_show
-      $input_to_show.parents('li').first().show()
+      $input_to_show.parents('li').show()

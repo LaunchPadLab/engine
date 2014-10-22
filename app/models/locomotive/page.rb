@@ -4,6 +4,7 @@ module Locomotive
     include Locomotive::Mongoid::Document
 
     MINIMAL_ATTRIBUTES = %w(_id title slug fullpath position depth published templatized target_klass_name redirect listed response_type parent_id parent_ids site_id created_at updated_at)
+    TEMPLATES_HASH = {"Parent" => "parent", "Content Two Columns" => "content-two-columns", "Content Three Columns" => "content-three-columns"}
 
     ## Extensions ##
     include Extensions::Page::Tree
@@ -26,7 +27,6 @@ module Locomotive
     field :published,           type: Boolean, default: false
     field :cache_strategy,      default: 'none'
     field :response_type,       default: 'text/html'
-    field :template_name
 
     ## associations ##
     belongs_to :site, class_name: 'Locomotive::Site', validate: false, autosave: false
@@ -107,6 +107,10 @@ module Locomotive
 
     def dependents
       site.pages.any_in("template_dependencies.#{::Mongoid::Fields::I18n.locale}" => [self.id]).to_a
+    end
+
+    def template_name
+      raw_template[/\{\% extends (.*?) %/,1].gsub("'", "").gsub('"', "")
     end
 
     protected

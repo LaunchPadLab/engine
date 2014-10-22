@@ -38,10 +38,12 @@ module Locomotive
 
     def update
       @page = current_site.pages.find(params[:id])
-      # template_name = params[:page][:template_name]
-      # raw_template = params[:page][:raw_template]
-      # string_to_replace = raw_template[/\{\% extends (.*?) %/,1]
-      # raw_template.gsub(string_to_replace, template_name) if template_name
+      template_name = params[:page][:template_name]
+      if template_name && template_name != ""
+        raw_template = params[:page][:raw_template]
+        string_to_replace = raw_template[/\{\% extends (.*?) %/,1]
+        raw_template.sub!(string_to_replace, template_name) if template_name
+      end
       @page.update_attributes(params[:page])
       respond_with @page, location: edit_page_path(@page._id)
     end

@@ -14,7 +14,9 @@
   - if not @page.index? and not @page.not_found?
     = f.input :parent_id, as: :select, collection: parent_pages_options, include_blank: false
 
-    = f.input :template_name, as: :select, collection: {"Parent" => "parent", "Content Two Columns" => "content-two-columns", "Content Three Columns" => "content-three-columns"}
+    - unless Locomotive::Page::TEMPLATES_HASH.values.include?(@page.slug)
+
+      = f.input :template_name, as: :select, include_blank: false, collection: Locomotive::Page::TEMPLATES_HASH
 
   = f.input :slug, required: false, hint: @page.slug.blank? ? t('.empty_slug') : public_page_url(@page, locale: current_content_locale), input_html: { :'data-url' => get_path_pages_path, disabled: @page.index? || @page.not_found? }, wrapper_html: { style: "#{'display: none' if @page.templatized? && !@page.templatized_from_parent?};", class: 'em-inline-hints' }
 

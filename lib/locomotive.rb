@@ -69,6 +69,9 @@ module Locomotive
     if ::Dragonfly::VERSION =~ /^0\.9\.([0-9]+)/
       Locomotive.log :error, "WARNING: Old Dragonfly config detected, image uploads might be broken. Use 'rails g locomotive:install' to get the latest configuration files."
     end
+
+    # avoid I18n warnings
+    I18n.enforce_available_locales = false
   end
 
   def self.add_middlewares
@@ -77,6 +80,12 @@ module Locomotive
     self.app_middleware.use '::Locomotive::Middlewares::SeoTrailingSlash'
 
     self.app_middleware.use '::Locomotive::Middlewares::InlineEditor'
+
+    self.app_middleware.use '::Locomotive::Middlewares::Site'
+
+    self.app_middleware.use '::Locomotive::Middlewares::Locale'
+
+    self.app_middleware.use '::Locomotive::Middlewares::LocaleRedirection'
   end
 
   def self.configure_multi_sites

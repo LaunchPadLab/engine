@@ -122,17 +122,16 @@ Rails.application.routes.draw do
 
   # magic urls
   match '/_admin'               => 'locomotive/public/pages#show_toolbar'
-  match ':locale/_admin'        => 'locomotive/public/pages#show_toolbar', locale: /(#{Locomotive.config.site_locales.join('|')})/
-  match ':locale/*path/_admin'  => 'locomotive/public/pages#show_toolbar', locale: /(#{Locomotive.config.site_locales.join('|')})/
   match '*path/_admin'          => 'locomotive/public/pages#show_toolbar'
 
   match '/_edit'                => 'locomotive/public/pages#edit'
-  match ':locale/_edit'         => 'locomotive/public/pages#edit', page_path: 'index', locale: /(#{Locomotive.config.site_locales.join('|')})/
-  match ':locale/*path/_edit'   => 'locomotive/public/pages#edit', locale: /(#{Locomotive.config.site_locales.join('|')})/
   match '*path/_edit'           => 'locomotive/public/pages#edit'
 
+  constraints Locomotive::Routing::PostContentEntryConstraint.new do
+    root to:                    'locomotive/public/content_entries#create',     path: 'index'
+    match '*path'               => 'locomotive/public/content_entries#create'
+  end
+
   root to:                      'locomotive/public/pages#show'
-  match ':locale'               => 'locomotive/public/pages#show', page_path: 'index', locale: /(#{Locomotive.config.site_locales.join('|')})/
-  match ':locale/*path'         => 'locomotive/public/pages#show', locale: /(#{Locomotive.config.site_locales.join('|')})/
   match '*path'                 => 'locomotive/public/pages#show'
 end

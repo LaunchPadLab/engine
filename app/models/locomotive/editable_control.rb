@@ -8,7 +8,7 @@ module Locomotive
     ## methods ##
 
     def options=(value)
-      if value.respond_to?(:split)
+      if value.respond_to?(:split) && value.is_a?(String)
         value = value.split(/\s*\,\s*/).map do |option|
           first, last = *option.split(/\s*=\s*/)
           last ||= first

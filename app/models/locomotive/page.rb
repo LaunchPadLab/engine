@@ -64,6 +64,15 @@ module Locomotive
 
     ## methods ##
 
+    def render(context, options = {})
+      output = super(context)
+      if options[:toolbar]
+        index = output.index("<body>")
+        output.insert(index + 6, options[:toolbar])
+      end
+      return output
+    end
+
     def index?
       self.slug == 'index' && self.depth.to_i == 0
     end
@@ -94,6 +103,10 @@ module Locomotive
 
     def translated_in
       self.title_translations.try(:keys)
+    end
+
+    def dependents
+      site.pages.any_in("template_dependencies.#{::Mongoid::Fields::I18n.locale}" => [self.id]).to_a
     end
 
     protected

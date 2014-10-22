@@ -52,6 +52,8 @@ module Locomotive
               fixed:         !!@options[:fixed],
               disabled:      false,
               from_parent:   false,
+              widget_type:   @options[:widget_type],
+              widget_index:  @options[:widget_index].try(:to_i),
               _type:         self.document_type.to_s
             }
           end

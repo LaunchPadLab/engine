@@ -437,6 +437,32 @@ describe Locomotive::Page do
 
   end
 
+  describe '#dependents' do
+
+    before(:each) do
+      @site = FactoryGirl.create(:site)
+      @home = FactoryGirl.create(:page, slug: 'index', site: @site)
+      @home.update_attributes raw_template: "{% block body %}{% editable_text 'body' %}Lorem ipsum{% endeditable_text %}{% endblock %}"
+      @sub_page_1 = FactoryGirl.create(:page, slug: 'sub_page_1', parent: @home, raw_template: "{% extends 'parent' %}")
+      @sub_page_2 = FactoryGirl.create(:page, slug: 'sub_page_2', parent: @home, raw_template: "{% extends 'parent' %}")
+    end
+
+    it "should return an empty array if there are no dependent pages" do
+      @sub_page_1.dependents.should == []
+    end
+
+    it "should return all pages that dependent on it" do
+      @sub_page_1_1 = FactoryGirl.create(:page, slug: 'sub_page_1_1', parent: @sub_page_1, raw_template: "{% extends 'parent' %}")
+      @home.dependents.count.should == 3
+      @sub_page_1.dependents.count.should == 1
+    end
+
+    it "should not include a page that does not depend on it" do
+      @sub_page_2_1 = FactoryGirl.create(:page, slug: 'sub_page_2_1', parent: @sub_page_2, raw_template: "{% extends 'parent' %}")
+      @sub_page_1.dependents.count.should == 0
+    end
+  end
+
   class Foo
   end
 

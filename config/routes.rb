@@ -22,8 +22,20 @@ Locomotive::Engine.routes.draw do
   resources :pages do
     put :sort, on: :member
     get :get_path, on: :collection
-    resources :previews
+    member do
+      post 'edit_from_preview' => 'pages#edit', as: :edit_from_preview
+    end
+    resources :previews, only: [:show, :create, :update, :destroy] do
+      collection do
+        post '/new' => 'previews#new'
+      end
+    end
+
+    collection do
+      get 'previews' => 'previews#index'
+    end
   end
+
 
   resources :snippets
 

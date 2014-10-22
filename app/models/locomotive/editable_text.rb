@@ -48,7 +48,7 @@ module Locomotive
     end
 
     def copy_formatting_attributes_from(el)
-      %w(format rows line_break).each do |attr|
+      %w(format rows line_break widget_index widget_type).each do |attr|
         self.attributes[attr] = el.attributes[attr]
       end
     end

@@ -10,7 +10,6 @@ class Locomotive.Views.EditableElements.TextView extends Backbone.View
 
   render: ->
     $(@el).html(ich.editable_text_input(@model.toJSON()))
-
     return @
 
   after_render: ->

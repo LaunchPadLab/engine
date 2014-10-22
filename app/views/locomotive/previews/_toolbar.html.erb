@@ -1,0 +1,73 @@
+<style>
+
+.previews-toolbar {
+  margin-top: 0px;
+}
+
+body {
+  margin-top: 0px;
+}
+body .fixed {
+    top: 60px !important;
+}
+
+.previews-toolbar .preview-toolbar {
+  height: 60px;
+  width: 100%;
+  background-color: white;
+  position: fixed;
+  top: 0;
+  z-index: 100;
+}
+.previews-toolbar form .toolbar-button {
+  margin-top: 8px;
+  margin-left: 50px;
+  height: 40px;
+  padding-top: 12px;
+}
+
+.previews-toolbar form .gray-button {
+  background-color: #bbb;
+}
+
+.previews-toolbar form .red-button {
+  background-color: red;
+}
+
+.previews-toolbar form .back-button {
+  margin-left: 50px;
+}
+
+.previews-toolbar .toolbar-margin {
+  height: 60px;
+  margin-bottom: 45px;
+}
+
+
+.previews-toolbar  a#reject-link {
+  color: red !important;
+  margin-left: 50px;
+}
+
+.previews-toolbar form {
+  float: left;
+}
+
+</style>
+<div class="previews-toolbar">
+  <div class="toolbar-margin"></div>
+  <div class="preview-toolbar">
+    <% target_path = action_name == "show" ? page_preview_path(@page, @preview) : page_previews_path(@page) %>
+    <%= form_tag edit_from_preview_page_path(@page), method: :post do %>
+      <%= hidden_field_tag :page_params, @preview.page_params %>
+      <%= submit_tag 'Change Revisions', class: 'back-button toolbar-button button gray-button' %>
+    <% end %>
+    <%= form_for @preview, url: target_path do |f| %>
+      <%= f.hidden_field :page_params, value: f.object.page_params %>
+      <%= f.submit (can?(:update, @page) ? "Save And Propagate Changes" : "Request Approval"), class: 'button toolbar-button' %>
+      <% if can?(:update, @page) && action_name != 'new' %>
+        <%= f.submit Locomotive::Preview::REJECT_TEXT, class: 'button toolbar-button red-button', data: { confirm: "Are you sure you want to reject these changes?" } %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

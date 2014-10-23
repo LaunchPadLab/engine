@@ -14,7 +14,9 @@ class Locomotive.Views.EditableElements.TextView extends Backbone.View
 
   after_render: ->
     if @model.get('format') == 'html'
-      @$('textarea').tinymce(@tinymce_settings())
+      name = @$('textarea').attr('name')
+      CKEDITOR.replace(name)
+      # @$('textarea').ckeditor()
     else
       @$('textarea').bind 'keyup', (event) =>
         input = $(event.target)

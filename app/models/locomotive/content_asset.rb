@@ -1,5 +1,5 @@
 module Locomotive
-  class ContentAsset
+  class ContentAsset < ::Ckeditor::Asset
 
     include Locomotive::Mongoid::Document
 

@@ -16,6 +16,7 @@ module Locomotive
 
     ## associations ##
     belongs_to :site, class_name: 'Locomotive::Site', validate: false, autosave: false
+    belongs_to :folder, class_name: 'Ckeditor::Folder', validate: false, autosave: false
 
     ## validations ##
     validates_presence_of :source

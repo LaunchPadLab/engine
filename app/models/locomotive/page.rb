@@ -21,6 +21,7 @@ module Locomotive
     field :slug,                localize: true
     field :fullpath,            localize: true
     field :handle
+    field :extendable,          type: Boolean, default: false
     field :raw_template,        localize: true
     field :locales,             type: Array
     field :published,           type: Boolean, default: false
@@ -106,6 +107,10 @@ module Locomotive
 
     def dependents
       site.pages.any_in("template_dependencies.#{::Mongoid::Fields::I18n.locale}" => [self.id]).to_a
+    end
+
+    def template_name
+      raw_template[/\{\% extends (.*?) %/,1].gsub("'", "").gsub('"', "")
     end
 
     protected

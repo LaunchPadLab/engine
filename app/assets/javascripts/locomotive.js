@@ -19,9 +19,9 @@
 //= require codemirror/modes/xml
 //= require codemirror/modes/htmlmixed
 //= require locomotive/vendor
+//= require locomotive/public_resources
 //= require ./locomotive/application
 
 $(document).ready(function() {
   $.datepicker.setDefaults($.datepicker.regional[window.locale]);
 });
-

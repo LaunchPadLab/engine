@@ -36,7 +36,7 @@ Locomotive::Engine.routes.draw do
     end
   end
 
-
+  resources :public_resources
   resources :snippets
 
   resources :sites

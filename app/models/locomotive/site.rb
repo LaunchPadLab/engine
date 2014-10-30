@@ -15,7 +15,9 @@ module Locomotive
     field :robots_txt
 
     ## associations ##
+
     has_many    :pages,           class_name: 'Locomotive::Page',           validate: false, autosave: false
+    has_many    :public_resources, class_name: 'Locomotive::PublicResource', validate: false, autosave: false
     has_many    :folders,         class_name: 'Ckeditor::Folder',         validate: false, autosave: false
     has_many    :previews,        class_name: 'Locomotive::Preview',        validate: false, autosave: false
     has_many    :snippets,        class_name: 'Locomotive::Snippet',        dependent: :destroy, validate: false, autosave: false

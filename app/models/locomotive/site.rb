@@ -59,6 +59,10 @@ module Locomotive
       self.memberships.detect { |m| m.admin? && m.account_id == account._id }
     end
 
+    def extendable_pages
+      self.pages.where(extendable: true)
+    end
+
     protected
 
     # FIXME: Currently there is no t/translate method on the I18n module

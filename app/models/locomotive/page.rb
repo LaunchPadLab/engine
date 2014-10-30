@@ -4,7 +4,6 @@ module Locomotive
     include Locomotive::Mongoid::Document
 
     MINIMAL_ATTRIBUTES = %w(_id title slug fullpath position depth published templatized target_klass_name redirect listed response_type parent_id parent_ids site_id created_at updated_at)
-    TEMPLATES_HASH = {"Parent" => "parent", "Content Two Columns" => "content-two-columns", "Content Three Columns" => "content-three-columns", "Tiled Children" => "tiled-children"}
 
     ## Extensions ##
     include Extensions::Page::Tree
@@ -22,6 +21,7 @@ module Locomotive
     field :slug,                localize: true
     field :fullpath,            localize: true
     field :handle
+    field :extendable,          type: Boolean, default: false
     field :raw_template,        localize: true
     field :locales,             type: Array
     field :published,           type: Boolean, default: false

@@ -111,7 +111,8 @@ module Locomotive
     end
 
     def template_name
-      raw_template[/\{\% extends (.*?) %/,1].gsub("'", "").gsub('"', "")
+      t = raw_template[/\{\% extends (.*?) %/,1]
+      t.gsub("'", "").gsub('"', "") if t
     end
 
     protected

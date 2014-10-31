@@ -20,5 +20,5 @@ class Locomotive.Views.EditableElements.ControlView extends Backbone.View
     @bind_model()
 
   bind_model: ->
-    Backbone.ModelBinding.bind @, { select: 'class' }
+    Backbone.ModelBinding.bind @, { select: 'id' }
 

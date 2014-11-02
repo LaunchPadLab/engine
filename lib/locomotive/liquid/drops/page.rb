@@ -61,6 +61,18 @@ module Locomotive
           @_source.editable_elements.where(slug: meth).try(:first).try(:content)
         end
 
+        def widget_1_album_photos
+          @_source.widget_1_album.content_assets
+        end
+
+        def widget_2_album_photos
+          @_source.widget_2_album.content_assets
+        end
+
+        def widget_3_album_photos
+          @_source.widget_3_album.content_assets
+        end
+
       end
     end
   end

@@ -8,6 +8,7 @@ module Locomotive
 
     ## other getters / setters ##
 
+    ## THIS FILE IS OVERWRITTEN ON LOCOMOTIVE_ENGINE REPO ##
     def options
       self.__source.options.map do |option|
         option['selected'] = option['value'] == self.__source.content

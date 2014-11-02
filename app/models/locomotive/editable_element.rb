@@ -189,7 +189,8 @@ module Locomotive
     def set_page_album_ids
       return true unless album?
       page = self.page
-      album = page.site.albums.find(self.content)
+      album = page.site.albums.where(_id: self.content).first
+      return true unless album
       page_relation_to_set = "widget_#{widget_index}_album="
       page.send(page_relation_to_set, album)
     end

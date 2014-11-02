@@ -55,6 +55,9 @@
   %label{ for: 'page_editable_elements_attributes_{{index}}_content' } {{label}}
 
   = select_tag 'page[editable_elements_attributes][{{index}}][content]', raw('{{#each options}}<option value="{{this.value}}" {{#if this.selected}}selected="selected"{{/if}}>{{this.text}}</option>{{/each}}'), id: 'page_editable_elements_attributes_{{index}}_content', class: 'content widget-type-{{widget_type}} widget-index-{{widget_index}}', data: { widget_index: "{{widget_index}}" }
+  {{#if is_album}}
+  %i= link_to 'Manage Albums', '/ckeditor/albums', target: "_blank"
+  {{/if}}
 
   {{#if hint}}
   %p.inline-hints {{hint}}

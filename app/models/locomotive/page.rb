@@ -31,15 +31,9 @@ module Locomotive
 
     ## associations ##
     belongs_to :site, class_name: 'Locomotive::Site', validate: false, autosave: false
-    belongs_to :widget_1_album, class_name: '::Ckeditor::Album', validate: false, autosave: false
-    belongs_to :widget_2_album, class_name: '::Ckeditor::Album', validate: false, autosave: false
-    belongs_to :widget_3_album, class_name: '::Ckeditor::Album', validate: false, autosave: false
 
     ## indexes ##
     index site_id:    1
-    index widget_1_album_id:    1
-    index widget_2_album_id:    1
-    index widget_3_album_id:    1
     index parent_id:  1
     index fullpath:   1, site_id: 1
 

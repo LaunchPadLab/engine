@@ -139,7 +139,7 @@ module Locomotive
     end
 
     def album?
-      widget_type && widget_type == Locomotive::EditableControl::Widgets::ALBUM
+      widget_type && widget_type.downcase == Locomotive::EditableControl::Widgets::ALBUM.downcase
     end
 
     protected

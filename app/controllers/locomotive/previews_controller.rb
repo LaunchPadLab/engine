@@ -9,8 +9,17 @@ module Locomotive
 
     def new
       @page = current_site.pages.find(params[:page_id])
+      template_name = params[:page][:template_name]
+      if template_name.present? && !@page.extendable
+        raw_template = params[:page][:raw_template]
+        string_to_replace = raw_template[/\{\% extends (.*?) %/,1]
+        if @page.template_name != string_to_replace
+          raw_template.sub!(string_to_replace, template_name)
+        end
+      end
       @preview = current_site.previews.build(page_params: params[:page].to_json)
       @page.attributes = params[:page]
+      return redirect_to edit_page_path(@page) if @page.invalid?
       prepare_toolbar
       render_locomotive_page(nil, { page: @page, no_redirect: true, toolbar: @toolbar })
     end

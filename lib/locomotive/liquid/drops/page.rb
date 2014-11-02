@@ -62,15 +62,21 @@ module Locomotive
         end
 
         def widget_1_album_photos
-          @_source.widget_1_album.content_assets
+          album = @_source.widget_1_album
+          return [] unless album.present?
+          album.content_assets
         end
 
         def widget_2_album_photos
-          @_source.widget_2_album.content_assets
+          album = @_source.widget_2_album
+          return [] unless album.present?
+          album.content_assets
         end
 
         def widget_3_album_photos
-          @_source.widget_3_album.content_assets
+          album = @_source.widget_3_album
+          return [] unless album.present?
+          album.content_assets
         end
 
       end

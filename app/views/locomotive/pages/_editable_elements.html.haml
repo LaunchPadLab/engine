@@ -56,7 +56,9 @@
 
   = select_tag 'page[editable_elements_attributes][{{index}}][content]', raw('{{#each options}}<option value="{{this.value}}" {{#if this.selected}}selected="selected"{{/if}} {{#if this.disabled}}disabled="disabled"{{/if}}>{{this.text}}</option>{{/each}}'), id: 'page_editable_elements_attributes_{{index}}_content', class: 'content widget-type-{{widget_type}} widget-index-{{widget_index}}', data: { widget_index: "{{widget_index}}" }
   {{#if is_album}}
-  %i= link_to 'Manage Albums', '/ckeditor/albums', target: "_blank"
+  %i= link_to 'Manage Albums', '/ckeditor/albums?CKEditor=widget_{{index}}_album_ckeditor&album_field_id=page_editable_elements_attributes_{{index}}_content&CKEditorFuncNum=1&langCode=en', target: "_blank"
+  %div{style: "display:none;"}
+    = text_area_tag 'widget_{{index}}_album_ckeditor', '{{ content }}', id: 'widget_{{index}}_album_ckeditor', disabled: true
   {{/if}}
 
   {{#if hint}}

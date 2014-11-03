@@ -41,7 +41,15 @@
     = hidden_field_tag 'page[editable_elements_attributes][{{index}}][remove_source]', '0', class: 'remove-flag'
 
     {{else}}
+    {{#if widget_index}}
+    = hidden_field_tag 'page[editable_elements_attributes][{{index}}][source]', '{{content}}', id: 'page_editable_elements_attributes_{{index}}_source'
+    %div{style: "display:none;"}
+      = text_area_tag 'widget_{{widget_index}}_photo_ckeditor', '{{ content }}', id: 'widget_{{widget_index}}_photo_ckeditor', disabled: true
+    = link_to 'Choose An Image', '/ckeditor/folders?CKEditor=widget_{{widget_index}}_photo_ckeditor&field_id=page_editable_elements_attributes_{{index}}_content&CKEditorFuncNum=1&langCode=en', target: "_blank"
+
+    {{else}}
     = file_field_tag 'page[editable_elements_attributes][{{index}}][source]', id: 'page_editable_elements_attributes_{{index}}_source'
+    {{/if}}
     {{/if}}
 
   {{#if hint}}
@@ -56,9 +64,9 @@
 
   = select_tag 'page[editable_elements_attributes][{{index}}][content]', raw('{{#each options}}<option value="{{this.value}}" {{#if this.selected}}selected="selected"{{/if}} {{#if this.disabled}}disabled="disabled"{{/if}}>{{this.text}}</option>{{/each}}'), id: 'page_editable_elements_attributes_{{index}}_content', class: 'content widget-type-{{widget_type}} widget-index-{{widget_index}}', data: { widget_index: "{{widget_index}}" }
   {{#if is_album}}
-  %i= link_to 'Manage Albums', '/ckeditor/albums?CKEditor=widget_{{index}}_album_ckeditor&album_field_id=page_editable_elements_attributes_{{index}}_content&CKEditorFuncNum=1&langCode=en', target: "_blank"
+  %i= link_to 'Manage Albums', '/ckeditor/albums?CKEditor=widget_{{widget_index}}_album_ckeditor&field_id=page_editable_elements_attributes_{{index}}_content&CKEditorFuncNum=1&langCode=en', target: "_blank"
   %div{style: "display:none;"}
-    = text_area_tag 'widget_{{index}}_album_ckeditor', '{{ content }}', id: 'widget_{{index}}_album_ckeditor', disabled: true
+    = text_area_tag 'widget_{{widget_index}}_album_ckeditor', '{{ content }}', id: 'widget_{{widget_index}}_album_ckeditor', disabled: true
   {{/if}}
 
   {{#if hint}}

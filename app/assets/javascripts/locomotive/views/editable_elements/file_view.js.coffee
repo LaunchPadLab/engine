@@ -26,7 +26,9 @@ class Locomotive.Views.EditableElements.FileView extends Backbone.View
     return @
 
   after_render: ->
-    # do nothing
+    if @model.get('widget_type') == 'Photo'
+      name = @$('textarea').attr('name')
+      CKEDITOR.replace(name)
 
   refresh: ->
     @$('input[type=file]').unbind 'change'

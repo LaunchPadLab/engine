@@ -35,6 +35,7 @@ module Locomotive
       @page = current_site.pages.find(params[:page_id])
       if can?(:update, @page)
         new_attributes = JSON.parse(@preview.page_params)
+        raise new_attributes.inspect
         @page.update_attributes(new_attributes)
         current_site.previews.where(page: @page).destroy_all
       else

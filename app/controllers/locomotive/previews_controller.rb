@@ -13,9 +13,7 @@ module Locomotive
       if template_name.present? && !@page.extendable
         raw_template = params[:page][:raw_template]
         string_to_replace = raw_template[/\{\% extends (.*?) %/,1]
-        if @page.template_name != string_to_replace
-          raw_template.sub!(string_to_replace, template_name)
-        end
+        raw_template.sub!(string_to_replace, template_name)
       end
       @preview = current_site.previews.build(page_params: params[:page].to_json)
       @page.attributes = params[:page]

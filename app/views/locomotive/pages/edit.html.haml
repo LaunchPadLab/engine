@@ -15,8 +15,7 @@
   = semantic_form_for @page, url: page_path(@page), method: :put, html: { multipart: true } do |form|
 
     = render 'form', f: form
-    / http://rancho-solano.locomotive-engine.dev/locomotive/pages/545832b5dd41eef1a5000007/previews/new
-    / = render 'locomotive/shared/form_actions', back_url: pages_path, button_label: :update
+
     #local-actions-bottom-bar
       .span-12
         %p

@@ -19,12 +19,15 @@ module Locomotive
     field :locales,           type: Array,   default: []
     field :widget_type
     field :widget_index,      type: Integer
+    field :from_preview,      type: Boolean, default: false
+    field :from_preview_slug
 
     ## associations ##
     embedded_in :page, class_name: 'Locomotive::Page', inverse_of: :editable_elements
+    embedded_in :preview, class_name: 'Locomotive::Preview', inverse_of: :editable_elements
 
     ## validations ##
-    validates_presence_of :slug
+    validates_presence_of :slug, unless: :from_preview?
 
     ## callbacks ##
     after_save :propagate_content, if: :fixed?

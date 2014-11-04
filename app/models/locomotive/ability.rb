@@ -65,6 +65,8 @@ module Locomotive
 
       can :manage, [ContentEntry, ContentAsset, Translation]
 
+      can :manage, Preview
+
       can :touch, Site, _id: @site._id
 
       can :read, ContentType
@@ -72,6 +74,8 @@ module Locomotive
 
     def setup_site_admin_permissions!
       can :manage, Page
+
+      can :manage, Preview
 
       can :manage, ContentEntry
 

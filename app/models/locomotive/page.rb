@@ -115,6 +115,20 @@ module Locomotive
       t.gsub("'", "").gsub('"', "") if t
     end
 
+    def build_editable_attributes_from(preview)
+      preview.editable_elements.each do |el|
+        raise self.editable_elements.where(slug: el.slug).first
+      end
+    end
+
+
+    def publish_editable_elements_from(preview)
+      preview.editable_elements.each do |el|
+        raise self.editable_elements.where(slug: el.slug).first
+      end
+    end
+
+
     protected
 
     def do_not_remove_index_and_404_pages

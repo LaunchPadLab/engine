@@ -9,15 +9,25 @@ module Locomotive
 
     def new
       @page = current_site.pages.find(params[:page_id])
+
+      # override extends for template name dropdown
       template_name = params[:page][:template_name]
       if template_name.present? && !@page.extendable
         raw_template = params[:page][:raw_template]
         string_to_replace = raw_template[/\{\% extends (.*?) %/,1]
         raw_template.sub!(string_to_replace, template_name)
       end
-      @preview = current_site.previews.build(page_params: params[:page].to_json)
+
+      # create preview and update page without persisting changes
+      params_except_editable_elements = params[:page].reject {|key,value| key == "editable_elements_attributes" }
+      @preview = current_site.previews.create(page_params: params_except_editable_elements.to_json)
       @page.attributes = params[:page]
+      @preview.create_editable_elements(page_params: params[:page], page: @page)
+
+      # run validations
       return redirect_to edit_page_path(@page) if @page.invalid?
+
+      # render
       prepare_toolbar
       render_locomotive_page(nil, { page: @page, no_redirect: true, toolbar: @toolbar })
     end
@@ -31,11 +41,13 @@ module Locomotive
     end
 
     def create
-      @preview = current_site.previews.build(params[:preview])
+      @preview = current_site.previews.find(params[:preview_id])
       @page = current_site.pages.find(params[:page_id])
       if can?(:update, @page)
+        raise "hello"
         new_attributes = JSON.parse(@preview.page_params)
         @page.update_attributes(new_attributes)
+        @page.publish_editable_elements_from(@preview)
         current_site.previews.where(page: @page).destroy_all
       else
         @preview.page_id = @page.id
@@ -54,7 +66,7 @@ module Locomotive
     end
 
     def index
-      @previews = current_site.previews.includes([:page, :account])
+      @previews = current_site.previews.active.includes([:page, :account])
     end
 
     def destroy

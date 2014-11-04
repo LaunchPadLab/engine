@@ -33,7 +33,9 @@ module Locomotive
     def edit
       @page = current_site.pages.find(params[:id])
       if from_preview?
-        @page.attributes = JSON.parse(params[:page_params])
+        @preview = current_site.previews.find(params[:preview_id])
+        @page.attributes = JSON.parse(@preview.page_params)
+        @page.build_editable_attributes_from(@preview)
         # calling .valid? will serialize the template
         @page.valid?
       end
@@ -76,7 +78,7 @@ module Locomotive
     end
 
     def from_preview?
-      params[:page_params].present?
+      params[:preview_id].present?
     end
 
   end

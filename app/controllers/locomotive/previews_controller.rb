@@ -10,8 +10,8 @@ module Locomotive
     def new
       @page = current_site.pages.find(params[:page_id])
       template_name = params[:page][:template_name]
-      if template_name.present? && !@page.extendable
-        raw_template = params[:page][:raw_template]
+      raw_template = params[:page][:raw_template]
+      if template_name.present? && raw_template.present? && !@page.extendable
         string_to_replace = raw_template[/\{\% extends (.*?) %/,1]
         raw_template.sub!(string_to_replace, template_name)
       end

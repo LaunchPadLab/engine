@@ -27,7 +27,7 @@ Locomotive::Engine.routes.draw do
     end
     resources :previews, only: [:show, :create, :update, :destroy] do
       collection do
-        post '/new' => 'previews#new'
+        put '/new' => 'previews#new'
       end
     end
 

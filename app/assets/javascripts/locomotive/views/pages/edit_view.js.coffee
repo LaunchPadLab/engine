@@ -29,3 +29,10 @@ class Locomotive.Views.Pages.EditView extends Locomotive.Views.Pages.FormView
       $input_to_show = $(".widget-index-" + widget_index + "." + "widget-type" + "-" + widget_type)
       $input_to_show.parents('li').show()
       $("body").find(".widget-type-control").parents('li').show();
+
+    $(".edit-page-form form input[type='submit']").on "click", (e) ->
+      e.preventDefault()
+      url = $(this).data "path"
+      $form = $(".edit-page-form form")
+      $form.attr "action", url
+      $form.submit()

@@ -73,7 +73,6 @@ module Locomotive
         start_of_body_index = output.index("<body")
         end_of_body_index = output[start_of_body_index..(start_of_body_index + 1000)].index(">") + start_of_body_index
         output.insert(end_of_body_index + 1, options[:toolbar])
-        raise output.inspect
       end
       return output
     end

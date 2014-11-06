@@ -70,8 +70,10 @@ module Locomotive
     def render(context, options = {})
       output = super(context)
       if options[:toolbar]
-        index = output.index("<body>")
-        output.insert(index + 6, options[:toolbar])
+        start_of_body_index = output.index("<body")
+        end_of_body_index = output[start_of_body_index..(start_of_body_index + 1000)].index(">") + start_of_body_index
+        output.insert(end_of_body_index + 1, options[:toolbar])
+        raise output.inspect
       end
       return output
     end

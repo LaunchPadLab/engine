@@ -47,6 +47,7 @@ en:
         snippets: Snippets
         account: My account
         approvals: My Pending Approvals
+        public_resources: Public Resources
         site: Site
         theme_assets: Theme files
         translations: Translations

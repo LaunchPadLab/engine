@@ -11,9 +11,20 @@
 
 %p!= t('.help')
 
-/ = semantic_form_for @page, url: new_page_previews_path(@page), method: :post, html: { multipart: true } do |form|
-= semantic_form_for @page, url: page_path(@page), method: :put, html: { multipart: true } do |form|
+.edit-page-form
+  = semantic_form_for @page, url: page_path(@page), method: :put, html: { multipart: true } do |form|
 
-  = render 'form', f: form
+    = render 'form', f: form
 
-  = render 'locomotive/shared/form_actions', back_url: pages_path, button_label: :update
+    #local-actions-bottom-bar
+      .span-12
+        %p
+          = link_to escape_once('&larr;&nbsp; Back without saving'), pages_path
+          &nbsp;
+
+      .span-12.last
+        %p.actions
+          = submit_tag "Preview", :'data-disable-with' => "Pending...", :'data-sending-form-message' => "Your form is being submitted", data: { path: new_page_previews_path(@page) }
+          = submit_tag "Save", :'data-disable-with' => "Pending...", :'data-sending-form-message' => "Your form is being submitted", data: { path: page_path(@page) }
+
+      .clear

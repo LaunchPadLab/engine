@@ -12,7 +12,7 @@
 
   .inner
 
-    - unless page.index_or_not_found?
+    - unless page.index_or_not_found? || cannot?(:move, Locomotive::Page)
       %em
 
     - if can?(:edit, page)

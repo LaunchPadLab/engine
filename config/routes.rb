@@ -27,7 +27,7 @@ Locomotive::Engine.routes.draw do
     end
     resources :previews, only: [:show, :create, :update, :destroy] do
       collection do
-        post '/new' => 'previews#new'
+        put '/new' => 'previews#new'
       end
     end
 
@@ -36,10 +36,12 @@ Locomotive::Engine.routes.draw do
     end
   end
 
-
+  resources :public_resources
   resources :snippets
 
   resources :sites
+
+  resources :folders
 
   resource :current_site, controller: 'current_site'
 

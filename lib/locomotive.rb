@@ -21,6 +21,7 @@ require 'locomotive/cancan'
 require 'locomotive/regexps'
 require 'locomotive/render'
 require 'locomotive/middlewares'
+require 'ckeditor'
 
 module Locomotive
   extend ActiveSupport::Autoload

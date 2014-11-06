@@ -1,6 +1,10 @@
 module Locomotive
   class EditableElement
 
+    module Widgets
+      ALBUM = 'Album'
+    end
+
     # include ::Mongoid::Document
     include Locomotive::Mongoid::Document
 
@@ -24,6 +28,7 @@ module Locomotive
 
     ## callbacks ##
     after_save :propagate_content, if: :fixed?
+    after_save :set_page_album_ids
     after_update :propagate_defaults, if: :propagate_defaults?
 
     ## scopes ##
@@ -133,6 +138,10 @@ module Locomotive
       elements.compact || []
     end
 
+    def album?
+      widget_type && widget_type.downcase == Locomotive::EditableControl::Widgets::ALBUM.downcase
+    end
+
     protected
 
     def _selector
@@ -175,6 +184,15 @@ module Locomotive
     #
     def propagate_content
       true
+    end
+
+    def set_page_album_ids
+      return true unless album?
+      page = self.page
+      album = page.site.albums.where(_id: self.content).first
+      return true unless album
+      page_relation_to_set = "widget_#{widget_index}_album="
+      page.send(page_relation_to_set, album)
     end
 
   end

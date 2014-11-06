@@ -61,6 +61,32 @@ module Locomotive
           @_source.editable_elements.where(slug: meth).try(:first).try(:content)
         end
 
+        def widget_1_album_photos
+          album = @_source.widget_1_album
+          return [] unless album.present?
+          album.content_assets
+        end
+
+        def widget_2_album_photos
+          album = @_source.widget_2_album
+          return [] unless album.present?
+          album.content_assets
+        end
+
+        def widget_3_album_photos
+          album = @_source.widget_3_album
+          return [] unless album.present?
+          album.content_assets
+        end
+
+        def no_index
+          @_source.no_index
+        end
+
+        def no_follow
+          @_source.no_follow
+        end
+
       end
     end
   end

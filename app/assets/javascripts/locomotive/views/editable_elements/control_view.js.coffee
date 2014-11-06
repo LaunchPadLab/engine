@@ -14,11 +14,14 @@ class Locomotive.Views.EditableElements.ControlView extends Backbone.View
     return @
 
   after_render: ->
-    # do nothing
+    if @model.get('widget_type') == 'Album'
+      name = @$('textarea').attr('name')
+      console.log(name)
+      CKEDITOR.replace(name)
 
   refresh: ->
     @bind_model()
 
   bind_model: ->
-    Backbone.ModelBinding.bind @, { select: 'class' }
+    Backbone.ModelBinding.bind @, { select: 'id' }
 

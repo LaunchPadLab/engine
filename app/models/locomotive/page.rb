@@ -23,6 +23,8 @@ module Locomotive
     field :fullpath,            localize: true
     field :handle
     field :extendable,          type: Boolean, default: false
+    field :no_index,            type: Boolean, default: false
+    field :no_follow,           type: Boolean, default: false
     field :raw_template,        localize: true
     field :locales,             type: Array
     field :published,           type: Boolean, default: false

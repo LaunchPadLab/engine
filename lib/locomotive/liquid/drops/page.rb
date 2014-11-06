@@ -79,6 +79,14 @@ module Locomotive
           album.content_assets
         end
 
+        def no_index
+          @_source.no_index
+        end
+
+        def no_follow
+          @_source.no_follow
+        end
+
       end
     end
   end

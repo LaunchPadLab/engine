@@ -28,6 +28,10 @@
 
   = f.input :meta_description
 
+  = f.input :no_index, as: :'Locomotive::Toggle', input_html: { class: 'simple-toggle' }
+
+  = f.input :no_follow, as: :'Locomotive::Toggle', input_html: { class: 'simple-toggle' }
+
 = f.inputs name: :advanced_options, id: 'advanced-options', class: "inputs foldable #{'folded' if inputs_folded?(@page)}" do
 
   - if can?(:customize, @page)
@@ -35,7 +39,7 @@
 
     = f.input :response_type, as: :select, collection: options_for_page_response_type, include_blank: false
 
-    = f.input :extendable, as: :'Locomotive::Toggle'
+    = f.input :extendable, as: :'Locomotive::Toggle', input_html: { class: 'simple-toggle' }
 
     = f.input :templatized, as: :'Locomotive::Toggle', style: "#{'display: none' if @page.redirect? || @page.templatized_from_parent?}"
 

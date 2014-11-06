@@ -73,6 +73,8 @@ module Locomotive
     def setup_site_admin_permissions!
       can :manage, Page
 
+      cannot :move, Page
+
       can :manage, Preview
 
       can :manage, ContentEntry

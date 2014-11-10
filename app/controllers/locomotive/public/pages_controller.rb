@@ -16,6 +16,8 @@ module Locomotive
 
       before_filter :set_locale, only: [:show, :edit]
 
+      before_filter :authenticate_intranet_user!, only: [:show], unless: :public_page?
+
       helper Locomotive::BaseHelper
 
       def show_toolbar
@@ -32,6 +34,15 @@ module Locomotive
       end
 
       protected
+
+      def public_page?
+        top_level_parent_page = locomotive_page.ancestors.last
+        return true unless top_level_parent_page
+        handle = top_level_parent_page.handle
+        return true unless handle.present?
+        return true if Locomotive::Page.whitelisted?(controller: controller_name, action: action_name)
+        handle.downcase != "intranet"
+      end
 
       def set_toolbar_locale
         ::I18n.locale = current_locomotive_account.locale rescue Locomotive.config.default_locale

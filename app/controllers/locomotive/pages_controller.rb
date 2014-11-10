@@ -26,18 +26,34 @@ module Locomotive
     end
 
     def create
+      template_name = params[:page][:template_name]
+      if template_name.present?
+        raw_template = params[:page][:raw_template]
+        string_to_replace = raw_template[/\{\% extends (.*?) %/,1]
+        raw_template.sub!(string_to_replace, template_name)
+      end
       @page = current_site.pages.create(params[:page])
       respond_with @page, location: edit_page_path(@page._id)
     end
 
     def edit
       @page = current_site.pages.find(params[:id])
-      @page.attributes = JSON.parse(params[:page_params]) if params[:page_params]
+      if from_preview?
+        @page.attributes = JSON.parse(params[:page_params])
+        # calling .valid? will serialize the template
+        @page.valid?
+      end
       respond_with @page
     end
 
     def update
       @page = current_site.pages.find(params[:id])
+      template_name = params[:page][:template_name]
+      if template_name.present? && !@page.extendable
+        raw_template = params[:page][:raw_template]
+        string_to_replace = raw_template[/\{\% extends (.*?) %/,1]
+        raw_template.sub!(string_to_replace, template_name)
+      end
       @page.update_attributes(params[:page])
       respond_with @page, location: edit_page_path(@page._id)
     end
@@ -63,6 +79,10 @@ module Locomotive
         slug:               page.slug,
         templatized_parent: page.templatized_from_parent?
       }
+    end
+
+    def from_preview?
+      params[:page_params].present?
     end
 
   end

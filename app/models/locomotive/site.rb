@@ -15,13 +15,8 @@ module Locomotive
     field :robots_txt
 
     ## associations ##
+
     has_many    :pages,           class_name: 'Locomotive::Page',           validate: false, autosave: false
-    has_many    :users,           class_name: 'Locomotive::User',           validate: false, autosave: false
-    has_many    :invitations,     class_name: 'Locomotive::Invitation',     validate: false, autosave: false
-    has_many    :events,          class_name: 'Locomotive::Event',          validate: false, autosave: false
-    has_many    :announcements,   class_name: 'Locomotive::Announcement',   validate: false, autosave: false
-    has_many    :resources,       class_name: 'Locomotive::Resource',       validate: false, autosave: false
-    has_many    :previews,        class_name: 'Locomotive::Preview',        validate: false, autosave: false
     has_many    :snippets,        class_name: 'Locomotive::Snippet',        dependent: :destroy, validate: false, autosave: false
     has_many    :theme_assets,    class_name: 'Locomotive::ThemeAsset',     dependent: :destroy, validate: false, autosave: false
     has_many    :content_assets,  class_name: 'Locomotive::ContentAsset',   dependent: :destroy, validate: false, autosave: false
@@ -29,6 +24,16 @@ module Locomotive
     has_many    :content_entries, class_name: 'Locomotive::ContentEntry',   dependent: :destroy, validate: false, autosave: false
     has_many    :translations,    class_name: 'Locomotive::Translation',    dependent: :destroy, validate: false, autosave: false
     embeds_many :memberships,     class_name: 'Locomotive::Membership'
+
+    has_many    :users,           class_name: 'Locomotive::User',           validate: false, autosave: false
+    has_many    :invitations,     class_name: 'Locomotive::Invitation',     validate: false, autosave: false
+    has_many    :events,          class_name: 'Locomotive::Event',          validate: false, autosave: false
+    has_many    :announcements,   class_name: 'Locomotive::Announcement',   validate: false, autosave: false
+    has_many    :resources,       class_name: 'Locomotive::Resource',       validate: false, autosave: false
+    has_many    :public_resources,  class_name: 'Locomotive::PublicResource', validate: false, autosave: false
+    has_many    :folders,           class_name: 'Ckeditor::Folder',           validate: false, autosave: false
+    has_many    :albums,            class_name: 'Ckeditor::Album',            validate: false, autosave: false
+    has_many    :previews,          class_name: 'Locomotive::Preview',        validate: false, autosave: false
 
     ## validations ##
     validates_presence_of :name
@@ -61,6 +66,10 @@ module Locomotive
 
     def is_admin?(account)
       self.memberships.detect { |m| m.admin? && m.account_id == account._id }
+    end
+
+    def extendable_pages
+      self.pages.where(extendable: true)
     end
 
     protected

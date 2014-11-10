@@ -4,10 +4,12 @@ module Locomotive
     include Locomotive::Mongoid::Document
 
     MINIMAL_ATTRIBUTES = %w(_id title slug fullpath position depth published templatized target_klass_name redirect listed response_type parent_id parent_ids site_id created_at updated_at)
+    WHITELISTED_PAGES = [["intranet", "sign_in"], ["intranet", "sign_up"]]
 
     ## Extensions ##
     include Extensions::Page::Tree
     include Extensions::Page::EditableElements
+    include Extensions::Page::Albums
     include Extensions::Page::Parse
     include Extensions::Page::Render
     include Extensions::Page::Templatized
@@ -21,6 +23,9 @@ module Locomotive
     field :slug,                localize: true
     field :fullpath,            localize: true
     field :handle
+    field :extendable,          type: Boolean, default: false
+    field :no_index,            type: Boolean, default: false
+    field :no_follow,           type: Boolean, default: false
     field :raw_template,        localize: true
     field :locales,             type: Array
     field :published,           type: Boolean, default: false
@@ -62,12 +67,25 @@ module Locomotive
     scope :dependent_from,      ->(id) { where(:template_dependencies.in => [id]) }
 
     ## methods ##
+    def self.intranet_home(site)
+      site.pages.where(handle: "intranet-home").first
+    end
+
+    def self.sign_in_page(site)
+      site.pages.where(handle: "sign_in").first || site.pages.where(slug: "sign_in").first
+    end
+
+    def self.whitelisted?(args = {})
+      controller, action = args[:controller], args[:action]
+      WHITELISTED_PAGES.include?([controller, action])
+    end
 
     def render(context, options = {})
       output = super(context)
       if options[:toolbar]
-        index = output.index("<body>")
-        output.insert(index + 6, options[:toolbar])
+        start_of_body_index = output.index("<body")
+        end_of_body_index = output[start_of_body_index..(start_of_body_index + 1000)].index(">") + start_of_body_index
+        output.insert(end_of_body_index + 1, options[:toolbar])
       end
       return output
     end
@@ -106,6 +124,11 @@ module Locomotive
 
     def dependents
       site.pages.any_in("template_dependencies.#{::Mongoid::Fields::I18n.locale}" => [self.id]).to_a
+    end
+
+    def template_name
+      t = raw_template[/\{\% extends (.*?) %/,1]
+      t.gsub("'", "").gsub('"', "") if t
     end
 
     protected

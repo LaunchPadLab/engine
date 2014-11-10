@@ -9,6 +9,7 @@ module Locomotive
       add :translations,  url: translations_path
       add :account,       url: edit_my_account_path
       add :approvals,     url: previews_pages_path
+      add :public_resources,     url: public_resources_path
     end
 
   end

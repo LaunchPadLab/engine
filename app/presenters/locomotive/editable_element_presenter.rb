@@ -9,6 +9,7 @@ module Locomotive
       presenter.property  :hint
       presenter.property  :widget_type
       presenter.property  :widget_index
+      presenter.property  :is_album
       presenter.property  :priority, type: 'Integer'
     end
 
@@ -26,6 +27,10 @@ module Locomotive
 
     def type
       self.__source._type.to_s.demodulize
+    end
+
+    def is_album
+      self.__source.album?
     end
 
     def block_name

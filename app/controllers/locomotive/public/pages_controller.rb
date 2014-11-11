@@ -36,7 +36,10 @@ module Locomotive
       protected
 
       def public_page?
-        top_level_parent_page = locomotive_page.ancestors.last
+        page = locomotive_page
+        return true unless page
+        return false if page.intranet_home?
+        top_level_parent_page = page.ancestors.last
         return true unless top_level_parent_page
         handle = top_level_parent_page.handle
         return true unless handle.present?

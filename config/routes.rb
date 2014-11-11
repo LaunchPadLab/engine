@@ -36,7 +36,19 @@ Locomotive::Engine.routes.draw do
     end
   end
 
+  resources :invitations do
+    member do
+      get :resend
+    end
+  end
+
+  resources :imports
+  resources :users
+  resources :events
+  resources :announcements
+  resources :resources
   resources :public_resources
+
   resources :snippets
 
   resources :sites

@@ -3,6 +3,7 @@
 #menu {
   li.contents { }
   li.settings { }
+  li.intranet { }
 }
 
 body.contents {
@@ -28,5 +29,18 @@ body.settings {
   #submenu {
     @include locomotive-blue-submenu;
     // @include locomotive-orange-submenu;
+  }
+}
+
+body.intranet {
+  #menu li.intranet {
+    // @include locomotive-blue-entry;
+    // @include locomotive_black_menu;
+    @include locomotive-orange-entry;
+  }
+
+  #submenu {
+    // @include locomotive-blue-submenu;
+    @include locomotive-orange-submenu;
   }
 }

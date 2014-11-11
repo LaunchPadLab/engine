@@ -1,0 +1,5 @@
+%ul.pages-list
+  - pages.each do |page|
+    %li
+      = check_box_tag "pages[]", page.id, (:checked if @membership.pages.include?(page.id.to_s))
+      = label_tag page.title

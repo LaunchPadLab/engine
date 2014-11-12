@@ -35,8 +35,6 @@ module Locomotive
     scope :visible, where(_visible: true)
     scope :latest_updated, order_by(updated_at: :desc).limit(Locomotive.config.ui[:latest_entries_nb])
     scope :next_or_previous, ->(condition, order_by) { where({ _visible: true }.merge(condition)).limit(1).order_by(order_by) }
-    scope :by_function, ->(function) { where("lower(function)=?", function.downcase)}
-    scope :by_group, ->(group) { where("lower(group)=?", group.downcase)}
 
     ## methods ##
 

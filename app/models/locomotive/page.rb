@@ -136,6 +136,15 @@ module Locomotive
       self.handle.try(:downcase) == INTRANET_HOME_HANDLE || self.slug.try(:downcase) == INTRANET_HOME_HANDLE
     end
 
+    def belongs_to_intranet?
+      return true if self.intranet_home?
+      top_level_parent_page = self.ancestors.last
+      return false unless top_level_parent_page
+      handle = top_level_parent_page.handle
+      return false unless handle.present?
+      handle.downcase != "intranet"
+    end
+
     protected
 
     def do_not_remove_index_and_404_pages

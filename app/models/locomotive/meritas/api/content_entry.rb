@@ -4,7 +4,7 @@ module Locomotive
     attr_reader :params, :content_type, :site
     attr_accessor :content_entries
 
-    MERITAS_CUSTOM_CONTENT_TYPES = ["event"]
+    MERITAS_CUSTOM_CONTENT_TYPES = ["events"]
 
     def initialize(args = {})
       @content_entries = args[:content_entries]
@@ -24,7 +24,7 @@ module Locomotive
         @content_type.slug.downcase
       end
 
-      def event_entries
+      def events_entries
         filter_by_date_range if start_date.present? && end_date.present?
         filter_by_function if params[:function_id].present?
         filter_by_group if params[:group_id].present?
@@ -47,29 +47,20 @@ module Locomotive
 
       # GROUP
       def filter_by_group
-        @content_entries = @content_entries.where(group: group_entry)
+        @content_entries = @content_entries.where(group: params[:group_id])
       end
 
       def group_content_type
-        @group_content_type ||= @site.content_types.where(slug: "group").first
-      end
-
-      def group_entry
-        group_content_type.entries.find(params[:group_id])
+        @group_content_type ||= @site.content_types.where(slug: "groups").first
       end
 
       # FUNCTION
       def filter_by_function
-        group_ids = group_content_type.entries.where(function: function_entry).map(&:_id)
-        @content_entries = @content_entries.where(:group_id.in => group_ids)
+        @content_entries = @content_entries.where(function: params[:function_id])
       end
 
       def function_content_type
-        @function_content_type ||= @site.content_types.where(slug: "function").first
-      end
-
-      def function_entry
-        function_content_type.entries.find(params[:function_id])
+        @function_content_type ||= @site.content_types.where(slug: "functions").first
       end
 
   end

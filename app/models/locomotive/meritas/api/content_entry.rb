@@ -26,8 +26,9 @@ module Locomotive
 
       def event_entries
         filter_by_date_range if start_date.present? && end_date.present?
-        filter_by_function if params[:function_id]
-        filter_by_group if params[:group_id]
+        filter_by_function if params[:function_id].present?
+        filter_by_group if params[:group_id].present?
+        return @content_entries
       end
 
       def start_date

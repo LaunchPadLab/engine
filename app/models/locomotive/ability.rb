@@ -91,7 +91,9 @@ module Locomotive
 
       can :manage, Site, _id: @site._id
 
-      can :point, Site
+      cannot :point, Site
+
+      can :manage, Account
 
       cannot :create, Site
 

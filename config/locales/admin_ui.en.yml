@@ -51,6 +51,13 @@ en:
         site: Site
         theme_assets: Theme files
         translations: Translations
+        intranet: Intranet
+        users: Users
+        invitations: Invite User
+        imports: Import Users
+        events: Events
+        resources: Resources
+        announcements: Announcements
       form:
         change_file: change
         delete_file: delete
@@ -60,6 +67,7 @@ en:
         create: Create
         update: Save
         preview: Preview
+        invite: Invite User
         send: Send
         disable_with: Pending...
       list:

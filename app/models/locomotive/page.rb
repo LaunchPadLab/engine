@@ -4,6 +4,8 @@ module Locomotive
     include Locomotive::Mongoid::Document
 
     MINIMAL_ATTRIBUTES = %w(_id title slug fullpath position depth published templatized target_klass_name redirect listed response_type parent_id parent_ids site_id created_at updated_at)
+    WHITELISTED_PAGES = [["intranet", "sign_in"], ["intranet", "sign_up"]]
+    INTRANET_HOME_HANDLE = "intranet"
 
     ## Extensions ##
     include Extensions::Page::Tree
@@ -66,12 +68,25 @@ module Locomotive
     scope :dependent_from,      ->(id) { where(:template_dependencies.in => [id]) }
 
     ## methods ##
+    def self.intranet_home(site)
+      site.pages.where(handle: INTRANET_HOME_HANDLE).first || site.pages.where(slug: INTRANET_HOME_HANDLE).first
+    end
+
+    def self.sign_in_page(site)
+      site.pages.where(handle: "sign_in").first || site.pages.where(slug: "sign_in").first
+    end
+
+    def self.whitelisted?(args = {})
+      controller, action = args[:controller], args[:action]
+      WHITELISTED_PAGES.include?([controller, action])
+    end
 
     def render(context, options = {})
       output = super(context)
       if options[:toolbar]
-        index = output.index("<body>")
-        output.insert(index + 6, options[:toolbar])
+        start_of_body_index = output.index("<body")
+        end_of_body_index = output[start_of_body_index..(start_of_body_index + 1000)].index(">") + start_of_body_index
+        output.insert(end_of_body_index + 1, options[:toolbar])
       end
       return output
     end
@@ -115,6 +130,10 @@ module Locomotive
     def template_name
       t = raw_template[/\{\% extends (.*?) %/,1]
       t.gsub("'", "").gsub('"', "") if t
+    end
+
+    def intranet_home?
+      self.handle.try(:downcase) == INTRANET_HOME_HANDLE || self.slug.try(:downcase) == INTRANET_HOME_HANDLE
     end
 
     protected

@@ -40,28 +40,35 @@ module Locomotive
           super
         end
 
-        def top_page
-          @page.ancestors[1] || @page
+        def top_page_id
+          @page.parent_ids[1].try(:to_s) || @page.id.to_s
         end
 
         def top_page_active?
-          @page == top_page
+          @page.id.to_s == top_page_id
+        end
+
+        def top_page
+          @all_pages_by_id[top_page_id].first
+        end
+
+        def children(page)
+          @parent_child_hash[page.id.to_s] || []
         end
 
         def has_active_child?(page)
-          return false if page.children.blank?
-          page.children.include?(@page) || page.children.map(&:children).flatten.include?(@page)
+          return false if children(page).blank?
+          children(page).include?(@page) || children(page).map {|p| children(p) }.flatten.include?(@page)
         end
 
         def has_children?(page)
-          page.children.any?
+          children(page).any?
         end
 
         def render(context)
           children_output = []
 
           entries = fetch_entries(context)
-
           entries.each_with_index do |p, index|
             css = []
             css << 'first' if index == 0
@@ -83,7 +90,23 @@ module Locomotive
 
         private
 
+        def set_parent_child_hash
+          # { parent_id => [child_ids] }
+          @parent_child_hash = {}
+          @all_pages.each_with_index do |page, index|
+            immediate_parent_id = page.parent_ids[-1].try(:to_s)
+            if immediate_parent_id
+              array = @parent_child_hash[immediate_parent_id] || []
+              array << page
+              @parent_child_hash[immediate_parent_id] = array
+            end
+          end
+        end
+
         def set_defaults
+          @all_pages = @site.pages
+          @all_pages_by_id = @all_pages.group_by {|p| p.id.to_s }
+          set_parent_child_hash
           css_classes = { active_class: 'active', has_children_class: 'has-children', has_active_child_class: 'has-active-child', has_dropdown_class: 'has-dropdown', depth_class: 'depth', dropdown_class: 'dropdown'}
           @options = @options.merge(css_classes)
         end
@@ -92,13 +115,16 @@ module Locomotive
         def fetch_entries(context)
           @site, @page = context.registers[:site], context.registers[:page]
           set_defaults
-          children = (case @source
-          when 'site'     then @site.pages.root.minimal_attributes(@options[:add_attributes]).first # start from home page
-          when 'parent'   then @page.ancestors[1] || @page
+
+          page = (case @source
+          when 'site'     then @all_pages.root.minimal_attributes(@options[:add_attributes]).first # start from home page
+          when 'parent'   then top_page
           when 'page'     then @page
           else
-            @site.pages.fullpath(@source).minimal_attributes(@options[:add_attributes]).first
-          end).children_with_minimal_attributes(@options[:add_attributes]).to_a
+            @all_pages.fullpath(@source).minimal_attributes(@options[:add_attributes]).first
+          end)
+
+          children = children(page)
 
           children.delete_if { |p| !include_page?(p) }
         end
@@ -134,14 +160,14 @@ module Locomotive
         end
 
         def render_children_for_page?(page, depth)
-          depth.succ <= @options[:depth].to_i && page.children.reject { |c| !include_page?(c) }.any?
+          depth.succ <= @options[:depth].to_i && children(page).reject { |c| !include_page?(c) }.any?
         end
 
         # Recursively creates a nested unordered list for the depth specified
         def render_entry_children(context, page, depth)
           output = %{}
 
-          children = page.children_with_minimal_attributes(@options[:add_attributes]).reject { |c| !include_page?(c) }
+          children = children(page).reject { |c| !include_page?(c) }
           if children.present?
             dropdown_class = @source == 'site' && page.depth == 1 ? @options[:dropdown_class] : ''
             output = %{<ul id="#{@options[:id]}-#{page.slug.to_s.dasherize}" class="#{bootstrap? ? 'dropdown-menu' : dropdown_class}">}

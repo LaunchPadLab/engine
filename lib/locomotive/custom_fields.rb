@@ -19,6 +19,10 @@ module CustomFields
       Locomotive::ContentFieldPresenter
     end
 
+    def has_parent_dependency?
+      self.type == "belongs_to" && self.class_slug == "groups"
+    end
+
     protected
 
     def ensure_class_name_security

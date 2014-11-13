@@ -15,7 +15,7 @@ module Locomotive
         memo << state.dasherize if page.send(:"#{state}?")
         memo
       end
-      page.belongs_to_intranet?
+      return classes.join(" ")
     end
 
     def page_toggler(page)

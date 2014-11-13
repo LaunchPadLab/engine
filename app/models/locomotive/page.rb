@@ -138,11 +138,11 @@ module Locomotive
 
     def belongs_to_intranet?
       return true if self.intranet_home?
-      top_level_parent_page = self.ancestors.last
+      top_level_parent_page = self.ancestors[1]
       return false unless top_level_parent_page
       handle = top_level_parent_page.handle || top_level_parent_page.slug
       return false unless handle.present?
-      handle.downcase != "intranet"
+      handle.downcase == "intranet"
     end
 
     def does_not_belong_to_intranet?

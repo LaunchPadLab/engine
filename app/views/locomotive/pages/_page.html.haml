@@ -10,7 +10,7 @@
   - if not page.index? and with_children
     = page_toggler(page)
 
-  .inner
+  %div{class: "inner #{'intranet' if page.belongs_to_intranet?}"}
 
     - unless page.index_or_not_found? || cannot?(:move, Locomotive::Page)
       %em

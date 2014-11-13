@@ -4,7 +4,7 @@ module Locomotive
     attr_reader :params, :content_type, :site
     attr_accessor :content_entries
 
-    MERITAS_CUSTOM_CONTENT_TYPES = ["events"]
+    MERITAS_CUSTOM_CONTENT_TYPES = %w(events)
 
     def initialize(args = {})
       @content_entries = args[:content_entries]

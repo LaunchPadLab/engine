@@ -38,13 +38,8 @@ module Locomotive
       def public_page?
         page = locomotive_page
         return true unless page
-        return false if page.intranet_home?
-        top_level_parent_page = page.ancestors.last
-        return true unless top_level_parent_page
-        handle = top_level_parent_page.handle
-        return true unless handle.present?
         return true if Locomotive::Page.whitelisted?(controller: controller_name, action: action_name)
-        handle.downcase != "intranet"
+        page.does_not_belong_to_intranet?
       end
 
       def set_toolbar_locale

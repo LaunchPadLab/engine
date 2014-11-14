@@ -12,7 +12,8 @@
       f:            f,
       name:         field.name.to_sym,
       field:        field,
-      highlighted:  field._id == @content_type.label_field_id
+      highlighted:  field._id == @content_type.label_field_id,
+      has_parent:   field.has_parent_dependency?
 
 = f.inputs name: :advanced_options, class: "inputs foldable #{'folded' if inputs_folded?(@content_entry)}" do
 

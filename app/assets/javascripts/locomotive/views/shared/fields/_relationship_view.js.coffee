@@ -9,7 +9,7 @@ class Locomotive.Views.Shared.Fields.RelationshipView extends Backbone.View
 
     element.select2
       width:                '50%'
-      minimumInputLength:   1
+      minimumInputLength:   0
       quietMillis:          100
       allowClear:           true
       placeholder:          ' '

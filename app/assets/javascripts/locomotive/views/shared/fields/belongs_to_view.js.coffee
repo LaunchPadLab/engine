@@ -16,3 +16,4 @@ class Locomotive.Views.Shared.Fields.BelongsToView extends Locomotive.Views.Shar
 
     $(@el).on 'select2-selecting', (el) =>
       @model.set "#{@options.name}_id", el.val
+

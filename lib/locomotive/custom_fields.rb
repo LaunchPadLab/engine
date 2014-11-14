@@ -20,7 +20,7 @@ module CustomFields
     end
 
     def has_parent_dependency?
-      self.type == "belongs_to" && self.class_slug == "groups"
+      self.type == "belongs_to" && self.name == "group"
     end
 
     protected

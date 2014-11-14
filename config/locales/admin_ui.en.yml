@@ -56,7 +56,7 @@ en:
         invitations: Invite User
         imports: Import Users
         events: Events
-        resources: Resources
+        intranet_resources: Intranet Resources
         announcements: Announcements
       form:
         change_file: change

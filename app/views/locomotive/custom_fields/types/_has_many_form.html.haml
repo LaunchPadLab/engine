@@ -20,7 +20,8 @@
           f:            form,
           name:         _field.name.to_sym,
           field:        _field,
-          highlighted:  _field._id == content_type.label_field_id
+          highlighted:  _field._id == content_type.label_field_id,
+          has_parent:   _field.has_parent_dependency?
 
   .dialog-actions
     = link_to t('locomotive.buttons.close'), '#', id: 'close-link'

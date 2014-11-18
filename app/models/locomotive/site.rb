@@ -12,6 +12,7 @@ module Locomotive
 
     ## fields ##
     field :name
+    field :intranet_name, default: "My School"
     field :robots_txt
 
     ## associations ##

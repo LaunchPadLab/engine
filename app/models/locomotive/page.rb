@@ -27,6 +27,7 @@ module Locomotive
     field :extendable,          type: Boolean, default: false
     field :no_index,            type: Boolean, default: false
     field :no_follow,           type: Boolean, default: false
+    field :user_type,           default: Locomotive::User::ALL
     field :raw_template,        localize: true
     field :locales,             type: Array
     field :published,           type: Boolean, default: false

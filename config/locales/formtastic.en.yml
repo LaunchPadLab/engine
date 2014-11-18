@@ -3,6 +3,7 @@ en:
     titles:
       information: General information
       advanced_options: Advanced options
+      intranet: Intranet
       meta: SEO Metadata
       seo: SEO settings
       robots_txt: Robots.txt file

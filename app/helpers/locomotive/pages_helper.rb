@@ -11,10 +11,11 @@ module Locomotive
     end
 
     def css_for_page(page)
-      %w(index not_found templatized redirect unpublished).inject([]) do |memo, state|
+      classes = %w(index not_found templatized redirect unpublished).inject([]) do |memo, state|
         memo << state.dasherize if page.send(:"#{state}?")
         memo
-      end.join(' ')
+      end
+      return classes.join(" ")
     end
 
     def page_toggler(page)

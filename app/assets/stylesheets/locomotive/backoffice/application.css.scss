@@ -198,6 +198,11 @@ ul.list {
       clear: both;
 
       background: #ebedf4;
+
+      &.intranet {
+        background: #FFCC99;
+      }
+
       @include border-radius(16px);
       @include box-shadow(rgba(0, 0, 0, 0.2) 0px 1px 0px 0px);
 

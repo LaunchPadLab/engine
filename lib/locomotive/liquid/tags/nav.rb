@@ -113,7 +113,7 @@ module Locomotive
 
         # Determines root node for the list
         def fetch_entries(context)
-          @site, @page = context.registers[:site], context.registers[:page]
+          @site, @page, @intranet_user = context.registers[:site], context.registers[:page], context.registers[:current_intranet_user]
           set_defaults
 
           page = (case @source
@@ -195,9 +195,14 @@ module Locomotive
           end
         end
 
+        def do_not_show?(page)
+          return true if !page.listed? || page.templatized? || !page.published?
+          return true if page.user_type != ::Locomotive::User::ALL && page.user_type != @intranet_user.type
+        end
+
         # Determines whether or not a page should be a part of the menu
         def include_page?(page)
-          if !page.listed? || page.templatized? || !page.published?
+          if do_not_show?(page)
             false
           elsif @options[:exclude]
             (page.fullpath =~ @options[:exclude]).nil?

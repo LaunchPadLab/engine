@@ -54,7 +54,7 @@ module Locomotive
         end
 
         def has_children?(page)
-          page.children.any?
+          page.children.detect {|c| c.listed? && c.published? }.present?
         end
 
         def render(context)

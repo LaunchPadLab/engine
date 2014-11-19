@@ -49,6 +49,10 @@ module Locomotive
 
     ## methods ##
 
+    def intranet_home_id
+      @intrante_home_id ||= Page.intranet_home(self)._id.to_s
+    end
+
     def all_pages_in_once
       Page.quick_tree(self)
     end

@@ -68,6 +68,8 @@ module Locomotive
       can :touch, Site, _id: @site._id
 
       can :read, ContentType
+
+      can :manage, "Portal"
     end
 
     def setup_site_admin_permissions!
@@ -98,6 +100,8 @@ module Locomotive
       cannot :create, Site
 
       can :manage, Membership
+
+      can :manage, "Portal"
 
       cannot :grant_admin, Membership
 

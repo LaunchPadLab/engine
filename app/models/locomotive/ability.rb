@@ -69,7 +69,7 @@ module Locomotive
 
       can :read, ContentType
 
-      can :manage, Portal
+      can :manage, "Portal"
     end
 
     def setup_site_admin_permissions!

@@ -201,7 +201,7 @@ module Locomotive
         'default_locale'              => current_site.default_locale.to_s,
         'locales'                     => current_site.locales,
         'current_user'                => Locomotive::Liquid::Drops::CurrentUser.new(current_locomotive_account),
-        'current_intranet_user'       => Locomotive::Liquid::Drops::CurrentIntranetUser.new(current_intranet_user),
+        'current_portal_user'         => Locomotive::Liquid::Drops::CurrentPortalUser.new(current_portal_user),
         'session'                     => Locomotive::Liquid::Drops::SessionProxy.new,
         'wagon'                       => false,
         'editing'                     => self.editing_page?
@@ -220,7 +220,7 @@ module Locomotive
         inline_editor:              self.editing_page?,
         logger:                     Rails.logger,
         current_locomotive_account: current_locomotive_account,
-        current_intranet_user:      current_intranet_user,
+        current_portal_user:        current_portal_user,
         theme_assets_checksum:      Locomotive.config.theme_assets_checksum ? current_site.theme_assets.checksums : {},
         asset_host:                 Locomotive::Liquid::AssetHost.new(request, current_site, Locomotive.config.asset_host)
       }

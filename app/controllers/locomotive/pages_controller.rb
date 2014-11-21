@@ -38,7 +38,7 @@ module Locomotive
 
     def edit
       @page = current_site.pages.find(params[:id])
-      session[:access_type] = @page.belongs_to_intranet? ? Locomotive::PublicResource::AccessTypes::PORTAL : Locomotive::PublicResource::AccessTypes::PUBLIC
+      session[:access_type] = @page.belongs_to_portal? ? Locomotive::PublicResource::AccessTypes::PORTAL : Locomotive::PublicResource::AccessTypes::PUBLIC
 
       if from_preview?
         @page.attributes = JSON.parse(params[:page_params])

@@ -123,6 +123,10 @@ Rails.application.routes.draw do
         api.resources :content_assets
       end
     end
+
+    namespace :public_api do
+      resources :content_entries, path: 'content_types/:slug/entries'
+    end
   end
 
   # sitemap

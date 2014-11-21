@@ -46,7 +46,7 @@ Locomotive::Engine.routes.draw do
   resources :users
   resources :events
   resources :announcements
-  resources :intranet_resources
+  resources :portal_resources
   resources :public_resources
 
   resources :snippets

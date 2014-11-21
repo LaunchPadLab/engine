@@ -1,7 +1,7 @@
 module Locomotive
   module Liquid
     module Drops
-      class CurrentIntranetUser < Base
+      class CurrentPortalUser < Base
 
         def logged_in?
           @_source.present?

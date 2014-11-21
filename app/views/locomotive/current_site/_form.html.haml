@@ -9,7 +9,7 @@
 
 = f.inputs name: :information  do
   = f.input :name, wrapper_html: { style: 'display: none' }
-  = f.input :intranet_name
+  = f.input :portal_name
   = f.input :locales, as: '::Locomotive::Locales', collection: ordered_current_site_locales, input_html: { class: 'locales' }
   = f.input :timezone_name, as: :select, include_blank: false, collection: options_for_site_timezones
 

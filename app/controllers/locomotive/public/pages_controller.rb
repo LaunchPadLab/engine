@@ -16,7 +16,7 @@ module Locomotive
 
       before_filter :set_locale, only: [:show, :edit]
 
-      before_filter :authenticate_intranet_user!, only: [:show], unless: :public_page?
+      before_filter :authenticate_portal_user!, only: [:show], unless: :public_page?
 
       helper Locomotive::BaseHelper
 
@@ -39,7 +39,7 @@ module Locomotive
         page = locomotive_page
         return true unless page
         return true if Locomotive::Page.whitelisted?(controller: controller_name, action: action_name)
-        page.does_not_belong_to_intranet?
+        page.does_not_belong_to_portal?
       end
 
       def set_toolbar_locale

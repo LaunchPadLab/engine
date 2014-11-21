@@ -12,7 +12,7 @@ module Locomotive
 
     ## fields ##
     field :name
-    field :intranet_name, default: "My School"
+    field :portal_name, default: "Portal"
     field :robots_txt
 
     ## associations ##
@@ -28,9 +28,6 @@ module Locomotive
 
     has_many    :users,                   class_name: 'Locomotive::User',               validate: false, autosave: false
     has_many    :invitations,             class_name: 'Locomotive::Invitation',         validate: false, autosave: false
-    has_many    :events,                  class_name: 'Locomotive::Event',              validate: false, autosave: false
-    has_many    :announcements,           class_name: 'Locomotive::Announcement',       validate: false, autosave: false
-    has_many    :intranet_resources,      class_name: 'Locomotive::IntranetResource',   validate: false, autosave: false
     has_many    :public_resources,        class_name: 'Locomotive::PublicResource',     validate: false, autosave: false
     has_many    :folders,                 class_name: 'Ckeditor::Folder',               validate: false, autosave: false
     has_many    :albums,                  class_name: 'Ckeditor::Album',                validate: false, autosave: false
@@ -49,8 +46,8 @@ module Locomotive
 
     ## methods ##
 
-    def intranet_home_id
-      @intranet_home_id ||= Page.intranet_home(self).try(:_id).try(:to_s) || ''
+    def portal_home_id
+      @portal_home_id ||= Page.portal_home(self).try(:_id).try(:to_s) || ''
     end
 
     def all_pages_in_once

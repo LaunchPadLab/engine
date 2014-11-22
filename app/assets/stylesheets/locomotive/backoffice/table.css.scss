@@ -1,0 +1,86 @@
+@import "compass/css3";
+@import "compass/css3/border-radius";
+@import "compass/css3/images";
+@import "compass/css3/text-shadow";
+@import "locomotive/shared/helpers";
+@import "buttons";
+
+
+fieldset {
+  margin: 0;
+  padding:0;
+  margin-bottom: 20px;
+  padding-bottom: 1px;
+  border: 0;
+
+  legend {
+    display: block;
+    width: 918px;
+    padding: 5px 0px;
+    background: #ebedf4;
+    margin: 0;
+    border: 1px solid #ccced7;
+    border-bottom-width: 0px;
+    white-space: normal;
+    color: #000;
+    @include border-top-radius(8px);
+    @include background-image(linear-gradient(#ebedf4, #d7dbe7));
+
+    span {
+      padding-left: 20px;
+
+      line-height: 20px;
+
+      font-size: 13px;
+      font-weight: bold;
+      @include single-text-shadow(#fff, 1px, 1px, 1px);
+    }
+  } // legend
+
+  &.foldable {
+    legend span {
+      cursor: pointer;
+
+      &:after { font-family: FontAwesome; content: "\00a0\00a0\f0d7"; }
+    }
+
+    &.folded legend {
+      @include border-bottom-radius(8px);
+      @include box-shadow(rgba(0, 0, 0, 0.4) 0px 1px 0px 0px);
+      border-bottom-width: 1px;
+
+      span {
+        &:after { content: "\00a0\00a0\f0da"; }
+      }
+    }
+  } // .foldable
+}
+
+
+.table-content{
+
+  background: #ebedf4;
+  margin-bottom: 0px;
+  padding: 0px 10px;
+
+  overflow: scroll;
+  display: block;
+  width: 898px;
+  border: 1px solid #ccced7;
+
+  @include border-bottom-radius(8px);
+  @include box-shadow(rgba(0, 0, 0, 0.4) 0px 0px 5px 0px inset, rgba(255, 255, 255, 0.5) 0 1px 0 0 inset);
+
+  table {
+
+    tr {
+      margin: 0;
+      padding: 10px 20px 16px 20px;
+      background: transparent url(/assets/locomotive/form/input-sep.png) repeat-x 0 bottom;
+
+      td {
+      }
+    }
+  }
+
+}

@@ -49,6 +49,26 @@ Locomotive::Engine.routes.draw do
   resources :intranet_resources
   resources :public_resources
 
+  # lyris resources
+  namespace :lyris do
+    resources :lists do
+      resources :members
+      resources :messages do
+        member do
+          get "copy"
+          post "schedule"
+          get "new_schedule"
+        end
+      end
+      member do
+        get 'new_import'
+        post 'import'
+        get 'upload_status'
+      end
+    end
+  end
+
+
   resources :snippets
 
   resources :sites

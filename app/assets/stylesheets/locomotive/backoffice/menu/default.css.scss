@@ -4,7 +4,10 @@
   li.contents { }
   li.settings { }
   li.intranet { }
+  li.lyris { }
 }
+
+
 
 body.contents {
   #menu li.contents {
@@ -42,5 +45,29 @@ body.intranet {
   #submenu {
     // @include locomotive-blue-submenu;
     @include locomotive-orange-submenu;
+  }
+}
+body.lyris {
+  #menu li.lyris {
+    // @include locomotive-blue-entry;
+    // @include locomotive_black_menu;
+    @include locomotive-lime-green-entry;
+  }
+
+  #submenu {
+    // @include locomotive-blue-submenu;
+    @include locomotive-lime-green-submenu;
+  }
+  .list-nav {
+    ul {
+      li{
+        float: left;
+        margin: 15px 7px 0 8px;
+        // @include locomotive-lime-green-entry;
+
+      }
+    }
+    @include locomotive-lime-green-listmenu;
+
   }
 }

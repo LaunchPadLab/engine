@@ -52,6 +52,8 @@ en:
         theme_assets: Theme files
         translations: Translations
         intranet: Intranet
+        lyris: Lyris
+        lists: Lists
         users: Users
         invitations: Invite User
         imports: Import Users

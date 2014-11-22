@@ -3,8 +3,9 @@
 #menu {
   li.contents { }
   li.settings { }
-  li.intranet { }
+
   li.lyris { }
+  li.portal { }
 }
 
 
@@ -35,8 +36,8 @@ body.settings {
   }
 }
 
-body.intranet {
-  #menu li.intranet {
+body.portal {
+  #menu li.portal {
     // @include locomotive-blue-entry;
     // @include locomotive_black_menu;
     @include locomotive-orange-entry;

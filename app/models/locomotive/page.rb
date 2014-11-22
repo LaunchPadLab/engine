@@ -4,8 +4,8 @@ module Locomotive
     include Locomotive::Mongoid::Document
 
     MINIMAL_ATTRIBUTES = %w(_id title slug fullpath position depth published templatized target_klass_name redirect listed response_type parent_id parent_ids site_id created_at updated_at)
-    WHITELISTED_PAGES = [["intranet", "sign_in"], ["intranet", "sign_up"]]
-    INTRANET_HOME_HANDLE = "intranet"
+    WHITELISTED_PAGES = [["portal", "sign_in"], ["portal", "sign_up"]]
+    PORTAL_HOME_HANDLE = "portal"
 
     ## Extensions ##
     include Extensions::Page::Tree
@@ -27,6 +27,7 @@ module Locomotive
     field :extendable,          type: Boolean, default: false
     field :no_index,            type: Boolean, default: false
     field :no_follow,           type: Boolean, default: false
+    field :user_type,           default: Locomotive::User::ALL
     field :raw_template,        localize: true
     field :locales,             type: Array
     field :published,           type: Boolean, default: false
@@ -68,8 +69,8 @@ module Locomotive
     scope :dependent_from,      ->(id) { where(:template_dependencies.in => [id]) }
 
     ## methods ##
-    def self.intranet_home(site)
-      site.pages.where(handle: INTRANET_HOME_HANDLE).first || site.pages.where(slug: INTRANET_HOME_HANDLE).first
+    def self.portal_home(site)
+      site.pages.where(handle: PORTAL_HOME_HANDLE).first || site.pages.where(fullpath: PORTAL_HOME_HANDLE).first
     end
 
     def self.sign_in_page(site)
@@ -132,21 +133,19 @@ module Locomotive
       t.gsub("'", "").gsub('"', "") if t
     end
 
-    def intranet_home?
-      self.handle.try(:downcase) == INTRANET_HOME_HANDLE || self.slug.try(:downcase) == INTRANET_HOME_HANDLE
+    def portal_home?
+      self.handle.try(:downcase) == PORTAL_HOME_HANDLE || self.slug.try(:downcase) == PORTAL_HOME_HANDLE
     end
 
-    def belongs_to_intranet?
-      return true if self.intranet_home?
-      top_level_parent_page = self.ancestors[1]
-      return false unless top_level_parent_page
-      handle = top_level_parent_page.handle || top_level_parent_page.slug
-      return false unless handle.present?
-      handle.downcase == "intranet"
+    def belongs_to_portal?
+      return true if self.portal_home?
+      top_level_parent_page_id = self.parent_ids[1]
+      return false unless top_level_parent_page_id
+      top_level_parent_page_id.to_s == site.portal_home_id
     end
 
-    def does_not_belong_to_intranet?
-      !belongs_to_intranet?
+    def does_not_belong_to_portal?
+      !belongs_to_portal?
     end
 
     protected

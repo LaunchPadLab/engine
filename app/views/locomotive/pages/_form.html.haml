@@ -32,6 +32,12 @@
 
   = f.input :no_follow, as: :'Locomotive::Toggle', input_html: { class: 'simple-toggle' }
 
+- if action_name == "new" || @page.belongs_to_portal?
+
+  = f.inputs name: current_site.portal_name, class: "inputs foldable #{'folded' if inputs_folded?(@page)}" do
+
+    = f.input :user_type, as: :select, collection: Locomotive::User::PAGE_OPTIONS, label: "Permitted User Type"
+
 = f.inputs name: :advanced_options, id: 'advanced-options', class: "inputs foldable #{'folded' if inputs_folded?(@page)}" do
 
   - if can?(:customize, @page)

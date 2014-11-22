@@ -46,7 +46,7 @@ Locomotive::Engine.routes.draw do
   resources :users
   resources :events
   resources :announcements
-  resources :intranet_resources
+  resources :portal_resources
   resources :public_resources
 
   # lyris resources
@@ -142,6 +142,10 @@ Rails.application.routes.draw do
 
         api.resources :content_assets
       end
+    end
+
+    namespace :public_api do
+      resources :content_entries, path: 'content_types/:slug/entries'
     end
   end
 

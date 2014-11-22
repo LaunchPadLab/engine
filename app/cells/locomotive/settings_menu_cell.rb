@@ -4,12 +4,12 @@ module Locomotive
     protected
 
     def build_list
-      add :site,          url: edit_current_site_path
-      add :theme_assets,  url: theme_assets_path
-      add :translations,  url: translations_path
-      add :account,       url: edit_my_account_path
-      add :approvals,     url: previews_pages_path
-      add :public_resources,     url: public_resources_path
+      add :site,                  url: edit_current_site_path
+      add :theme_assets,          url: theme_assets_path
+      add :translations,          url: translations_path
+      add :account,               url: edit_my_account_path
+      add :approvals,             url: previews_pages_path if can?(:manage, Page)
+      add :public_resources,      url: public_resources_path if can?(:edit, Page)
     end
 
   end

@@ -3,6 +3,7 @@ en:
     titles:
       information: General information
       advanced_options: Advanced options
+      portal: Portal
       meta: SEO Metadata
       seo: SEO settings
       robots_txt: Robots.txt file

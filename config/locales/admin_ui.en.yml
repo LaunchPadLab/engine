@@ -51,14 +51,14 @@ en:
         site: Site
         theme_assets: Theme files
         translations: Translations
-        intranet: Intranet
         lyris: Lyris
         lists: Lists
+        portal: Portal
         users: Users
         invitations: Invite User
         imports: Import Users
         events: Events
-        intranet_resources: Intranet Resources
+        portal_resources: Portal Resources
         announcements: Announcements
       form:
         change_file: change

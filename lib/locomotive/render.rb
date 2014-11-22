@@ -182,28 +182,29 @@ module Locomotive
     #
     def locomotive_default_assigns
       {
-        'env'               => Rails.env,
-        'site'              => current_site.to_liquid,
-        'page'              => @page,
-        'models'            => Locomotive::Liquid::Drops::ContentTypes.new,
-        'contents'          => Locomotive::Liquid::Drops::ContentTypes.new, # DEPRECATED
-        'current_page'      => self.params[:page],
-        'params'            => self.params,
-        'path'              => request.path,
-        'fullpath'          => request.fullpath,
-        'url'               => request.url,
-        'ip_address'        => request.remote_ip,
-        'post?'             => request.post?,
-        'host'              => request.host_with_port,
-        'now'               => Time.now.in_time_zone(current_site.timezone),
-        'today'             => Date.today,
-        'locale'            => I18n.locale.to_s,
-        'default_locale'    => current_site.default_locale.to_s,
-        'locales'           => current_site.locales,
-        'current_user'      => Locomotive::Liquid::Drops::CurrentUser.new(current_locomotive_account),
-        'session'           => Locomotive::Liquid::Drops::SessionProxy.new,
-        'wagon'             => false,
-        'editing'           => self.editing_page?
+        'env'                         => Rails.env,
+        'site'                        => current_site.to_liquid,
+        'page'                        => @page,
+        'models'                      => Locomotive::Liquid::Drops::ContentTypes.new,
+        'contents'                    => Locomotive::Liquid::Drops::ContentTypes.new, # DEPRECATED
+        'current_page'                => self.params[:page],
+        'params'                      => self.params,
+        'path'                        => request.path,
+        'fullpath'                    => request.fullpath,
+        'url'                         => request.url,
+        'ip_address'                  => request.remote_ip,
+        'post?'                       => request.post?,
+        'host'                        => request.host_with_port,
+        'now'                         => Time.now.in_time_zone(current_site.timezone),
+        'today'                       => Date.today,
+        'locale'                      => I18n.locale.to_s,
+        'default_locale'              => current_site.default_locale.to_s,
+        'locales'                     => current_site.locales,
+        'current_user'                => Locomotive::Liquid::Drops::CurrentUser.new(current_locomotive_account),
+        'current_portal_user'         => Locomotive::Liquid::Drops::CurrentPortalUser.new(current_portal_user),
+        'session'                     => Locomotive::Liquid::Drops::SessionProxy.new,
+        'wagon'                       => false,
+        'editing'                     => self.editing_page?
       }
     end
 
@@ -219,6 +220,7 @@ module Locomotive
         inline_editor:              self.editing_page?,
         logger:                     Rails.logger,
         current_locomotive_account: current_locomotive_account,
+        current_portal_user:        current_portal_user,
         theme_assets_checksum:      Locomotive.config.theme_assets_checksum ? current_site.theme_assets.checksums : {},
         asset_host:                 Locomotive::Liquid::AssetHost.new(request, current_site, Locomotive.config.asset_host)
       }

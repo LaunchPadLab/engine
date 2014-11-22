@@ -28,6 +28,7 @@ module Locomotive
         filter_by_date_range if start_date.present? && end_date.present?
         filter_by_function if params[:function_id].present?
         filter_by_group if params[:group_id].present?
+        filter_by_publish_to if params[:calendar].present?
         return @content_entries
       end
 
@@ -61,6 +62,16 @@ module Locomotive
 
       def function_content_type
         @function_content_type ||= @site.content_types.where(slug: "functions").first
+      end
+
+      #FUNCTION
+      def filter_by_publish_to
+        calendar_hash = {"public" => ["Public Calendar", "All Calendars"], "portal" => ["Portal Calendar", "All Calendars"]}
+        array = calendar_hash[params[:calendar]]
+        field = @content_type.entries_custom_fields.where(name: "publish_to").first
+        return unless field.present?
+        ids = field.select_options.map {|f| array.include?(f.name) ? f._id : nil }.compact
+        @content_entries = @content_entries.where(:publish_to_id.in => ids)
       end
 
   end

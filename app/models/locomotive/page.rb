@@ -4,7 +4,6 @@ module Locomotive
     include Locomotive::Mongoid::Document
 
     MINIMAL_ATTRIBUTES = %w(_id title slug fullpath position depth published templatized target_klass_name redirect listed response_type parent_id parent_ids site_id created_at updated_at)
-    WHITELISTED_PAGES = [["portal", "sign_in"], ["portal", "sign_up"]]
     PORTAL_HOME_HANDLE = "portal"
 
     ## Extensions ##
@@ -73,13 +72,10 @@ module Locomotive
       site.pages.where(handle: PORTAL_HOME_HANDLE).first || site.pages.where(fullpath: PORTAL_HOME_HANDLE).first
     end
 
-    def self.sign_in_page(site)
-      site.pages.where(handle: "sign_in").first || site.pages.where(slug: "sign_in").first
-    end
-
-    def self.whitelisted?(args = {})
-      controller, action = args[:controller], args[:action]
-      WHITELISTED_PAGES.include?([controller, action])
+    def self.find_template(args = {})
+      site = args[:site]
+      fullpath = args[:fullpath]
+      site.pages.where(fullpath: fullpath).first
     end
 
     def render(context, options = {})

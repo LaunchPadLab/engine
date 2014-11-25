@@ -38,7 +38,6 @@ module Locomotive
       def public_page?
         page = locomotive_page
         return true unless page
-        return true if Locomotive::Page.whitelisted?(controller: controller_name, action: action_name)
         page.does_not_belong_to_portal?
       end
 

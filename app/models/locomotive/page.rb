@@ -30,6 +30,7 @@ module Locomotive
     field :raw_template,        localize: true
     field :locales,             type: Array
     field :published,           type: Boolean, default: false
+    field :group_id
     field :cache_strategy,      default: 'none'
     field :response_type,       default: 'text/html'
 
@@ -76,6 +77,17 @@ module Locomotive
       site = args[:site]
       fullpath = args[:fullpath]
       site.pages.where(fullpath: fullpath).first
+    end
+
+    def group
+      return nil unless group_id.present?
+      site.content_types.where(slug: "groups").first
+    end
+
+    def events
+      return [] unless group_id.present?
+      content_type = site.content_types.where(slug: "events").first
+      content_type.entries.where(group: group_id).where(:start_time.gte => DateTime.now).order_by("start_time ASC").limit(3)
     end
 
     def render(context, options = {})

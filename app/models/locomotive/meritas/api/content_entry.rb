@@ -25,26 +25,38 @@ module Locomotive
       end
 
       def events_entries
-        filter_by_date_range if start_date.present? && end_date.present?
+        # filter_by_date_range if start_date.present? && end_date.present?
+        filter_by_start_date if params[:start_date].present?
+        filter_by_end_date if params[:end_date].present?
         filter_by_function if params[:function_id].present?
         filter_by_group if params[:group_id].present?
         filter_by_publish_to if params[:calendar].present?
         return @content_entries
       end
 
-      def start_date
-        @start_date ||= params[:start_date]
-      end
+      # def start_date
+      #   @start_date ||= params[:start_date]
+      # end
 
-      def end_date
-        @end_date ||= params[:start_date]
-      end
+      # def end_date
+      #   @end_date ||= params[:start_date]
+      # end
 
-      def filter_by_date_range
+      def filter_by_start_date
         start_date = Date.parse(params[:start_date])
-        end_date = Date.parse(params[:end_date])
-        @content_entries = @content_entries.where(:start_time.gte => start_date, :end_time.lte => end_date)
+        @content_entries = @content_entries.where(:start_time.gte => start_date)
       end
+
+      def filter_by_end_date
+        end_date = Date.parse(params[:end_date])
+        @content_entries = @content_entries.where(:end_time.lte => end_date)
+      end
+
+      # def filter_by_date_range
+      #   start_date = Date.parse(params[:start_date])
+      #   end_date = Date.parse(params[:end_date])
+      #   @content_entries = @content_entries.where(:start_time.gte => start_date, :end_time.lte => end_date)
+      # end
 
       # GROUP
       def filter_by_group

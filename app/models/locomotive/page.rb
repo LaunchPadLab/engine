@@ -87,7 +87,7 @@ module Locomotive
     def events
       return [] unless group_id.present?
       content_type = site.content_types.where(slug: "events").first
-      content_type.entries.where(group: group_id).limit(3)
+      content_type.entries.where(group: group_id).where(:start_time.gte => DateTime.now).order_by("start_time ASC").limit(3)
     end
 
     def render(context, options = {})

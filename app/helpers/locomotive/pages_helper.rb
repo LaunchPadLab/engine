@@ -10,6 +10,13 @@ module Locomotive
       hash
     end
 
+    def groups_for_select
+      content_type = current_site.content_types.where(slug: "groups").first
+      hash = {}
+      content_type.entries.each {|e| hash[e.name] = e._id }
+      return hash
+    end
+
     def css_for_page(page)
       classes = %w(index not_found templatized redirect unpublished).inject([]) do |memo, state|
         memo << state.dasherize if page.send(:"#{state}?")

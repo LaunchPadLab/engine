@@ -2,7 +2,7 @@ module Locomotive
   class Meritas::Api::ContentEntry
 
     attr_reader :params, :content_type, :site
-    attr_accessor :content_entries
+    attr_accessor :content_entries, :unpaginated_entries
 
     MERITAS_CUSTOM_CONTENT_TYPES = %w(events)
 
@@ -19,6 +19,11 @@ module Locomotive
       send("#{slug}_entries")
     end
 
+    def entries_page_count
+      events_entries
+      (@content_entries.count / @items_per_page).ceil
+    end
+
     private
 
       def slug
@@ -32,8 +37,7 @@ module Locomotive
         filter_by_group if params[:group_id].present?
         filter_by_publish_to if params[:calendar].present?
         filter_by_page if params[:page].present?
-        filter_by_page_count if params[:page_count].present?
-        return @content_entries
+        @content_entries
       end
 
       # DATE RANGE
@@ -79,11 +83,6 @@ module Locomotive
       def filter_by_page
         page = params[:page].to_i
         @content_entries = @content_entries.skip(page*@items_per_page).limit(@items_per_page)
-      end
-
-      # COUNT
-      def filter_by_page_count
-        @content_entries = (@content_entries.count / @items_per_page).ceil
       end
   end
 end

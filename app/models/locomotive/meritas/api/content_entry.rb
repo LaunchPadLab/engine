@@ -11,7 +11,7 @@ module Locomotive
       @params = args[:params]
       @content_type = args[:content_type]
       @site = args[:site]
-      @items_per_page = 6.0
+      @items_per_page = (params[:items_per_page] || 6).to_f
     end
 
     def entries

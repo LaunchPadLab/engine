@@ -7,11 +7,14 @@
 //= require jquery
 //= require jquery-ui
 //= require jquery_ujs
+//= require jquery.simplePagination
 //= require underscore
 //= require backbone
 //= require codemirror
 //= require tinymce-jquery
 //= require ckeditor/init
+
+//= require lyris
 //= require portal_resources
 //= require select2/select2
 //= require codemirror/addons/mode/overlay

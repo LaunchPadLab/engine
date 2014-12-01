@@ -42,7 +42,11 @@ Locomotive::Engine.routes.draw do
     end
   end
 
-  resources :imports
+  namespace :import do
+    resources :users
+    resources :events
+  end
+
   resources :users
   resources :events
   resources :announcements

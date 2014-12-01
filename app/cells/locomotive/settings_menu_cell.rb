@@ -9,7 +9,7 @@ module Locomotive
       add :translations,          url: translations_path
       add :account,               url: edit_my_account_path
       add :approvals,             url: previews_pages_path if can?(:manage, Page)
-      add :public_resources,      url: public_resources_path if can?(:edit, Page)
+      add :import_events,         url: new_import_event_path if can?(:edit, Page)
     end
 
   end

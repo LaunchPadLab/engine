@@ -6,7 +6,7 @@ module Locomotive
     DEFAULT_ROLE = "beginner_user"
     REQUIRE_PAGE_PERMISSION = ["beginner_user", "advanced_user"]
 
-    ROLES = %w(admin site_admin advanced_user beginner_user)
+    ROLES = %w(admin site_admin site_admin_w_email advanced_user beginner_user)
 
     def initialize(account, site)
       @account, @site = account, site
@@ -102,6 +102,47 @@ module Locomotive
       can :manage, Membership
 
       can :manage, "Portal"
+
+      cannot :grant_admin, Membership
+
+      cannot [:update, :destroy], Membership do |membership|
+        @membership.account_id == membership.account_id || # can not edit myself
+        membership.admin? # can not modify an administrator
+      end
+    end
+
+    def setup_site_admin_w_email_permissions!
+      can :manage, Page
+
+      cannot :move, Page
+
+      can :manage, Preview
+
+      can :manage, ContentEntry
+
+      can :manage, ContentType
+
+      can :manage, Snippet
+
+      can :manage, ThemeAsset
+
+      can :manage, ContentAsset
+
+      can :manage, Translation
+
+      can :manage, Site, _id: @site._id
+
+      cannot :point, Site
+
+      can :manage, Account
+
+      cannot :create, Site
+
+      can :manage, Membership
+
+      can :manage, "Portal"
+
+      can :manage, "Lyris"
 
       cannot :grant_admin, Membership
 

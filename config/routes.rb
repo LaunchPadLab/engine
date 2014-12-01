@@ -59,12 +59,18 @@ Locomotive::Engine.routes.draw do
           post "schedule"
           get "new_schedule"
         end
+        collection do
+          get 'tags'
+          post 'preview'
+          post 'quick_message'
+        end
       end
       member do
         get 'new_import'
         post 'import'
         get 'upload_status'
       end
+
     end
   end
 

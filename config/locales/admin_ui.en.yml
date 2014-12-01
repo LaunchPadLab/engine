@@ -51,6 +51,8 @@ en:
         site: Site
         theme_assets: Theme files
         translations: Translations
+        lyris: Lyris
+        lists: Lists
         portal: Portal
         users: Users
         invitations: Invite User

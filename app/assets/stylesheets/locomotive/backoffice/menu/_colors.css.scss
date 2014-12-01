@@ -43,6 +43,10 @@
   @include locomotive-menu-entry(#46b398);
 }
 
+@mixin locomotive-lime-green-entry {
+  @include locomotive-menu-entry(#90df18,#aeed50);
+}
+
 @mixin locomotive-orange-entry {
   @include locomotive-menu-entry(#ec8901);
 }
@@ -98,6 +102,28 @@
 
     &.on, &:active {
       @include background-image(linear-gradient(#195e4b, #166d55));
+    }
+  }
+}
+
+@mixin locomotive-lime-green-submenu {
+  @include background-image(linear-gradient(#99ee1a, #7ec118)); // TODO (#2e9a7d)
+  & > ul > li > a, & > .actions .button {
+    @include background-image(linear-gradient(#99ff00, #7ec118));
+
+    &.on, &:active {
+      @include background-image(linear-gradient(#7ec118, #99ff00));
+    }
+  }
+}
+
+@mixin locomotive-lime-green-listmenu {
+  // @include background-image(linear-gradient(#99ee1a, #7ec118)); // TODO (#2e9a7d)
+  & > ul > li > a, & > .actions .button {
+    @include background-image(linear-gradient(#99ff00, #7ec118));
+
+    &.on, &:active {
+      @include background-image(linear-gradient(#7ec118, #99ff00));
     }
   }
 }

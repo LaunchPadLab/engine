@@ -1,0 +1,86 @@
+@import "compass/css3/images";
+@import "compass/css3/border-radius";
+@import "compass/css3/text-shadow";
+@import "compass/css3/box-shadow";
+@import "helpers";
+
+.list-nav {
+
+    & > ul {
+      height: 58px;
+      margin: 0px;
+
+      & > li {
+        float: left;
+        margin: 15px 7px 0 8px;
+        @include border-radius(16px);
+
+        &.hoverable > a span {
+          i {
+            position: relative;
+            left: 6px;
+          }
+        }
+
+        & > a {
+          display: inline-block;
+          @include border-radius(16px);
+
+          @include box-shadow(rgba(255, 255, 255, 0.2) 0 1px 0 0 inset, rgba(255, 255, 255, 0.1) 0 1px 0 0);
+
+          border: 1px solid rgba(0, 0, 0, 0.4);
+          border-top: 1px solid rgba(0, 0, 0, 0.3);
+          padding: 0px 16px 0px 16px;
+          line-height: 26px;
+          outline: none;
+          text-decoration: none;
+
+          span {
+            color: #fff;
+            font-size: 13px;
+            font-weight: normal;
+            @include single-text-shadow(rgba(0, 0, 0, 1), 1px, 1px, 1px);
+          }
+
+          &:hover {
+            border: 1px solid rgba(0, 0, 0, 0.9);
+            border-top: 1px solid rgba(0, 0, 0, 0.8);
+          }
+
+          &.on, &:active {
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid transparent;
+            @include box-shadow(rgba(0, 0, 0, 0) 0 1px 0 0 inset, rgba(255, 255, 255, 0.2) 0 1px 0 0);
+          }
+
+          &.hover {
+            background: #fff !important;
+            border-color: transparent !important;
+            border-color-bottom: #fff;
+            padding-bottom: 0px;
+            @include border-bottom-radius(0px); // !important is missing here
+            position: relative;
+            z-index: 998;
+
+            span {
+              color: #8b8d9a;
+              text-shadow: none;
+              @include box-shadow(transparent 0 0 0 0);
+            }
+
+            & > em {
+              @include absolute-position(bottom, 1px, right, -17px);
+              @include border-bottom-left-radius(16px);
+              @include box-shadow(-4px 4px 0 2px #fff);
+              clip: rect(0px, 16px, 16px, 0px);
+              width: 16px;
+              height: 16px;
+              background: transparent none no-repeat 0 0;
+            }
+          }
+        } // > a
+
+      } // > li
+    } // > ul
+  }

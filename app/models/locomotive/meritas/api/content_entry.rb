@@ -52,7 +52,7 @@ module Locomotive
       end
 
       def group_content_type
-        @group_content_type ||= @site.content_types.where(slug: "groups").first
+        @group_content_type ||= @site.content_types.groups.first
       end
 
       # FUNCTION
@@ -61,7 +61,7 @@ module Locomotive
       end
 
       def function_content_type
-        @function_content_type ||= @site.content_types.where(slug: "functions").first
+        @function_content_type ||= @site.content_types.functions.first
       end
 
       #FUNCTION

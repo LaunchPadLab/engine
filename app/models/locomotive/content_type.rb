@@ -41,6 +41,9 @@ module Locomotive
 
     ## named scopes ##
     scope :ordered, order_by(updated_at: :desc)
+    scope :events, where(slug: "events")
+    scope :functions, where(slug: "functions")
+    scope :groups, where(slug: "groups")
 
     ## indexes ##
     index site_id: 1, slug: 1

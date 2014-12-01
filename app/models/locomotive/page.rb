@@ -31,6 +31,7 @@ module Locomotive
     field :locales,             type: Array
     field :published,           type: Boolean, default: false
     field :group_id
+    field :function_id
     field :cache_strategy,      default: 'none'
     field :response_type,       default: 'text/html'
 
@@ -81,13 +82,22 @@ module Locomotive
 
     def group
       return nil unless group_id.present?
-      site.content_types.where(slug: "groups").first
+      site.content_types.groups.first
     end
 
     def events
-      return [] unless group_id.present?
-      content_type = site.content_types.where(slug: "events").first
+      return [] unless group_id.present? || function_id.present?
+      content_type = site.content_types.events.first
+      group_or_function = group_id.present? ? :group : :function
+      content_type.entries.where(group_or_function => send("#{group_or_function.to_s}_id")).where(:start_time.gte => DateTime.now).order_by("start_time ASC").limit(3)
+    end
+
+    def group_events
       content_type.entries.where(group: group_id).where(:start_time.gte => DateTime.now).order_by("start_time ASC").limit(3)
+    end
+
+    def function_events
+      content_type.entries.where(function: function_id).where(:start_time.gte => DateTime.now).order_by("start_time ASC").limit(3)
     end
 
     def render(context, options = {})

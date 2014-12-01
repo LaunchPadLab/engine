@@ -20,6 +20,10 @@
 
   = f.input :slug, required: false, hint: @page.slug.blank? ? t('.empty_slug') : public_page_url(@page, locale: current_content_locale), input_html: { :'data-url' => get_path_pages_path, disabled: @page.index? || @page.not_found? }, wrapper_html: { style: "#{'display: none' if @page.templatized? && !@page.templatized_from_parent?};", class: 'em-inline-hints' }
 
+  = f.input :function_id, as: :select, label: "Function", collection: options_for_select(functions_for_select, selected: f.object.function_id), input_html: { class: 'simple-toggle' }
+
+  = f.input :group_id, as: :select, label: "Group / Team", collection: options_for_select(groups_for_select, selected: f.object.group_id), input_html: { class: 'simple-toggle' }
+
 = f.inputs name: :seo, class: "inputs foldable #{'folded' if inputs_folded?(@page)}" do
 
   = f.input :seo_title
@@ -54,8 +58,6 @@
   = f.input :published, as: :'Locomotive::Toggle', input_html: { class: 'simple-toggle' }
 
   = f.input :listed, as: :'Locomotive::Toggle', input_html: { class: 'simple-toggle' }
-
-  = f.input :group_id, as: :select, label: "Group / Team", collection: options_for_select(groups_for_select, selected: f.object.group_id), input_html: { class: 'simple-toggle' }
 
   = f.input :redirect, as: :'Locomotive::Toggle', wrapper_html: { style: "#{'display: none' if @page.templatized? || !@page.default_response_type?}" }
 

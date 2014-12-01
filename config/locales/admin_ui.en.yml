@@ -48,6 +48,7 @@ en:
         account: My account
         approvals: My Pending Approvals
         public_resources: Public Resources
+        import_events: Import Events
         site: Site
         theme_assets: Theme files
         translations: Translations

@@ -4,7 +4,6 @@ module Locomotive
     include Locomotive::Mongoid::Document
 
     MINIMAL_ATTRIBUTES = %w(_id title slug fullpath position depth published templatized target_klass_name redirect listed response_type parent_id parent_ids site_id created_at updated_at)
-    WHITELISTED_PAGES = [["portal", "sign_in"], ["portal", "sign_up"]]
     PORTAL_HOME_HANDLE = "portal"
 
     ## Extensions ##
@@ -31,6 +30,8 @@ module Locomotive
     field :raw_template,        localize: true
     field :locales,             type: Array
     field :published,           type: Boolean, default: false
+    field :group_id
+    field :function_id
     field :cache_strategy,      default: 'none'
     field :response_type,       default: 'text/html'
 
@@ -73,13 +74,30 @@ module Locomotive
       site.pages.where(handle: PORTAL_HOME_HANDLE).first || site.pages.where(fullpath: PORTAL_HOME_HANDLE).first
     end
 
-    def self.sign_in_page(site)
-      site.pages.where(handle: "sign_in").first || site.pages.where(slug: "sign_in").first
+    def self.find_template(args = {})
+      site = args[:site]
+      fullpath = args[:fullpath]
+      site.pages.where(fullpath: fullpath).first
     end
 
-    def self.whitelisted?(args = {})
-      controller, action = args[:controller], args[:action]
-      WHITELISTED_PAGES.include?([controller, action])
+    def group
+      return nil unless group_id.present?
+      site.content_types.groups.first
+    end
+
+    def events
+      return [] unless group_id.present? || function_id.present?
+      content_type = site.content_types.events.first
+      group_or_function = group_id.present? ? :group : :function
+      content_type.entries.where(group_or_function => send("#{group_or_function.to_s}_id")).where(:start_time.gte => DateTime.now).order_by("start_time ASC").limit(3)
+    end
+
+    def group_events
+      content_type.entries.where(group: group_id).where(:start_time.gte => DateTime.now).order_by("start_time ASC").limit(3)
+    end
+
+    def function_events
+      content_type.entries.where(function: function_id).where(:start_time.gte => DateTime.now).order_by("start_time ASC").limit(3)
     end
 
     def render(context, options = {})

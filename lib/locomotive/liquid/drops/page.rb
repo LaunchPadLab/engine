@@ -87,6 +87,14 @@ module Locomotive
           @_source.no_follow
         end
 
+        def group
+          @_source.group
+        end
+
+        def events
+          @_source.events
+        end
+
       end
     end
   end

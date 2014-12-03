@@ -9,6 +9,24 @@ namespace :locomotive do
   #   puts '...done'
   # end
 
+  task generate_default_pages: :environment do
+    Locomotive::Site.all.each do |site|
+      pages = site.pages
+      paths_of_pages_needed = Extensions::Page::Defaults::REQUIRED_PATHS - self.pages.map(&:fullpath)
+      paths_of_pages_needed.each do |path|
+        Locomotive::Extensions::Page::Defaults.new(site: site, path: path).create
+      end
+    end
+
+    def ensure_default_pages_exist
+      default_pages_exist?
+    end
+
+    def default_pages_exist?
+
+    end
+  end
+
   desc 'Rebuild the serialized template of all the site pages'
   task rebuild_serialized_page_templates: :environment do
     Locomotive::Site.all.each do |site|

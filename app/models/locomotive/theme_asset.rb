@@ -14,6 +14,7 @@ module Locomotive
     field :size,          type: Integer
     field :folder,        default: nil
     field :checksum
+    field :all_sites, type: Boolean, default: false
 
     mount_uploader :source, ThemeAssetUploader, mount_on: :source_filename, validate_integrity: true
 
@@ -43,7 +44,7 @@ module Locomotive
 
     ## accessors ##
     attr_accessor   :plain_text_name, :plain_text, :plain_text_type, :performing_plain_text
-    attr_accessible :folder, :source, :plain_text_type, :performing_plain_text, :plain_text_name, :plain_text
+    attr_accessible :folder, :source, :plain_text_type, :performing_plain_text, :plain_text_name, :plain_text, :all_sites
 
     ## methods ##
 
@@ -105,7 +106,7 @@ module Locomotive
     end
 
     def self.all_grouped_by_folder(site)
-      assets = site.theme_assets.order_by(:slug.asc)
+      assets = site.all_theme_assets.order_by(:slug.asc)
       assets.group_by { |a| a.folder.split('/').first.to_sym }
     end
 
@@ -154,7 +155,7 @@ module Locomotive
 
         sanitized_path = path.gsub(/[("')]/, '').gsub(/^\//, '').gsub(/\?[0-9]+$/, '')
 
-        if asset = self.site.theme_assets.where(local_path: sanitized_path).first
+        if asset = self.site.all_theme_assets.where(local_path: sanitized_path).first
           timestamp = self.updated_at.to_i
           "#{path.first}#{asset.source.url}?#{timestamp}#{path.last}"
         else

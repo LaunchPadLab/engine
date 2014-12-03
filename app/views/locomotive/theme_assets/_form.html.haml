@@ -33,3 +33,4 @@
 
 = f.inputs name: :options, class: "inputs foldable #{'folded' if inputs_folded?(@theme_asset)}" do
   = f.input :folder
+  = f.input :all_sites, as: :'Locomotive::Toggle', input_html: { class: 'simple-toggle' }, label: "For All Sites"

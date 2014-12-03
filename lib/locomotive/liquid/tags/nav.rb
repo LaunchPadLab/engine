@@ -26,7 +26,7 @@ module Locomotive
 
             @options[:add_attributes] = []
             if @options[:snippet]
-              template = @options[:snippet].include?('{') ? @options[:snippet] : context[:site].snippets.where(slug: @options[:snippet] ).try(:first).try(:template)
+              template = @options[:snippet].include?('{') ? @options[:snippet] : context[:site].all_snippets.where(slug: @options[:snippet] ).try(:first).try(:template)
               unless template.blank?
                 @options[:liquid_render] = ::Liquid::Template.parse(template)
                 @options[:add_attributes] = ['editable_elements']

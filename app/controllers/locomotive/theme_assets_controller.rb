@@ -6,15 +6,16 @@ module Locomotive
     respond_to :json, only: [:index, :create, :update, :destroy]
 
     def index
+      snippets_to_show = can?(:manage, All) ? 'all_snippets' : 'snippets'
       respond_to do |format|
         format.html {
           @assets             = ThemeAsset.all_grouped_by_folder(current_site)
           @js_and_css_assets  = (@assets[:javascripts] || []) + (@assets[:stylesheets] || [])
-          @snippets           = current_site.snippets.order_by(:name.asc).all.to_a
+          @snippets           = current_site.send(snippets_to_show).order_by(:name.asc).all.to_a
           render
         }
         format.json {
-          render json: current_site.theme_assets.by_content_type(params[:content_type])
+          render json: current_site.all_theme_assets.by_content_type(params[:content_type])
         }
       end
     end
@@ -30,19 +31,19 @@ module Locomotive
     end
 
     def edit
-      @theme_asset = current_site.theme_assets.find(params[:id])
+      @theme_asset = current_site.all_theme_assets.find(params[:id])
       @theme_asset.performing_plain_text = true if @theme_asset.stylesheet_or_javascript?
       respond_with @theme_asset
     end
 
     def update
-      @theme_asset = current_site.theme_assets.find(params[:id])
+      @theme_asset = current_site.all_theme_assets.find(params[:id])
       @theme_asset.update_attributes(params[:theme_asset])
       respond_with @theme_asset, location: edit_theme_asset_path(@theme_asset._id)
     end
 
     def destroy
-      @theme_asset = current_site.theme_assets.find(params[:id])
+      @theme_asset = current_site.all_theme_assets.find(params[:id])
       @theme_asset.destroy
       respond_with @theme_asset
     end

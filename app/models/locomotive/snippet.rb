@@ -8,6 +8,7 @@ module Locomotive
     field :name
     field :slug
     field :template, localize: true
+    field :all_sites, type: Boolean, default: false
 
     ## associations ##
     belongs_to :site, class_name: 'Locomotive::Site', validate: false, autosave: false
@@ -23,7 +24,7 @@ module Locomotive
     ## behaviours ##
     slugify_from    :name
     attr_protected  :id
-    attr_accessible :name, :slug, :template
+    attr_accessible :name, :slug, :template, :all_sites
 
     ## methods ##
 

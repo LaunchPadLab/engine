@@ -12,6 +12,7 @@ module Locomotive
 
     def groups_for_select
       content_type = current_site.content_types.groups.first
+      return [] unless content_type
       hash = {}
       content_type.entries.each {|e| hash[e.name] = e._id }
       return hash
@@ -19,6 +20,7 @@ module Locomotive
 
     def functions_for_select
       content_type = current_site.content_types.functions.first
+      return [] unless content_type
       hash = {}
       content_type.entries.each {|e| hash[e.name] = e._id }
       return hash

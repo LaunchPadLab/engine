@@ -15,7 +15,7 @@ module Locomotive
     end
 
     def show
-      @snippet = current_site.snippets.find(params[:id])
+      @snippet = current_site.all_snippets.find(params[:id])
       respond_with @snippet
     end
 
@@ -25,18 +25,18 @@ module Locomotive
     end
 
     def edit
-      @snippet = current_site.snippets.find(params[:id])
+      @snippet = current_site.all_snippets.find(params[:id])
       respond_with @snippet
     end
 
     def update
-      @snippet = current_site.snippets.find(params[:id])
+      @snippet = current_site.all_snippets.find(params[:id])
       @snippet.update_attributes(params[:snippet])
       respond_with @snippet, location: edit_snippet_path(@snippet._id)
     end
 
     def destroy
-      @snippet = current_site.snippets.find(params[:id])
+      @snippet = current_site.all_snippets.find(params[:id])
       @snippet.destroy
       respond_with @snippet, location: theme_assets_path
     end

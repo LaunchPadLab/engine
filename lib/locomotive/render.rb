@@ -221,7 +221,7 @@ module Locomotive
         logger:                     Rails.logger,
         current_locomotive_account: current_locomotive_account,
         current_portal_user:        current_portal_user,
-        theme_assets_checksum:      Locomotive.config.theme_assets_checksum ? current_site.theme_assets.checksums : {},
+        theme_assets_checksum:      Locomotive.config.theme_assets_checksum ? current_site.all_theme_assets.checksums : {},
         asset_host:                 Locomotive::Liquid::AssetHost.new(request, current_site, Locomotive.config.asset_host)
       }
     end

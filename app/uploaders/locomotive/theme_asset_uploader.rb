@@ -14,6 +14,8 @@ module Locomotive
     end
 
     def self.url_for(site, path)
+      obj = site.all_theme_assets.where(local_path: path).first
+      site = obj.present? ? obj.site : site
       build(site, path).url
     end
 

@@ -46,6 +46,14 @@ module Locomotive
 
     ## methods ##
 
+    def all_snippets
+      Snippet.or({site: self}, {all_sites: true})
+    end
+
+    def all_theme_assets
+      ThemeAsset.or({site: self}, {all_sites: true})
+    end
+
     def portal_home_id
       @portal_home_id ||= Page.portal_home(self).try(:_id).try(:to_s) || ''
     end

@@ -3,7 +3,7 @@ module Locomotive
 
     ## properties ##
 
-    properties  :name, :slug, :template
+    properties  :name, :slug, :all_sites, :template
     property    :updated_at, only_getter: true
 
     ## other getters / setters ##

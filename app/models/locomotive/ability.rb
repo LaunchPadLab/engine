@@ -34,6 +34,8 @@ module Locomotive
 
     def setup_default_permissions!
       cannot :manage, :all
+
+      can :manage, PublicResource
     end
 
     def setup_beginner_user_permissions!

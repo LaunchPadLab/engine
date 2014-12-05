@@ -2,7 +2,7 @@ module Locomotive
   class Meritas::Api::ContentEntry
 
     attr_reader :params, :content_type, :site
-    attr_accessor :content_entries, :unpaginated_entries
+    attr_accessor :content_entries
 
     MERITAS_CUSTOM_CONTENT_TYPES = %w(events)
 
@@ -11,17 +11,11 @@ module Locomotive
       @params = args[:params]
       @content_type = args[:content_type]
       @site = args[:site]
-      @items_per_page = (params[:items_per_page] || 6).to_f
     end
 
     def entries
       return @content_entries unless MERITAS_CUSTOM_CONTENT_TYPES.include?(slug)
       send("#{slug}_entries")
-    end
-
-    def entries_page_count
-      events_entries
-      (@content_entries.count / @items_per_page).ceil
     end
 
     private
@@ -31,24 +25,25 @@ module Locomotive
       end
 
       def events_entries
-        filter_by_start_date if params[:start_date].present?
-        filter_by_end_date if params[:end_date].present?
+        filter_by_date_range if start_date.present? && end_date.present?
         filter_by_function if params[:function_id].present?
         filter_by_group if params[:group_id].present?
         filter_by_publish_to if params[:calendar].present?
-        filter_by_page if params[:page].present?
-        @content_entries
+        return @content_entries
       end
 
-      # DATE RANGE
-      def filter_by_start_date
+      def start_date
+        @start_date ||= params[:start_date]
+      end
+
+      def end_date
+        @end_date ||= params[:start_date]
+      end
+
+      def filter_by_date_range
         start_date = Date.parse(params[:start_date])
-        @content_entries = @content_entries.where(:start_time.gte => start_date)
-      end
-
-      def filter_by_end_date
         end_date = Date.parse(params[:end_date])
-        @content_entries = @content_entries.where(:end_time.lte => end_date)
+        @content_entries = @content_entries.where(:start_time.gte => start_date, :end_time.lte => end_date)
       end
 
       # GROUP
@@ -79,10 +74,5 @@ module Locomotive
         @content_entries = @content_entries.where(:publish_to_id.in => ids)
       end
 
-      # PAGE
-      def filter_by_page
-        page = params[:page].to_i
-        @content_entries = @content_entries.skip(page*@items_per_page).limit(@items_per_page)
-      end
   end
 end

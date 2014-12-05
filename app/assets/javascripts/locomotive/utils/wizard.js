@@ -146,10 +146,8 @@ var Wizard = (function () {
           $('.form-actions', this.el).hide();
         }
         if (currentView.getPrevious() === null) {
-          $('.btn-back', this.el).show();
           $('.btn-previousView', this.el).hide();
         } else {
-          $('.btn-back', this.el).hide();
           $('.btn-previousView', this.el).show();
         }
 

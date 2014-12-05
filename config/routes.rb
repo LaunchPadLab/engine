@@ -64,7 +64,7 @@ Locomotive::Engine.routes.draw do
           get "new_schedule"
         end
         collection do
-          get 'tags'
+          get 'snippets'
           post 'preview'
           post 'quick_message'
         end

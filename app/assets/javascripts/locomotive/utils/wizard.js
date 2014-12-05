@@ -67,6 +67,7 @@ var Wizard = (function () {
     var _tail    = null;
     var _current = null;
     var _errors  = {};
+    var _count = 0;
     return {
       first: function () { return _head; },
       last: function () { return _tail; },
@@ -78,6 +79,7 @@ var Wizard = (function () {
       }, //set current to previous and return current or return null
       getCurrent: function () { return _current; },
       insertView: function (view) {
+        _count++;
         if (_tail === null) { // list is empty (implied head is null)
           _current = _tail = _head = new Node(view);
         }
@@ -95,6 +97,9 @@ var Wizard = (function () {
       },
       errors: function(){
         return _errors;
+      },
+      length: function(){
+        return _count;
       },
       validateCurrentView: function() {
         return _current.validate();
@@ -177,9 +182,9 @@ var Wizard = (function () {
 
       var tab = view.tab;
       view.tab = view.tab.replace(/\s/g, '-');
-
+      var i = this.wizardViews.length()+1;
       this.wizardViewTabs.
-        append('<li class="entry"><div class="left"><span></span></div><a href="#' + view.tab + '" title="' + view.tab + '"><span>' + tab + '</span></a><div class="right"><span></span></div></li>');
+        append('<li class="entry"><div class="left"><span></span></div><a href="#' + view.tab + '" title="' + view.tab + '"><span>' + i +". " + tab + '</span></a><div class="right"><span></span></div></li>');
 
       this.wizardViewContainer.append($(view.ref.render().el).hide());
       this.wizardViews.insertView(view);

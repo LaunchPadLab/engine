@@ -64,7 +64,7 @@ Locomotive::Engine.routes.draw do
           get "new_schedule"
         end
         collection do
-          get 'tags'
+          get 'snippets'
           post 'preview'
           post 'quick_message'
         end
@@ -156,6 +156,7 @@ Rails.application.routes.draw do
 
     namespace :public_api do
       resources :content_entries, path: 'content_types/:slug/entries'
+      get 'content_types/:slug/entries_page_count', to: 'content_entries#page_count'
     end
   end
 

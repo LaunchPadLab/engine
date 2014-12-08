@@ -108,8 +108,6 @@ module Locomotive
 
       can :manage, Membership
 
-      can :manage, User
-
       can :manage, "Portal"
 
       can :manage, User
@@ -153,8 +151,6 @@ module Locomotive
       cannot :create, Site
 
       can :manage, Membership
-
-      can :manage, User
 
       can :manage, "Portal"
 

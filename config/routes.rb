@@ -65,6 +65,7 @@ Locomotive::Engine.routes.draw do
         end
         collection do
           get 'snippets'
+          get 'templates'
           post 'preview'
           post 'quick_message'
         end

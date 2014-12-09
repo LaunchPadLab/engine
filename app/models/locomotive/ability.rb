@@ -72,6 +72,11 @@ module Locomotive
       can :read, ContentType
 
       can :manage, "Portal"
+
+      can :manage, User
+      can :manage, Import::User
+      can :manage, Import::Event
+      can :manage, Invitation
     end
 
     def setup_site_admin_permissions!
@@ -104,6 +109,11 @@ module Locomotive
       can :manage, Membership
 
       can :manage, "Portal"
+
+      can :manage, User
+      can :manage, Import::User
+      can :manage, Import::Event
+      can :manage, Invitation
 
       cannot :grant_admin, Membership
 
@@ -143,6 +153,11 @@ module Locomotive
       can :manage, Membership
 
       can :manage, "Portal"
+
+      can :manage, User
+      can :manage, Import::User
+      can :manage, Import::Event
+      can :manage, Invitation
 
       can :manage, "Lyris"
 

@@ -197,7 +197,8 @@ module Locomotive
 
         def do_not_show?(page)
           return true if !page.listed? || page.templatized? || !page.published?
-          return true if page.user_type != ::Locomotive::User::ALL && page.user_type != @portal_user.type
+          return false if @portal_user.nil? || @portal_user.type == ::Locomotive::User::ALL
+          return true if page.user_type != @portal_user.type
         end
 
         # Determines whether or not a page should be a part of the menu

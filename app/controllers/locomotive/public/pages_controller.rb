@@ -16,7 +16,7 @@ module Locomotive
 
       before_filter :set_locale, only: [:show, :edit]
 
-      before_filter :authenticate_portal_user!, only: [:show], unless: :public_page?
+      before_filter :authenticate_portal_user, only: [:show], unless: :public_page?
 
       helper Locomotive::BaseHelper
 
@@ -51,6 +51,13 @@ module Locomotive
         ::I18n.locale = ::Mongoid::Fields::I18n.locale
 
         self.setup_i18n_fallbacks
+      end
+
+      def authenticate_portal_user
+        authenticate_portal_user!
+        return if current_site.has_user?(current_portal_user)
+        sign_out(current_portal_user)
+        return redirect_to '/portal/users/sign_in', error: "Please make sure the login credentials pertain to #{current_site.name}'s portal."
       end
 
     end

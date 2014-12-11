@@ -20,6 +20,8 @@
 
         #content
           .inner
+            .breadcrumbs
+              = yield :breadcrumbs
             %h2!= title
 
             #local-actions-bar

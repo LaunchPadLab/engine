@@ -56,7 +56,12 @@ Locomotive::Engine.routes.draw do
   # lyris resources
   namespace :lyris do
     resources :lists do
-      resources :members
+      resources :members do
+        collection do
+          delete 'destroy_collection'
+          put 'update_collection'
+        end
+      end
       resources :messages do
         member do
           get "copy"

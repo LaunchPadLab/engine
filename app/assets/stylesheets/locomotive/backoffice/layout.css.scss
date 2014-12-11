@@ -91,7 +91,7 @@ body {
     top: -1px;
     padding-bottom: 8px;
 
-    > div.inner {
+    > div.inner, .breadcrumbs {
       position: relative;
       margin: 0px 8px;
       padding: 10px 15px 66px 15px;
@@ -99,11 +99,6 @@ body {
       // z-index: 100;
 
       background: #fff;
-
-      @include box-shadow(rgba(0, 0, 0, 0.3) 0px 0px 6px 4px);
-      @include border-bottom-radius(4px);
-
-      min-height: 290px;
 
       h2 {
         @include locomotive-link;
@@ -136,7 +131,15 @@ body {
         @include locomotive-link;
       } // > div.inner p
     } // #content > div.inner
-
+    > div.inner {
+      @include box-shadow(rgba(0, 0, 0, 0.3) 0px 0px 6px 4px);
+      @include border-bottom-radius(4px);
+      min-height: 290px;
+    }
+    .breadcrumbs {
+      min-height: 1em;
+      padding: 0.5em 0.25em;
+    }
     #local-actions-bar {
       position: absolute;
       top: 16px;

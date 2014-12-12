@@ -46,6 +46,15 @@ module Locomotive
 
     ## methods ##
 
+    def all_users
+      (Locomotive::User.where(is_super_admin: true) + Locomotive::User.where(site: self)).uniq
+    end
+
+    def has_user?(user)
+      return false if user.nil?
+      all_users.detect { |u| u._id.to_s == user._id.to_s }.present?
+    end
+
     def portal_home_id
       @portal_home_id ||= Page.portal_home(self).try(:_id).try(:to_s) || ''
     end

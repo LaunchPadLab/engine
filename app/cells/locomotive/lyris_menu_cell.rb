@@ -5,9 +5,10 @@ module Locomotive
 
     def build_list
       add :lists, url: lyris_lists_path
-      # add :announcements, url: announcements_path
-      # add :events, url: events_path
-      # add :resources, url: resources_path
+      if params[:list_id] || (params[:action]=="show" && params[:controller]=="locomotive/lyris/lists")
+        list_id = params[:list_id] ? params[:list_id] : params[:id]
+        add :messages, url: lyris_list_messages_path(list_id)
+      end
     end
 
   end

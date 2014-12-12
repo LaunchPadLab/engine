@@ -45,6 +45,7 @@ module Locomotive
     scope :functions, where(slug: "functions")
     scope :groups, where(slug: "groups")
     scope :venues, where(slug: "venues")
+    scope :subgroups, where(slug: "subgroups")
 
     ## indexes ##
     index site_id: 1, slug: 1

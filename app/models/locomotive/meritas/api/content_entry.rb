@@ -35,6 +35,7 @@ module Locomotive
         filter_by_end_date if params[:end_date].present?
         filter_by_function if params[:function_id].present?
         filter_by_group if params[:group_id].present?
+        filter_by_subgroup if params[:subgroup_id].present?
         filter_by_publish_to if params[:calendar].present?
         filter_by_page if params[:page].present?
         @content_entries
@@ -49,6 +50,15 @@ module Locomotive
       def filter_by_end_date
         end_date = Date.parse(params[:end_date])
         @content_entries = @content_entries.where(:end_time.lte => end_date)
+      end
+
+      # SUBGROUP
+      def filter_by_subgroup
+        @content_entries = @content_entries.where(subgroup: params[:subgroup_id])
+      end
+
+      def subgroup_content_type
+        @group_content_type ||= @site.content_types.subgroups.first
       end
 
       # GROUP

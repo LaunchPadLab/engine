@@ -10,19 +10,27 @@ module Locomotive
       hash
     end
 
-    def groups_for_select
-      @group_content_type ||= current_site.content_types.groups.first
-      hash = {}
-      return hash unless @group_content_type.present?
-      @group_content_type.entries.each {|e| hash[e.name] = e._id }
-      return hash
-    end
-
     def functions_for_select
       @function_content_type ||= current_site.content_types.functions.first
       hash = {}
       return hash unless @function_content_type.present?
       @function_content_type.entries.each {|e| hash[e.name] = e._id }
+      return hash
+    end
+
+    def groups_for_select
+      @group_content_type ||= current_site.content_types.groups.first
+      hash = {}
+      return hash unless @group_content_type.present?
+      @group_content_type.entries.each {|e| hash["#{e.function.name} / #{e.name}"] = e._id }
+      return hash
+    end
+
+    def subgroups_for_select
+      @subgroup_content_type ||= current_site.content_types.subgroups.first
+      hash = {}
+      return hash unless @subgroup_content_type.present?
+      @subgroup_content_type.entries.each {|e| hash["#{e.group.function.name} / #{e.group.name} / #{e.name}"] = e._id }
       return hash
     end
 

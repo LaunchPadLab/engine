@@ -48,7 +48,7 @@ module Locomotive
     ## methods ##
 
     def stylesheet_or_javascript?
-      self.stylesheet? || self.javascript?
+      self.stylesheet? || self.javascript? || self.html?
     end
 
     def local_path(short = false)
@@ -87,7 +87,6 @@ module Locomotive
 
     def store_plain_text
       return if self.persisted? && !self.stylesheet_or_javascript?
-
       self.content_type ||= @plain_text_type if self.performing_plain_text?
 
       data = self.performing_plain_text? ? self.plain_text : self.source.read
@@ -98,7 +97,7 @@ module Locomotive
 
       self.source = ::CarrierWave::SanitizedFile.new({
         tempfile: StringIO.new(sanitized_source),
-        filename: "#{self.plain_text_name}.#{self.stylesheet? ? 'css' : 'js'}"
+        filename: "#{self.plain_text_name}.#{get_extension}"
       })
 
       @plain_text = sanitized_source # no need to reset the plain_text instance variable to have the last version
@@ -127,6 +126,16 @@ module Locomotive
       self.source_filename || self.source.send(:original_filename) rescue nil
     end
 
+    def get_extension
+      if self.stylesheet?
+        'css'
+      elsif self.html?
+        'html'
+      else
+        'js'
+      end
+    end
+
     def sanitize_folder
       self.folder = self.content_type.to_s.pluralize if self.folder.blank?
 
@@ -134,7 +143,7 @@ module Locomotive
       self.folder = ActiveSupport::Inflector.transliterate(self.folder).gsub(/(\s)+/, '_').gsub(/^\//, '').gsub(/\/$/, '')
 
       # folder should begin by a root folder
-      if (self.folder =~ /^(stylesheets|javascripts|images|media|fonts|pdfs|others)($|\/)+/).nil?
+      if (self.folder =~ /^(stylesheets|javascripts|emails|images|media|fonts|pdfs|others)($|\/)+/).nil?
         self.folder = File.join(self.content_type.to_s.pluralize, self.folder)
       end
     end
@@ -150,7 +159,7 @@ module Locomotive
     def escape_shortcut_urls(text)
       return if text.blank?
 
-      text.gsub(/[("'](\/(stylesheets|javascripts|images|media|fonts|pdfs|others)\/(([^;.]+)\/)*([a-zA-Z_\-0-9]+)\.[a-z]{2,4})(\?[0-9]+)?[)"']/) do |path|
+      text.gsub(/[("'](\/(stylesheets|javascripts|images|emails|media|fonts|pdfs|others)\/(([^;.]+)\/)*([a-zA-Z_\-0-9]+)\.[a-z]{2,4})(\?[0-9]+)?[)"']/) do |path|
 
         sanitized_path = path.gsub(/[("')]/, '').gsub(/^\//, '').gsub(/\?[0-9]+$/, '')
 
@@ -166,10 +175,12 @@ module Locomotive
     def check_for_folder_changes
       # https://github.com/jnicklas/carrierwave/issues/330
       # https://github.com/jnicklas/carrierwave-mongoid/issues/23
+
       if self.persisted? && self.folder_changed? && !self.changed_attributes.key?('source_filename')
         # a simple way to rename a file
         old_asset         = self.class.where(_id: self._id).first # bypass memoization by mongoid
         file              = old_asset.source.file
+
         file.content_type = File.mime_type?(file.path) if file.content_type.nil?
         self.source       = file
         self.changed_attributes['source_filename'] = nil # delete the old file

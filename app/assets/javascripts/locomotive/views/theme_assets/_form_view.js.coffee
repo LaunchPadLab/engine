@@ -80,7 +80,12 @@ class Locomotive.Views.ThemeAssets.FormView extends Locomotive.Views.Shared.Form
     @image_picker_view.close()
 
   source_mode: ->
-    if @model.get('plain_text_type') == 'javascript' then 'javascript' else 'css'
+    if @model.get('plain_text_type') == 'javascript'
+      'javascript'
+    else if @model.get('plain_text_type') == 'html'
+      'HTML'
+    else
+      'css'
 
   enable_source_editing: ->
     input   = @$('#theme_asset_plain_text')

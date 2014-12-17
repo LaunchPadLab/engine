@@ -54,7 +54,7 @@ module Locomotive
 
       # GRADE
       def filter_by_grade
-        @content_entries = @content_entries.where(grade: params[:grade_id])
+        @content_entries = @content_entries.or({grade: params[:grade_id], grade: nil})
       end
 
       def grade_content_type

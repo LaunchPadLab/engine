@@ -172,7 +172,6 @@ var Wizard = (function () {
         $(currentView.getView().render().el).show();
 
         //show current errors
-        console.log(this.wizardViews.errors());
         currentView.show_errors(this.wizardViews.errors());
 
       }

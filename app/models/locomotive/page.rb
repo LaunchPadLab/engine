@@ -5,6 +5,7 @@ module Locomotive
 
     MINIMAL_ATTRIBUTES = %w(_id title slug fullpath position depth published templatized target_klass_name redirect listed response_type parent_id parent_ids site_id created_at updated_at)
     PORTAL_HOME_HANDLE = "portal"
+    EVENTS_PER_WIDGET = 3
 
     ## Extensions ##
     include Extensions::Page::Tree
@@ -30,6 +31,7 @@ module Locomotive
     field :raw_template,        localize: true
     field :locales,             type: Array
     field :published,           type: Boolean, default: false
+    field :subgroup_id
     field :group_id
     field :function_id
     field :cache_strategy,      default: 'none'
@@ -80,24 +82,34 @@ module Locomotive
       site.pages.where(fullpath: fullpath).first
     end
 
+    def lowest_level_event_category
+      [:subgroup, :group, :function].each do |category|
+        return category if send("#{category}_id").present?
+      end
+    end
+
     def group
       return nil unless group_id.present?
       site.content_types.groups.first
     end
 
     def events
-      return [] unless group_id.present? || function_id.present?
+      return [] unless [group_id, function_id, subgroup_id].compact.any?
       content_type = site.content_types.events.first
-      group_or_function = group_id.present? ? :group : :function
-      content_type.entries.where(group_or_function => send("#{group_or_function.to_s}_id")).where(:start_time.gte => DateTime.now).order_by("start_time ASC").limit(3)
-    end
-
-    def group_events
-      content_type.entries.where(group: group_id).where(:start_time.gte => DateTime.now).order_by("start_time ASC").limit(3)
+      category_type = lowest_level_event_category
+      content_type.entries.where(category_type => send("#{category_type.to_s}_id")).where(:start_time.gte => DateTime.now).order_by("start_time ASC").limit(EVENTS_PER_WIDGET)
     end
 
     def function_events
-      content_type.entries.where(function: function_id).where(:start_time.gte => DateTime.now).order_by("start_time ASC").limit(3)
+      content_type.entries.where(function: function_id).where(:start_time.gte => DateTime.now).order_by("start_time ASC").limit(EVENTS_PER_WIDGET)
+    end
+
+    def group_events
+      content_type.entries.where(group: group_id).where(:start_time.gte => DateTime.now).order_by("start_time ASC").limit(EVENTS_PER_WIDGET)
+    end
+
+    def subgroup_events
+      content_type.entries.where(subgroup: subgroup_id).where(:start_time.gte => DateTime.now).order_by("start_time ASC").limit(EVENTS_PER_WIDGET)
     end
 
     def render(context, options = {})

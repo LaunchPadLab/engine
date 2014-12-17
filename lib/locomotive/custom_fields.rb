@@ -20,17 +20,17 @@ module CustomFields
     end
 
     def has_parent_dependency?
-      self.type == "belongs_to" && ["group", "grade"].include?(self.name)
+      self.type == "belongs_to" && ["group"].include?(self.name)
     end
 
     def parent
       return '' unless has_parent_dependency?
-      self.name == "group" ? "functions" : "groups"
+      "functions"
     end
 
     def child
-      return '' unless ["function", "group"].include?(self.name)
-      self.name == "function" ? "groups" : "grades"
+      return '' unless ["function"].include?(self.name)
+      "groups"
     end
 
     protected

@@ -44,7 +44,7 @@ module Locomotive
       # DATE RANGE
       def filter_by_start_date
         start_date = Date.parse(params[:start_date])
-        @content_entries = @content_entries.where(:start_time.gte => start_date)
+        @content_entries = @content_entries.where(:end_time.gte => start_date)
       end
 
       def filter_by_end_date

@@ -24,7 +24,7 @@ module Locomotive
       else
         @content_type.list_or_group_entries(options)
       end
-      @content_entries = Locomotive::Meritas::Api::ContentEntry.new(content_entries: @content_entries, params: params, content_type: @content_type, site: current_site).entries
+      # @content_entries = Locomotive::Meritas::Api::ContentEntry.new(content_entries: @content_entries, params: params, content_type: @content_type, site: current_site).entries
       respond_with @content_entries
     end
 

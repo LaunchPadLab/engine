@@ -26,11 +26,11 @@ module Locomotive
       return hash
     end
 
-    def subgroups_for_select
-      @subgroup_content_type ||= current_site.content_types.subgroups.first
+    def grades_for_select
+      @grade_content_type ||= current_site.content_types.grades.first
       hash = {}
-      return hash unless @subgroup_content_type.present?
-      @subgroup_content_type.entries.each {|e| hash["#{e.group.function.name} / #{e.group.name} / #{e.name}"] = e._id }
+      return hash unless @grade_content_type.present?
+      @grade_content_type.entries.each {|e| hash[e.name] = e._id }
       return hash
     end
 

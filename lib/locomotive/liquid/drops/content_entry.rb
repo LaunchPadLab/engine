@@ -46,7 +46,7 @@ module Locomotive
         def before_method(meth)
           return '' if @_source.nil?
 
-          if not @@forbidden_attributes.include?(meth.to_s)
+          if !@@forbidden_attributes.include?(meth.to_s) && @_source.respond_to?(meth.to_sym)
             value = @_source.send(meth)
 
             if value.respond_to?(:all) # check for an association

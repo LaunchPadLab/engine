@@ -77,6 +77,7 @@ Locomotive::Engine.routes.draw do
       end
       member do
         get 'new_import'
+        get 'template'
         post 'import'
         get 'upload_status'
       end

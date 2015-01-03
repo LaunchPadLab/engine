@@ -121,6 +121,7 @@ module Locomotive
       path = path.split('?').first # take everything before the query string or the lookup fails
       path.gsub!(/\.[a-zA-Z][a-zA-Z0-9]{2,}$/, '') # remove the page extension
       path.gsub!(/^\//, '') # remove the leading slash
+      path.downcase!
 
       path = 'index' if path.blank? || path == '_edit'
 

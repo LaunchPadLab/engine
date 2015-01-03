@@ -82,7 +82,8 @@ class Locomotive.Views.ContentEntries.FormView extends Locomotive.Views.Shared.F
           editor.save()
           $(textarea).trigger('changeSilently')
 
-      $(textarea).tinymce(settings)
+      name = $(textarea).attr('name')
+      CKEDITOR.replace(name)
 
   enable_select_fields: ->
     @_select_field_view = new Locomotive.Views.Shared.Fields.SelectView model: @content_type

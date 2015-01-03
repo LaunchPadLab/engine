@@ -16,7 +16,6 @@ class Locomotive.Views.EditableElements.ControlView extends Backbone.View
   after_render: ->
     if @model.get('widget_type') == 'Album'
       name = @$('textarea').attr('name')
-      console.log(name)
       CKEDITOR.replace(name)
 
   refresh: ->

@@ -35,7 +35,7 @@ module Locomotive
         filter_by_end_date if params[:end_date].present?
         filter_by_function if params[:function_id].present?
         filter_by_group if params[:group_id].present?
-        filter_by_subgroup if params[:subgroup_id].present?
+        filter_by_grade if params[:grade_id].present?
         filter_by_publish_to if params[:calendar].present?
         filter_by_page if params[:page].present?
         @content_entries
@@ -44,7 +44,7 @@ module Locomotive
       # DATE RANGE
       def filter_by_start_date
         start_date = Date.parse(params[:start_date])
-        @content_entries = @content_entries.where(:start_time.gte => start_date)
+        @content_entries = @content_entries.where(:end_time.gte => start_date)
       end
 
       def filter_by_end_date
@@ -52,13 +52,13 @@ module Locomotive
         @content_entries = @content_entries.where(:end_time.lte => end_date)
       end
 
-      # SUBGROUP
-      def filter_by_subgroup
-        @content_entries = @content_entries.where(subgroup: params[:subgroup_id])
+      # GRADE
+      def filter_by_grade
+        @content_entries = @content_entries.or({grade: params[:grade_id], grade: nil})
       end
 
-      def subgroup_content_type
-        @group_content_type ||= @site.content_types.subgroups.first
+      def grade_content_type
+        @group_content_type ||= @site.content_types.grades.first
       end
 
       # GROUP

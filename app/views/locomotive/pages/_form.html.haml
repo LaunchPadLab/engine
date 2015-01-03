@@ -26,8 +26,8 @@
   - if groups_for_select.any?
     = f.input :group_id, as: :select, label: "Group / Team", collection: options_for_select(groups_for_select, selected: f.object.group_id), input_html: { class: 'simple-toggle' }
 
-  - if subgroups_for_select.any?
-    = f.input :subgroup_id, as: :select, label: "Subgroup / Team", collection: options_for_select(subgroups_for_select, selected: f.object.subgroup_id), input_html: { class: 'simple-toggle' }
+  - if grades_for_select.any?
+    = f.input :grade_id, as: :select, label: "Grade Level", collection: options_for_select(grades_for_select, selected: f.object.grade_id), input_html: { class: 'simple-toggle' }
 
 = f.inputs name: :seo, class: "inputs foldable #{'folded' if inputs_folded?(@page)}" do
 

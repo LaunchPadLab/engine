@@ -63,8 +63,16 @@ module Locomotive
             when :many_to_many
               self.modify_with_scope_key(key, "#{key.to_s.singularize}_ids", self.object_to_id(field, value))
             when :select
-              option = field.select_options.detect { |option| [option.name, option._id.to_s].include?(value) }
-              self.modify_with_scope_key(key, "#{key.to_s}_id", option.try(:_id))
+              if value.is_a?(Array)
+                options = value.map do |val|
+                  option = field.select_options.detect { |option| [option.name, option._id.to_s].include?(val) }
+                end.compact
+                options = options.map {|opt| opt.try(:_id) }
+                self.modify_with_scope_key(key, "#{key.to_s}_id", options)
+              else
+                option = field.select_options.detect { |option| [option.name, option._id.to_s].include?(value) }
+                self.modify_with_scope_key(key, "#{key.to_s}_id", option.try(:_id))
+              end
             end
           end
         end

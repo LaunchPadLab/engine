@@ -71,18 +71,8 @@ class Locomotive.Views.ContentEntries.FormView extends Locomotive.Views.Shared.F
 
   enable_richtexteditor: ->
     _.each @$('li.input.rte textarea.html'), (textarea) =>
-      settings = _.extend {}, @tinyMCE_settings(),
-        oninit: ((editor) =>
-          $.cmd 'S', (() =>
-            editor.save()
-            $(textarea).trigger('changeSilently')
-            @$('form').trigger('submit')
-          ), [], ignoreCase: true, document: editor.dom.doc),
-        onchange_callback: (editor) =>
-          editor.save()
-          $(textarea).trigger('changeSilently')
-
-      $(textarea).tinymce(settings)
+      name = $(textarea).attr('name')
+      CKEDITOR.replace(name)
 
   enable_select_fields: ->
     @_select_field_view = new Locomotive.Views.Shared.Fields.SelectView model: @content_type

@@ -71,18 +71,8 @@ class Locomotive.Views.ContentEntries.FormView extends Locomotive.Views.Shared.F
 
   enable_richtexteditor: ->
     _.each @$('li.input.rte textarea.html'), (textarea) =>
-      settings = _.extend {}, @tinyMCE_settings(),
-        oninit: ((editor) =>
-          $.cmd 'S', (() =>
-            editor.save()
-            $(textarea).trigger('changeSilently')
-            @$('form').trigger('submit')
-          ), [], ignoreCase: true, document: editor.dom.doc),
-        onchange_callback: (editor) =>
-          editor.save()
-          $(textarea).trigger('changeSilently')
-
-      $(textarea).tinymce(settings)
+      name = $(textarea).attr('name')
+      CKEDITOR.replace(name)
 
   enable_select_fields: ->
     @_select_field_view = new Locomotive.Views.Shared.Fields.SelectView model: @content_type
@@ -162,7 +152,9 @@ class Locomotive.Views.ContentEntries.FormView extends Locomotive.Views.Shared.F
     @refresh_file_fields()
 
   reset: ->
+    console.log "reset"
     @$('li.input.string input[type=text], li.input.text textarea, li.input.date input[type=text]').val('').trigger('change')
+    console.log "resetting fields"
     _.each @$('li.input.rte textarea.html'), (textarea) => $(textarea).tinymce().setContent(''); $(textarea).trigger('change')
     _.each @_file_field_views, (view) => view.reset()
     @$('li.input.toggle input[type=checkbox]').checkToggle('sync')
@@ -178,4 +170,3 @@ class Locomotive.Views.ContentEntries.FormView extends Locomotive.Views.Shared.F
 
   tinyMCE_settings: ->
     window.Locomotive.tinyMCE.defaultSettings
-

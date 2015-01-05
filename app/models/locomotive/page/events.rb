@@ -24,7 +24,8 @@ module Locomotive
             group_id: page.group_id,
             grade_id: page.grade_id,
             items_per_page: EVENTS_PER_WIDGET,
-            page: 1
+            future_only: true,
+            page: 0
           }
         end
 

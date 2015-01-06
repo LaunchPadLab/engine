@@ -37,7 +37,8 @@ module Locomotive
         filter_by_function if params[:function_id].present?
         filter_by_group if params[:group_id].present?
         filter_by_grade if params[:grade_id].present?
-        filter_by_publish_to_and_user if @user
+        filter_by_publish_to if params[:calendar].present?
+        filter_by_user if params[:calendar] == 'portal' && @user
         filter_by_page if params[:page].present?
         @content_entries
       end
@@ -81,7 +82,15 @@ module Locomotive
       end
 
       #FUNCTION
-      def filter_by_publish_to_and_user
+      def filter_by_user
+        array = [@user.type, 'All']
+        field = @content_type.entries_custom_fields.where(name: "user_type").first
+        return unless field.present?
+        ids = field.select_options.map {|f| array.include?(f.name) ? f._id : nil }.compact
+        @content_entries = @content_entries.where(:user_type_id.in => ids)
+      end
+
+      def filter_by_publish_to
         calendar_hash = {
           "public" => ["Public Calendar", "All Calendars"],
           "portal" => ["Portal Calendar", "All Calendars"]
@@ -91,14 +100,6 @@ module Locomotive
         return unless field.present?
         ids = field.select_options.map {|f| array.include?(f.name) ? f._id : nil }.compact
         @content_entries = @content_entries.where(:publish_to_id.in => ids)
-
-        if params[:calendar] == 'portal'
-          array = [@user.type, 'All']
-          field = @content_type.entries_custom_fields.where(name: "user_type").first
-          return unless field.present?
-          ids = field.select_options.map {|f| array.include?(f.name) ? f._id : nil }.compact
-          @content_entries = @content_entries.where(:user_type_id.in => ids)
-        end
       end
 
       # PAGE

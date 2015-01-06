@@ -27,6 +27,17 @@ module Locomotive
           @_source.faculty? if logged_in?
         end
 
+        def student?
+          @_source.student? if logged_in?
+        end
+
+        def alumnus?
+          @_source.alumnus? if logged_in?
+        end
+
+        def boarding?
+          @_source.boarding? if logged_in?
+        end
       end
     end
   end

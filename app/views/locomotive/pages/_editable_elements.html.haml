@@ -30,19 +30,19 @@
   %label{ for: 'page_editable_elements_attributes_{{index}}_content', class: "widget-type-{{widget_type}} widget-index-{{widget_index}}" } {{label}}
 
   %span.file
+
+    = link_to '{{filename}}', '{{content}}', target: '_blank', id: "page_editable_elements_attributes_{{index}}_link", style: "{{#unless filename}}display:none;{{/unless}}"
+    = link_to 'Choose Image', '/ckeditor/folders?CKEditor=editable_file_{{index}}_ckeditor&editable_file_field_id=page_editable_elements_attributes_{{index}}&CKEditorFuncNum=1&langCode=en', target: "_blank"
     {{#if content}}
-    = link_to '{{filename}}', '{{content}}', target: '_blank'
-
-    = file_field_tag 'page[editable_elements_attributes][{{index}}][source]', id: 'page_editable_elements_attributes_{{index}}_source', style: 'display: none'
-
-    = link_to t('locomotive.pages.form.change_file'), '#', class: 'change', :'data-alt-label' => t('locomotive.pages.form.cancel')
     = link_to t('locomotive.pages.form.delete_file'), '#', class: 'delete', :'data-alt-label' => t('locomotive.pages.form.cancel')
-
     = hidden_field_tag 'page[editable_elements_attributes][{{index}}][remove_source]', '0', class: 'remove-flag'
-
-    {{else}}
-    = file_field_tag 'page[editable_elements_attributes][{{index}}][source]', id: 'page_editable_elements_attributes_{{index}}_source'
     {{/if}}
+
+    %div{style: "display:none;"}
+      = text_area_tag 'editable_file_{{index}}_ckeditor', '{{ content }}', id: 'editable_file_{{index}}_ckeditor', disabled: true
+
+    = hidden_field_tag 'page[editable_elements_attributes][{{index}}][remote_source_url]', '{{ content }}', id: 'page_editable_elements_attributes_{{index}}_source'
+    = hidden_field_tag 'page[editable_elements_attributes][{{index}}][filename]', '{{ filename }}', id: 'page_editable_elements_attributes_{{index}}_filename'
 
   {{#if hint}}
   %p.inline-hints {{hint}}

@@ -7,5 +7,10 @@ module Locomotive
       self.build_store_dir('sites', model.site_id, 'public_resources', model.id)
     end
 
+    def filename
+      return original_filename unless model.name.present?
+      "#{model.name.downcase.parameterize}.#{file.extension}"
+    end
+
   end
 end

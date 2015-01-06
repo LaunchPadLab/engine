@@ -34,6 +34,7 @@ module Locomotive
       def events_entries
         filter_by_start_date if params[:start_date].present?
         filter_by_end_date if params[:end_date].present?
+        filter_by_future_only if params[:future_only].present?
         filter_by_function if params[:function_id].present?
         filter_by_group if params[:group_id].present?
         filter_by_grade if params[:grade_id].present?
@@ -52,6 +53,11 @@ module Locomotive
       def filter_by_end_date
         end_date = Date.parse(params[:end_date])
         @content_entries = @content_entries.where(:end_time.lte => end_date)
+      end
+
+      # UPCOMING EVENTS ONLY
+      def filter_by_future_only
+        @content_entries = @content_entries.where(:end_time.gte => DateTime.now)
       end
 
       # GRADE

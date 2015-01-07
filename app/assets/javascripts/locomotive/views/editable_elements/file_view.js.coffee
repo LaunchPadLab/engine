@@ -26,7 +26,8 @@ class Locomotive.Views.EditableElements.FileView extends Backbone.View
     return @
 
   after_render: ->
-    # do nothing
+    name = @$('textarea').attr('name')
+    CKEDITOR.replace(name)
 
   refresh: ->
     @$('input[type=file]').unbind 'change'

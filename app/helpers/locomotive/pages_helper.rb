@@ -22,7 +22,7 @@ module Locomotive
       @group_content_type ||= current_site.content_types.groups.first
       hash = {}
       return hash unless @group_content_type.present?
-      @group_content_type.entries.each {|e| hash["#{e.function.name} / #{e.name}"] = e._id }
+      @group_content_type.entries.each {|e| hash["#{e.function.try(:name)} / #{e.name}"] = e._id }
       return hash
     end
 

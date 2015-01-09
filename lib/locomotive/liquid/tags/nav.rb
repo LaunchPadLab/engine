@@ -197,7 +197,7 @@ module Locomotive
 
         def do_not_show?(page)
           return true if !page.listed? || page.templatized? || !page.published?
-          return false if page.does_not_belong_to_portal? || @portal_user.nil? || @portal_user.type == ::Locomotive::User::ALL
+          return false if page.does_not_belong_to_portal? || @portal_user.nil? || page.user_type == ::Locomotive::User::ALL || @portal_user.type == ::Locomotive::User::ALL
           return true if page.user_type != @portal_user.type
         end
 

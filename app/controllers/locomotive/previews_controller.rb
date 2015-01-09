@@ -9,13 +9,8 @@ module Locomotive
 
     def new
       @page = current_site.pages.find(params[:page_id])
-      template_name = params[:page][:template_name]
-      raw_template = params[:page][:raw_template]
-      if template_name.present? && raw_template.present? && !@page.extendable
-        string_to_replace = raw_template[/\{\% extends (.*?) %/,1]
-        raw_template.sub!(string_to_replace, template_name)
-      end
-      @preview = current_site.previews.build(page_params: params[:page].to_json)
+      updated_params = Locomotive::Page::MeritasParser.new(page: @page, params: params).updated_params
+      @preview = current_site.previews.build(page_params: updated_params[:page].to_json)
       @page.attributes = params[:page]
       return redirect_to edit_page_path(@page) if @page.invalid?
       prepare_toolbar

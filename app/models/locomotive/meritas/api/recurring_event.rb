@@ -22,16 +22,14 @@ module Locomotive
 
       def dates
         return [] unless end_date
-        date = start_date
-        dates = [start_date]
+        date = event_start_date
+        dates = [event_start_date]
 
-        # while date <= start
-        #   date += (event.frequency * 7).days
-        # end
+        while date < date_range_start
+          date += 1.day
+        end
 
-        # raise date.inspect
-
-        while date <= stop
+        while date <= date_range_stop
           next_weekday = weekdays.detect {|d| d > date.wday}
           if next_weekday
             date += (next_weekday - date.wday).days
@@ -40,27 +38,37 @@ module Locomotive
             date -= date.wday - weekdays.first
             date += (event.frequency * 7).days
           end
-          dates << date if date <= stop
+          dates << date if date <= date_range_stop
         end
-        return dates unless start
-        dates.find_all {|d| d >= start }
+        return dates unless date_range_start
+        dates.find_all {|d| d >= date_range_start }
       end
 
       def end_date
-        Date.parse(params[:end_date])
+        return default_end_date unless params[:end_date]
+        Date.parse(params[:end_date]) || default_end_date
       end
 
-      def start
-        Date.parse(params[:start_date])
+      def default_end_date
+        Date.today + 3.months
       end
 
-      def stop
+      def default_start_date
+        Date.today
+      end
+
+      def date_range_start
+        return default_start_date unless params[:start_date]
+        Date.parse(params[:start_date]) || default_start_date
+      end
+
+      def date_range_stop
         # earlier of stop date and range end date
         return end_date unless event.stop_date.present?
         event.stop_date <= end_date ? event.stop_date : end_date
       end
 
-      def start_date
+      def event_start_date
         event.start_time.to_date
         # weekdays.include?(event.start_time.to_date.wday) ? event.start_time.to_date : first_repeat_date
       end

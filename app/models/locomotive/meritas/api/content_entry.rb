@@ -38,6 +38,7 @@ module Locomotive
         filter_by_publish_to if params[:calendar].present?
         filter_by_user if params[:calendar] == 'portal' && @user
         filter_by_date
+        sort_entries
         filter_by_page if params[:page].present?
         @content_entries
       end
@@ -107,7 +108,7 @@ module Locomotive
         @function_content_type ||= @site.content_types.functions.first
       end
 
-      #FUNCTION
+      # USER
       def filter_by_user
         array = [@user.type, 'All']
         field = @content_type.entries_custom_fields.where(name: "user_type").first
@@ -128,10 +129,32 @@ module Locomotive
         @content_entries = @content_entries.where(:publish_to_id.in => ids)
       end
 
+      # SORT
+      def sort_entries
+        @content_entries.sort_by!(&:start_time)
+      end
+
+
       # PAGE
+      def page
+        params[:page].to_i
+      end
+
+      def entries_to_skip
+        page * @items_per_page.to_i
+      end
+
+      def end_of_range
+        entries_to_skip + @items_per_page.to_i - 1
+      end
+
+      def entries_range
+        entries_to_skip..end_of_range
+      end
+
       def filter_by_page
-        page = params[:page].to_i
-        @content_entries = @content_entries.skip(page*@items_per_page).limit(@items_per_page)
+        return @content_entries unless @content_entries.count > @items_per_page
+        @content_entries = @content_entries[entries_range]
       end
   end
 end

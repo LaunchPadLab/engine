@@ -2,28 +2,81 @@ module Locomotive
   class Meritas::Api::RecurringEvent
 
     attr_reader :event, :params
+    attr_accessor :end_date, :date_range_start, :date_range_stop, :events
 
+    NON_PROPAGATED_ATTRIBUTES = ["_id", "_position", "_visible", "position_in_function", "position_in_group", "position_in_grade", "position_in_venue", "start_time", "end_time", "parent_id", "_slug", "version", "model_name", "updated_at", "created_at", "_type", "content_type_id", "site_id", "_translated", "__label_field_name"]
+
+
+    # REQUIRED FIELDS: event
+    # OPTIONAL FIELDS: params[:end_date], params[:start_date] (date range to limit event generation)
     def initialize(args = {})
       @event = args[:event]
-      @params = args[:params]
+      @params = args.fetch(:params, {})
+      @end_date = set_end_date
+      @date_range_start = set_date_range_start
+      @date_range_stop = set_date_range_stop
     end
 
-    def recurring_event_objects
-      events = dates.map do |next_date|
-        new_event = event.dup
-        new_event.start_time = event.start_time + (next_date - event.start_time.to_date).to_i.days
-        new_event.end_time = event.end_time + (next_date - event.end_time.to_date).to_i.days
-        new_event
-      end
-      events
+
+    # PUBLIC METHODS
+
+    def create_recurring_events
+      events.each {|e| e.save }
     end
+
+    def propagate_recurring_event_updates
+      event.children.each do |child|
+        event.attributes.each do |attr, value|
+          child.send("#{attr}=", value) unless NON_PROPAGATED_ATTRIBUTES.include?(attr)
+        end
+        child.save
+      end
+    end
+
 
     private
+
+      # SET VARIABLES / DEFAULTS
+
+      def default_end_date
+        Date.today + 1.year
+      end
+
+      def default_start_date
+        Date.today
+      end
+
+      def set_end_date
+        return default_end_date unless params[:end_date]
+        Date.parse(params[:end_date]) || default_end_date
+      end
+
+      def set_date_range_start
+        return default_start_date unless params[:start_date]
+        Date.parse(params[:start_date]) || default_start_date
+      end
+
+      def set_date_range_stop
+        # earlier of stop date and range end date
+        return end_date unless event.stop_date.present?
+        event.stop_date <= end_date ? event.stop_date : end_date
+      end
+
+      def event_start_date
+        @event_start_date ||= event.start_time.to_date
+      end
+
+      def weekdays
+        @weekdays ||= event.weekdays.map(&:number)
+      end
+
+
+      # GENERATE ALL RECURRING EVENT DATES
 
       def dates
         return [] unless end_date
         date = event_start_date
-        dates = [event_start_date]
+        dates = []
 
         while date < date_range_start
           date += 1.day
@@ -44,41 +97,23 @@ module Locomotive
         dates.find_all {|d| d >= date_range_start }
       end
 
-      def end_date
-        return default_end_date unless params[:end_date]
-        Date.parse(params[:end_date]) || default_end_date
+
+      # GENERATE NON-SAVED EVENT OBJECTS
+
+      def events
+        @events ||= generate_recurring_event_objects
       end
 
-      def default_end_date
-        Date.today + 3.months
-      end
-
-      def default_start_date
-        Date.today
-      end
-
-      def date_range_start
-        return default_start_date unless params[:start_date]
-        Date.parse(params[:start_date]) || default_start_date
-      end
-
-      def date_range_stop
-        # earlier of stop date and range end date
-        return end_date unless event.stop_date.present?
-        event.stop_date <= end_date ? event.stop_date : end_date
-      end
-
-      def event_start_date
-        event.start_time.to_date
-        # weekdays.include?(event.start_time.to_date.wday) ? event.start_time.to_date : first_repeat_date
-      end
-
-      def weekdays
-        event.weekdays.map(&:number)
-      end
-
-      def first_repeat_date
-        # event.start_time.to_date
+      def generate_recurring_event_objects
+        events = dates.map do |next_date|
+          new_event = event.dup
+          new_event.start_time = event.start_time + (next_date - event.start_time.to_date).to_i.days
+          new_event.end_time = event.end_time + (next_date - event.end_time.to_date).to_i.days
+          new_event.parent = event
+          new_event.recurring = false
+          new_event
+        end
+        events
       end
 
   end

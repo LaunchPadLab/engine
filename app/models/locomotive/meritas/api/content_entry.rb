@@ -38,47 +38,38 @@ module Locomotive
         filter_by_publish_to if params[:calendar].present?
         filter_by_user if params[:calendar] == 'portal' && @user
         filter_by_date
+        filter_out_recurring_event_parents
         sort_entries
         filter_by_page if params[:page].present?
         @content_entries
       end
 
       def filter_by_date
-        @non_recurring_events = @content_entries.dup
         filter_by_end_date if params[:end_date].present?
-        filter_out_recurring_events
         filter_by_start_date if params[:start_date].present?
         filter_by_future_only if params[:future_only].present?
-        incorporate_recurring_events
       end
 
-      # RECURRING EVENTS
-      def filter_out_recurring_events
-        @non_recurring_events = @non_recurring_events.where(recurring: false)
+      def filter_out_recurring_event_parents
+        # these are "parent" events (ghosts) that shouldn't appear on calendar
+        # the purpose of the recurring event is to control the events that derive from it
+        @content_entries = @content_entries.where(recurring: false)
       end
 
-      def incorporate_recurring_events
-        @content_entries = (@non_recurring_events << recurring_events).flatten
-      end
-
-      def recurring_events
-        @recurring_events ||= Locomotive::Meritas::Api::RecurringEvents.new(params: params, events: @content_entries.where(recurring: true)).generate
-      end
-
+      # DATE RANGE
       def filter_by_end_date
         end_date = Date.parse(params[:end_date])
         @content_entries = @content_entries.where(:start_time.lte => end_date)
       end
 
-      # DATE RANGE
       def filter_by_start_date
         start_date = Date.parse(params[:start_date])
-        @non_recurring_events = @non_recurring_events.where(:end_time.gte => start_date)
+        @content_entries = @content_entries.where(:end_time.gte => start_date)
       end
 
       # UPCOMING EVENTS ONLY
       def filter_by_future_only
-        @non_recurring_events = @non_recurring_events.where(:end_time.gte => DateTime.now)
+        @content_entries = @content_entries.where(:end_time.gte => DateTime.now)
       end
 
       # GRADE

@@ -22,6 +22,8 @@ module Locomotive
     ## associations ##
     belongs_to  :site,          class_name: 'Locomotive::Site', validate: false, autosave: false
     belongs_to  :content_type,  class_name: 'Locomotive::ContentType', inverse_of: :entries, custom_fields_parent_klass: true
+    has_many    :children,      class_name: self.name, :foreign_key => :parent_id, :inverse_of => :parent, :validate => false
+    belongs_to  :parent,        class_name: self.name, :inverse_of => :children, :index => true, :validate => false
 
     ## callbacks ##
     before_validation :set_slug
@@ -30,6 +32,8 @@ module Locomotive
     before_save       :set_label_field_name
     before_create     :add_to_list_bottom
     after_create      :send_notifications
+    after_create      :generate_recurring_events, if: :recurring_event?
+    after_update      :propagate_recurring_event_changes, if: :recurring_event?
 
     ## named scopes ##
     scope :visible, where(_visible: true)
@@ -218,6 +222,18 @@ module Locomotive
 
         Locomotive::Notifications.new_content_entry(account, self).deliver
       end
+    end
+
+    def recurring_event?
+      content_type.slug == "events" && recurring
+    end
+
+    def generate_recurring_events
+      Locomotive::Meritas::Api::RecurringEvent.new(event: self).create_recurring_events
+    end
+
+    def propagate_recurring_event_changes
+      Locomotive::Meritas::Api::RecurringEvent.new(event: self).propagate_recurring_event_updates
     end
 
   end

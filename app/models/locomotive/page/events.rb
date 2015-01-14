@@ -25,7 +25,7 @@ module Locomotive
             grade_id: page.grade_id,
             items_per_page: EVENTS_PER_WIDGET,
             future_only: true,
-            calendar: "public",
+            calendar: @page.belongs_to_portal? ? "portal" : "public",
             page: 0
           }
         end

@@ -11,17 +11,20 @@
 
   = local_action_button :new, new_content_entry_path(@content_type.slug), icon: 'icon-plus'
 
-- if @content_type.description.present?
-  %p= @content_type.description
-
-- if @content_type.groupable?
-  - @content_entries.each do |group|
-    .box
-      %h3= group[:name] || t('.category_noname')
-      .inner
-        = render 'list', content_type: @content_type, entries: group[:entries]
+- if @content_type.slug == "events"
+  = render 'calendar'
 - else
-  = render 'list', content_type: @content_type, entries: @content_entries
+  - if @content_type.description.present?
+    %p= @content_type.description
+
+  - if @content_type.groupable?
+    - @content_entries.each do |group|
+      .box
+        %h3= group[:name] || t('.category_noname')
+        .inner
+          = render 'list', content_type: @content_type, entries: group[:entries]
+  - else
+    = render 'list', content_type: @content_type, entries: @content_entries
 
 - # Note: submenu has to be here in order to have the previous entries correctly rendered since we do not return
 - #       all the attributes of the content types in the following code (causing stale documents)

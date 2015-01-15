@@ -2,6 +2,8 @@ module Locomotive
   module PublicApi
     class ContentEntriesController < BaseController
 
+      respond_to :json
+
       def index
         @content_type = current_site.content_types.where(slug: params[:slug]).first
         @content_entries = @content_type.entries.order_by([@content_type.order_by_definition])

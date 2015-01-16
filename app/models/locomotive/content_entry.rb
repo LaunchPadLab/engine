@@ -18,6 +18,7 @@ module Locomotive
     ## validations ##
     validates_presence_of     :_slug
     validates_uniqueness_of   :_slug, scope: :content_type_id, allow_blank: true
+    validate                  :recurring_event_fields, if: :event_series?
 
     ## associations ##
     belongs_to  :site,          class_name: 'Locomotive::Site', validate: false, autosave: false
@@ -246,6 +247,18 @@ module Locomotive
 
     def disconnect_from_series
       self.parent_id = nil
+    end
+
+    def recurring_event_fields
+      unless weekdays && weekdays.count >= 1
+        errors.add(:weekdays, "are required for repeating events")
+      end
+      unless frequency && frequency >= 1
+        errors.add(:frequency, "is required for repeating events")
+      end
+      unless stop_date && stop_date > start_time.to_date
+        errors.add(:formatted_stop_date, "is required for repeating events and must be greater than the start date")
+      end
     end
 
   end

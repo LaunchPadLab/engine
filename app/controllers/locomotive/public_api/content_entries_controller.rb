@@ -2,14 +2,14 @@ module Locomotive
   module PublicApi
     class ContentEntriesController < BaseController
 
+      respond_to :json
+
       def index
         @content_type = current_site.content_types.where(slug: params[:slug]).first
         @content_entries = @content_type.entries.order_by([@content_type.order_by_definition])
         authenticate_portal_user if params[:calendar] == 'portal'
         @content_entries = Locomotive::Meritas::Api::ContentEntry.new(content_entries: @content_entries, user: current_portal_user, params: params, content_type: @content_type, site: current_site).entries
-        respond_to do |format|
-          format.json { render json: @content_entries.to_json }
-        end
+        respond_with @content_entries
       end
 
       def page_count

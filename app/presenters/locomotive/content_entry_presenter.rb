@@ -7,7 +7,7 @@ module Locomotive
 
     property    :_slug
 
-    properties  :_position, :_visible, required: false
+    properties  :_position, :_visible, :parent_id, required: false
 
     properties  :seo_title, :meta_keywords, :meta_description, required: false
 

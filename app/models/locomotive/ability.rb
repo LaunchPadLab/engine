@@ -88,7 +88,7 @@ module Locomotive
 
       can :manage, ContentEntry
 
-      can :manage, ContentType
+      can :read, ContentType
 
       can :manage, Snippet
 
@@ -132,7 +132,7 @@ module Locomotive
 
       can :manage, ContentEntry
 
-      can :manage, ContentType
+      can :read, ContentType
 
       can :manage, Snippet
 
@@ -171,6 +171,8 @@ module Locomotive
 
     def setup_admin_permissions!
       can :manage, :all
+      cannot :manage, ContentType
+      can :read, ContentType
 
       cannot [:update, :destroy], Membership do |membership|
         @membership.account_id == membership.account_id # can not edit myself

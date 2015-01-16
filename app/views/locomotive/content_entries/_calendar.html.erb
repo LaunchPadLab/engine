@@ -2,6 +2,11 @@
   .fc-event{
     cursor: pointer;
   }
+
+  .ui-dialog-titlebar-close {
+    display: inherit !important;
+    top: 18px !important;
+  }
 </style>
 
 <div class='fadeInUp'>
@@ -51,4 +56,8 @@
     </div>
 
   </div>
+</div>
+
+<div id="dialog" title="Repeating Event" style="display:none;">
+  <p>This is a repeating event. Do you want to edit the series or this individual occurrence?</p>
 </div>

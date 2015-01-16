@@ -14,6 +14,10 @@
 //= require tinymce-jquery
 //= require ckeditor/init
 
+//= require moment.min.js
+//= require jquery.visible.min.js
+//= require calendar
+//= require events
 //= require lyris
 //= require portal_resources
 //= require select2/select2

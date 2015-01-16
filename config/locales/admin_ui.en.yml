@@ -323,6 +323,8 @@ en:
       new:
         title: '%{type} &mdash; new entry'
       edit:
+        destroy: delete entry
+        confirm_destroy: Are you sure you want to delete this entry?
         title: '%{type} &mdash; editing entry'
       form:
         edit_select_options: edit options

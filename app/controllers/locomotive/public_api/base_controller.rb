@@ -14,8 +14,6 @@ module Locomotive
 
       before_filter :require_site
 
-      respond_to :json
-
       protected
 
       def set_locale

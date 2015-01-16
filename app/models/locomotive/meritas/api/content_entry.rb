@@ -39,7 +39,6 @@ module Locomotive
         filter_by_user if params[:calendar] == 'portal' && @user
         filter_by_date
         filter_out_recurring_event_parents
-        sort_entries
         filter_by_page if params[:page].present?
         @content_entries
       end
@@ -108,6 +107,11 @@ module Locomotive
         @content_entries = @content_entries.where(:user_type_id.in => ids)
       end
 
+      def filter_by_page
+         page = params[:page].to_i
+         @content_entries = @content_entries.skip(page*@items_per_page).limit(@items_per_page)
+      end
+
       def filter_by_publish_to
         calendar_hash = {
           "public" => ["Public Calendar", "All Calendars"],
@@ -120,32 +124,5 @@ module Locomotive
         @content_entries = @content_entries.where(:publish_to_id.in => ids)
       end
 
-      # SORT
-      def sort_entries
-        @content_entries.sort_by!(&:start_time)
-      end
-
-
-      # PAGE
-      def page
-        params[:page].to_i
-      end
-
-      def entries_to_skip
-        page * @items_per_page.to_i
-      end
-
-      def end_of_range
-        entries_to_skip + @items_per_page.to_i - 1
-      end
-
-      def entries_range
-        entries_to_skip..end_of_range
-      end
-
-      def filter_by_page
-        return @content_entries unless @content_entries.count > @items_per_page
-        @content_entries = @content_entries[entries_range]
-      end
   end
 end

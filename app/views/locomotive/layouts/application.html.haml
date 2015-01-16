@@ -20,9 +20,10 @@
 
         #content
           .inner
-            .breadcrumbs
-              = yield :breadcrumbs
-            %h2!= title
+            %h2!
+              = title
+              .breadcrumbs
+                = yield :breadcrumbs
 
             #local-actions-bar
               &nbsp;

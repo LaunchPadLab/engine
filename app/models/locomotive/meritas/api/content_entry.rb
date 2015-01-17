@@ -52,7 +52,7 @@ module Locomotive
       def filter_out_recurring_event_parents
         # these are "parent" events (ghosts) that shouldn't appear on calendar
         # the purpose of the recurring event is to control the events that derive from it
-        @content_entries = @content_entries.where(recurring: false)
+        @content_entries = @content_entries.where(:recurring.in => [false, nil])
       end
 
       # DATE RANGE

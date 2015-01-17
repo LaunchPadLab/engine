@@ -171,8 +171,6 @@ module Locomotive
 
     def setup_admin_permissions!
       can :manage, :all
-      cannot :manage, ContentType
-      can :read, ContentType
 
       cannot [:update, :destroy], Membership do |membership|
         @membership.account_id == membership.account_id # can not edit myself

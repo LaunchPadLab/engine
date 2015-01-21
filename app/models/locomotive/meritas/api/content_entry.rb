@@ -6,6 +6,11 @@ module Locomotive
 
     MERITAS_CUSTOM_CONTENT_TYPES = %w(events)
 
+    module LogicOperators
+      EXCLUSIVE = 'exclusive' # excludes entries tagged 'all'
+      INCLUSIVE = 'inclusive' # includes entries tagged 'all'
+    end
+
     def initialize(args = {})
       @content_entries = args[:content_entries]
       @params = args[:params]
@@ -73,7 +78,9 @@ module Locomotive
 
       # GRADE
       def filter_by_grade
-        @content_entries = @content_entries.or({grade: params[:grade_id], grade: nil})
+        criteria = [params[:grade_id], nil] # defaults to include events tagged with grade level of "All"
+        criteria.compact! if params[:grade_logic_operator] && params[:grade_logic_operator] == LogicOperators::EXCLUSIVE
+        @content_entries = @content_entries.where(:grade.in => criteria)
       end
 
       def grade_content_type

@@ -23,6 +23,7 @@ module Locomotive
             function_id: page.function_id,
             group_id: page.group_id,
             grade_id: page.grade_id,
+            grade_logic_operator: Meritas::Api::ContentEntry::LogicOperators::INCLUSIVE,
             items_per_page: EVENTS_PER_WIDGET,
             future_only: true,
             calendar: @page.belongs_to_portal? ? "portal" : "public",

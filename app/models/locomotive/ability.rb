@@ -82,7 +82,7 @@ module Locomotive
     def setup_site_admin_permissions!
       can :manage, Page
 
-      cannot :move, Page
+      can :move, Page
 
       can :manage, Preview
 
@@ -126,7 +126,7 @@ module Locomotive
     def setup_site_admin_w_email_permissions!
       can :manage, Page
 
-      cannot :move, Page
+      can :move, Page
 
       can :manage, Preview
 

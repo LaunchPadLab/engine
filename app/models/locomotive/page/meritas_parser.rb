@@ -42,15 +42,19 @@ module Locomotive
             "content-two-columns" => "portal-content-two-columns",
             "content-three-columns" => "portal-content-three-columns"
           }
-          hash[selected_template_name]
+          hash[selected_template_name] || selected_template_name
         end
 
         def should_be_portalized?
-          selected_template_name[0..5] != "portal" && page.parent.slug != "users"
+          selected_template_name[0..5] != "portal" && !public_portal_page?
         end
 
         def page_belongs_to_portal?
           page.belongs_to_portal? || (page.parent && page.parent.belongs_to_portal?)
+        end
+
+        def public_portal_page?
+          page.fullpath.split("/").include?("users")
         end
 
   end

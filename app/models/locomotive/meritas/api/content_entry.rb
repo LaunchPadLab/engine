@@ -2,7 +2,7 @@ module Locomotive
   class Meritas::Api::ContentEntry
 
     attr_reader :params, :content_type, :site
-    attr_accessor :content_entries, :unpaginated_entries
+    attr_accessor :content_entries, :unpaginated_entries, :functions, :grades, :groups
 
     MERITAS_CUSTOM_CONTENT_TYPES = %w(events)
 
@@ -37,15 +37,32 @@ module Locomotive
       end
 
       def events_entries
-        filter_by_function if params[:function_id].present?
-        filter_by_group if params[:group_id].present?
-        filter_by_grade if params[:grade_id].present?
+        set_event_categories
+        filter_by_functions if functions.present?
+        filter_by_grades if grades.present?
+        filter_by_groups if groups.present?
         filter_by_publish_to if params[:calendar].present?
         filter_by_user if params[:calendar] == 'portal' && @user
         filter_by_date
         filter_out_recurring_event_parents
         filter_by_page if params[:page].present?
         @content_entries
+      end
+
+      # set functions, grades, and groups to filter by
+      def set_event_categories
+        ["function", "grade", "group"].each do |type|
+          singular = "#{type}_id" # function_id, grade_id, group_id
+          plural = "#{type.pluralize}" # functions, grades, groups
+          plural_ids = params[plural].present? ? JSON.parse(params[plural]).to_a : []
+          plural_ids.reject! {|id| id.blank? }
+          if params[singular].present? || plural_ids.any?
+            ids = params[singular].present? ? [params[plural]] : JSON.parse(params[plural])
+          else
+            ids = []
+          end
+          instance_variable_set("@#{plural}", ids)
+        end
       end
 
       def filter_by_date
@@ -77,10 +94,12 @@ module Locomotive
       end
 
       # GRADE
-      def filter_by_grade
-        criteria = [params[:grade_id], nil] # defaults to include events tagged with grade level of "All"
-        criteria.compact! if params[:grade_logic_operator] && params[:grade_logic_operator] == LogicOperators::EXCLUSIVE
-        @content_entries = @content_entries.where(:grade.in => criteria)
+      def filter_by_grades
+        all_school = @site.content_types.grades.first.entries.where(name: "All School").first
+        grades << nil # defaults to include events tagged with grade level of "All"
+        grades << all_school if all_school # defaults to include events tagged with grade level of "All School"
+        grades.compact! if params[:grade_logic_operator] && params[:grade_logic_operator] == LogicOperators::EXCLUSIVE
+        @content_entries = @content_entries.where(:grade.in => grades)
       end
 
       def grade_content_type
@@ -88,8 +107,8 @@ module Locomotive
       end
 
       # GROUP
-      def filter_by_group
-        @content_entries = @content_entries.where(group: params[:group_id])
+      def filter_by_groups
+        @content_entries = @content_entries.where(:group.in => groups)
       end
 
       def group_content_type
@@ -97,8 +116,8 @@ module Locomotive
       end
 
       # FUNCTION
-      def filter_by_function
-        @content_entries = @content_entries.where(function: params[:function_id])
+      def filter_by_functions
+        @content_entries = @content_entries.where(:function.in => functions)
       end
 
       def function_content_type

@@ -33,9 +33,9 @@ module Locomotive
     before_save       :set_label_field_name
     before_create     :add_to_list_bottom
     after_create      :send_notifications
-    after_create      :generate_event_series, if: :event_series?
-    after_update      :propagate_event_series_changes, if: :event_series?
-    before_update     :disconnect_from_series, if: :part_of_event_series?
+    # after_create      :generate_event_series, if: :event_series?
+    # after_update      :propagate_event_series_changes, if: :event_series?
+    # before_update     :disconnect_from_series, if: :part_of_event_series?
 
     ## named scopes ##
     scope :visible, where(_visible: true)
@@ -132,6 +132,12 @@ module Locomotive
 
     def part_of_event_series?
       content_type.slug == "events" && parent_id.present?
+    end
+
+    def hex_color
+      return nil unless content_type.slug == "events"
+      return function.color.hex if function && function.color
+      nil
     end
 
     protected

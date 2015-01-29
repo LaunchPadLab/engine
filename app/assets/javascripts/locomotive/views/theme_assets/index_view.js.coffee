@@ -18,6 +18,8 @@ class Locomotive.Views.ThemeAssets.IndexView extends Backbone.View
 
     @render_js_and_css()
 
+    @render_email_templates()
+
     @render_fonts()
 
     @render_media()
@@ -61,6 +63,9 @@ class Locomotive.Views.ThemeAssets.IndexView extends Backbone.View
   render_js_and_css: ->
     @render_list 'js-and-css', @options.js_and_css_assets, Locomotive.Views.ThemeAssets.ListView, ich.js_and_css_list
 
+  render_email_templates: ->
+    @render_list 'email-templates', @options.email_templates, Locomotive.Views.ThemeAssets.ListView, ich.email_templates_list
+
   render_fonts: ->
     @render_list 'fonts', @options.fonts, Locomotive.Views.ThemeAssets.ListView, ich.fonts_list
 
@@ -86,6 +91,7 @@ class Locomotive.Views.ThemeAssets.IndexView extends Backbone.View
     type = switch content_type
       when 'image'                    then 'images'
       when 'javascript', 'stylesheet' then 'js-and-css'
+      when 'html'                     then 'email-templates'
       when 'media'                    then 'media'
       when 'font'                     then 'fonts'
       when 'other'                    then 'others'

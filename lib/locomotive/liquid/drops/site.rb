@@ -17,6 +17,14 @@ module Locomotive
           @_source.domains
         end
 
+        def functions
+          @_source.functions
+        end
+
+        def grades
+          @_source.grades
+        end
+
         protected
 
         def scoped_pages

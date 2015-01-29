@@ -78,8 +78,11 @@ module Locomotive
 
       # GRADE
       def filter_by_grade
-        criteria = [params[:grade_id], nil] # defaults to include events tagged with grade level of "All"
-        criteria.compact! if params[:grade_logic_operator] && params[:grade_logic_operator] == LogicOperators::EXCLUSIVE
+        all_school = @site.content_types.grades.first.entries.where(name: "All School").first
+        unless params[:grade_logic_operator] && params[:grade_logic_operator] == LogicOperators::EXCLUSIVE
+          criteria = [params[:grade_id], nil] # defaults to include events tagged with grade level of "All"
+          criteria << all_school.id if all_school.present?
+        end
         @content_entries = @content_entries.where(:grade.in => criteria)
       end
 

@@ -100,11 +100,13 @@ module Locomotive
       end
 
       # GRADE
+
       def filter_by_grades
         all_school = @site.content_types.grades.first.entries.where(name: "All School").first
-        grades << nil # defaults to include events tagged with grade level of "All"
-        grades << all_school if all_school # defaults to include events tagged with grade level of "All School"
-        grades.compact! if params[:grade_logic_operator] && params[:grade_logic_operator] == LogicOperators::EXCLUSIVE
+        unless params[:grade_logic_operator] && params[:grade_logic_operator] == LogicOperators::EXCLUSIVE
+          grades << nil # defaults to include events tagged with grade level of "All"
+          grades << all_school.id if all_school.present? # defaults to include events tagged with grade level of "All School"
+        end
         @content_entries = @content_entries.where(:grade.in => grades)
       end
 

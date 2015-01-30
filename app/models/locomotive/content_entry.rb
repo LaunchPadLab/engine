@@ -18,7 +18,7 @@ module Locomotive
     ## validations ##
     validates_presence_of     :_slug
     validates_uniqueness_of   :_slug, scope: :content_type_id, allow_blank: true
-    validate                  :recurring_event_fields, if: :event_series?
+    # validate                  :recurring_event_fields, if: :event_series?
 
     ## associations ##
     belongs_to  :site,          class_name: 'Locomotive::Site', validate: false, autosave: false
@@ -127,7 +127,7 @@ module Locomotive
     end
 
     def event_series?
-      content_type.slug == "events" && recurring
+      content_type.slug == "events" && respond_to?(:recurring)
     end
 
     def part_of_event_series?

@@ -2,13 +2,18 @@ module Locomotive
   class Meritas::Api::ContentEntry
 
     attr_reader :params, :content_type, :site
-    attr_accessor :content_entries, :unpaginated_entries, :functions, :grades, :groups
+    attr_accessor :content_entries, :unpaginated_entries, :functions, :grades, :groups, :default_filter_setting
 
     MERITAS_CUSTOM_CONTENT_TYPES = %w(events)
 
     module LogicOperators
       EXCLUSIVE = 'exclusive' # excludes entries tagged 'all'
       INCLUSIVE = 'inclusive' # includes entries tagged 'all'
+    end
+
+    module FilterOperators
+      SELECTED = 'selected' # defaults to all filters are selected (i.e. included)
+      UNSELECTED = 'unselected'# defaults to all filters unselected (i.e. excluded)
     end
 
     def initialize(args = {})
@@ -18,6 +23,7 @@ module Locomotive
       @content_type = args[:content_type]
       @site = args[:site]
       @items_per_page = (params[:items_per_page] || 6).to_f
+      @default_filter_setting = params.fetch(:default_filter_setting, FilterOperators::UNSELECTED)
     end
 
     def entries
@@ -38,9 +44,9 @@ module Locomotive
 
       def events_entries
         set_event_categories
-        filter_by_functions if functions.present?
-        filter_by_grades if grades.present?
-        filter_by_groups if groups.present?
+        filter_by_functions if functions.present? || defaults_to_selected?
+        filter_by_grades if grades.present? || defaults_to_selected?
+        filter_by_groups if groups.present? || defaults_to_selected?
         filter_by_publish_to if params[:calendar].present?
         filter_by_user if params[:calendar] == 'portal' && @user
         filter_by_date
@@ -54,10 +60,10 @@ module Locomotive
         ["function", "grade", "group"].each do |type|
           singular = "#{type}_id" # function_id, grade_id, group_id
           plural = "#{type.pluralize}" # functions, grades, groups
-          plural_ids = params[plural].present? ? JSON.parse(params[plural]).to_a : []
+          plural_ids = params[plural].present? ? JSON.parse(params[plural]) : []
           plural_ids.reject! {|id| id.blank? }
           if params[singular].present? || plural_ids.any?
-            ids = params[singular].present? ? [params[plural]] : JSON.parse(params[plural])
+            ids = params[singular].present? ? [params[singular]] : plural_ids
           else
             ids = []
           end
@@ -108,6 +114,7 @@ module Locomotive
 
       # GROUP
       def filter_by_groups
+        groups << nil
         @content_entries = @content_entries.where(:group.in => groups)
       end
 
@@ -150,5 +157,8 @@ module Locomotive
         @content_entries = @content_entries.where(:publish_to_id.in => ids)
       end
 
+      def defaults_to_selected?
+        default_filter_setting == FilterOperators::SELECTED
+      end
   end
 end

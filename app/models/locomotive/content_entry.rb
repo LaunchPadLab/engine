@@ -18,6 +18,7 @@ module Locomotive
     ## validations ##
     validates_presence_of     :_slug
     validates_uniqueness_of   :_slug, scope: :content_type_id, allow_blank: true
+    validate                  :unique_color, if: :has_color?
     # validate                  :recurring_event_fields, if: :event_series?
 
     ## associations ##
@@ -237,6 +238,20 @@ module Locomotive
         next unless account_ids.include?(account._id.to_s)
 
         Locomotive::Notifications.new_content_entry(account, self).deliver
+      end
+    end
+
+
+    # FUNCTION COLORS
+
+    def has_color?
+      content_type.slug == "functions" && respond_to?(:color)
+    end
+
+    def unique_color
+      return unless color.present?
+      if content_type.entries.where(color: color).count > 0
+        errors.add(:color, "is already in use by another category.")
       end
     end
 

@@ -116,7 +116,7 @@ module Locomotive
 
       # GROUP
       def filter_by_groups
-        groups << nil
+        groups << nil if defaults_to_selected?
         @content_entries = @content_entries.where(:group.in => groups)
       end
 

@@ -11,6 +11,7 @@ module Locomotive
             ## fields ##
             field :subdomain
             field :domains, type: Array, default: []
+            field :primary_domain
 
             ## indexes
             index domains: 1

@@ -37,27 +37,38 @@ module Locomotive
       end
 
       def events_entries
-        filter_by_start_date if params[:start_date].present?
-        filter_by_end_date if params[:end_date].present?
-        filter_by_future_only if params[:future_only].present?
         filter_by_function if params[:function_id].present?
         filter_by_group if params[:group_id].present?
         filter_by_grade if params[:grade_id].present?
         filter_by_publish_to if params[:calendar].present?
         filter_by_user if params[:calendar] == 'portal' && @user
+        filter_by_date
+        filter_out_recurring_event_parents
         filter_by_page if params[:page].present?
         @content_entries
       end
 
+      def filter_by_date
+        filter_by_end_date if params[:end_date].present?
+        filter_by_start_date if params[:start_date].present?
+        filter_by_future_only if params[:future_only].present?
+      end
+
+      def filter_out_recurring_event_parents
+        # these are "parent" events (ghosts) that shouldn't appear on calendar
+        # the purpose of the recurring event is to control the events that derive from it
+        @content_entries = @content_entries.where(:recurring.in => [false, nil])
+      end
+
       # DATE RANGE
+      def filter_by_end_date
+        end_date = Date.parse(params[:end_date])
+        @content_entries = @content_entries.where(:start_time.lte => end_date)
+      end
+
       def filter_by_start_date
         start_date = Date.parse(params[:start_date])
         @content_entries = @content_entries.where(:end_time.gte => start_date)
-      end
-
-      def filter_by_end_date
-        end_date = Date.parse(params[:end_date])
-        @content_entries = @content_entries.where(:end_time.lte => end_date)
       end
 
       # UPCOMING EVENTS ONLY
@@ -67,8 +78,11 @@ module Locomotive
 
       # GRADE
       def filter_by_grade
-        criteria = [params[:grade_id], nil] # defaults to include events tagged with grade level of "All"
-        criteria.compact! if params[:grade_logic_operator] && params[:grade_logic_operator] == LogicOperators::EXCLUSIVE
+        all_school = @site.content_types.grades.first.entries.where(name: "All School").first
+        unless params[:grade_logic_operator] && params[:grade_logic_operator] == LogicOperators::EXCLUSIVE
+          criteria = [params[:grade_id], nil] # defaults to include events tagged with grade level of "All"
+          criteria << all_school.id if all_school.present?
+        end
         @content_entries = @content_entries.where(:grade.in => criteria)
       end
 
@@ -94,13 +108,18 @@ module Locomotive
         @function_content_type ||= @site.content_types.functions.first
       end
 
-      #FUNCTION
+      # USER
       def filter_by_user
         array = [@user.type, 'All']
         field = @content_type.entries_custom_fields.where(name: "user_type").first
         return unless field.present?
         ids = field.select_options.map {|f| array.include?(f.name) ? f._id : nil }.compact
         @content_entries = @content_entries.where(:user_type_id.in => ids)
+      end
+
+      def filter_by_page
+         page = params[:page].to_i
+         @content_entries = @content_entries.skip(page*@items_per_page).limit(@items_per_page)
       end
 
       def filter_by_publish_to
@@ -115,10 +134,5 @@ module Locomotive
         @content_entries = @content_entries.where(:publish_to_id.in => ids)
       end
 
-      # PAGE
-      def filter_by_page
-        page = params[:page].to_i
-        @content_entries = @content_entries.skip(page*@items_per_page).limit(@items_per_page)
-      end
   end
 end

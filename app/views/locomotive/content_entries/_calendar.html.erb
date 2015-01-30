@@ -1,0 +1,68 @@
+<style>
+  .fc-event{
+    cursor: pointer;
+  }
+
+  .ui-dialog-titlebar-close {
+    display: inherit !important;
+    top: 18px !important;
+  }
+</style>
+
+<div class='fadeInUp'>
+  <div>
+    <form>
+      <label for="function-select">Calendar</label>
+      <select id="calendar-select">
+        <option value="">All</option>
+        <option value="public">Public</option>
+        <option value="portal">Portal</option>
+      </select>
+      <div class='row'>
+        <div class='medium-12 columns'>
+            <div class="row calendar-filters">
+              <div class="medium-3 columns" id="function-container">
+                <div class='row'>
+                  <div class='small-12 columns'>
+                    <label for="function-select">Category</label>
+                    <select id="function-select"></select>
+                  </div>
+                </div>
+              </div>
+              <div class="medium-3 columns" id="group-container" style="display:none;">
+                <div class='row'>
+                  <div class='small-12 columns'>
+                    <label for="group-select">Group</label>
+                    <select id="group-select"></select>
+                  </div>
+                </div>
+              </div>
+              <div class="medium-3 columns" id="grade-container">
+                <div class='row'>
+                  <div class='small-12 columns'>
+                    <label for="grade-select">Grade Level</label>
+                    <select id="grade-select"></select>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+    </form>
+
+    <div class='not-mobile'>
+
+      <div class='row' id="calendarview-panel">
+        <div class='small-12 medium-12 columns'>
+          <div id="calendar"></div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<div id="dialog" title="Repeating Event" style="display:none;">
+  <p>This is a repeating event. Do you want to edit the series or this individual occurrence?</p>
+</div>

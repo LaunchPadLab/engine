@@ -1,6 +1,18 @@
 module Locomotive
   module ContentEntriesHelper
 
+    def event?
+      @content_type.slug == "events"
+    end
+
+    def individual_occurrence?
+      @content_entry.parent_id.present?
+    end
+
+    def do_not_show_field?(field)
+      event? && field.name == "recurring" && individual_occurrence?
+    end
+
     # Keep track of the form used to create / edit content entries
     # from a has_many custom field.
     # Because of formtastic which does not work with embedded forms,

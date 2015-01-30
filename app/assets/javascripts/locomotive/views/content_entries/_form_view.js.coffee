@@ -70,9 +70,17 @@ class Locomotive.Views.ContentEntries.FormView extends Locomotive.Views.Shared.F
       showTime: false
 
   enable_richtexteditor: ->
+    model = @model
     _.each @$('li.input.rte textarea.html'), (textarea) =>
       name = $(textarea).attr('name')
-      CKEDITOR.replace(name)
+      editor = CKEDITOR.replace(name)
+      # The "change" event is fired whenever a change is made in the editor.
+      editor.on "change", (evt) ->
+        data = evt.editor.getData()
+        parsed_name = name.substr(14)
+        parsed_name = parsed_name.substr(0, parsed_name.length - 1);
+        model.set(parsed_name, data)
+
 
   enable_select_fields: ->
     @_select_field_view = new Locomotive.Views.Shared.Fields.SelectView model: @content_type

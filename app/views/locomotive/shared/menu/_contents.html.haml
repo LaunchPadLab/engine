@@ -20,6 +20,8 @@
 - if can?(:manage, "Portal")
   = submenu_entry 'Portal Resources', public_resources_path(access_type: Locomotive::PublicResource::AccessTypes::PORTAL)
 
+= submenu_entry 'Events', '/locomotive/content_types/events/entries'
+
 - each_content_type do |menu_item|
   -if menu_item.is_a?(Array)
     - content_types = menu_item
@@ -28,29 +30,31 @@
         .inner
           %ul.big-links
             - content_types.each do |content_type|
-              %li
-                = link_to truncate(content_type.name, length: 20), content_entries_path(content_type.slug)
+              - unless ["events"].include?(content_type.slug)
+                %li
+                  = link_to truncate(content_type.name, length: 20), content_entries_path(content_type.slug)
   - else
     - content_type = menu_item
-    = submenu_entry truncate(content_type.name, length: 15), content_entries_path(content_type.slug), i18n: false, css: "#{'on' if is_content_type_selected(content_type)}" do
-      .wrapper
-        .header
-          %p
-            = link_to new_content_entry_path(content_type.slug) do
-              %i.icon-plus
-              = t('locomotive.content_entries.index.new')
+    - unless ["events"].include?(content_type.slug)
+      = submenu_entry truncate(content_type.name, length: 15), content_entries_path(content_type.slug), i18n: false, css: "#{'on' if is_content_type_selected(content_type)}" do
+        .wrapper
+          .header
+            %p
+              = link_to new_content_entry_path(content_type.slug) do
+                %i.icon-plus
+                = t('locomotive.content_entries.index.new')
 
-          - if can? :manage, content_type
-            %p.edit
-              = link_to edit_content_type_path(content_type) do
-                %i.icon-pencil
-                = t('locomotive.content_types.index.edit')
+            - if can? :manage, content_type
+              %p.edit
+                = link_to edit_content_type_path(content_type) do
+                  %i.icon-pencil
+                  = t('locomotive.content_types.index.edit')
 
-        .inner
-          %h2!= t('locomotive.content_entries.index.latest_entries')
-          %ul
-            - content_type.entries.latest_updated.each do |entry|
-              %li
-                %i.icon-chevron-right
-                = link_to truncate(entry._label(content_type), length: 20), edit_content_entry_path(content_type.slug, entry)
-                %span= time_ago_in_words(entry.updated_at)
+          .inner
+            %h2!= t('locomotive.content_entries.index.latest_entries')
+            %ul
+              - content_type.entries.latest_updated.each do |entry|
+                %li
+                  %i.icon-chevron-right
+                  = link_to truncate(entry._label(content_type), length: 20), edit_content_entry_path(content_type.slug, entry)
+                  %span= time_ago_in_words(entry.updated_at)

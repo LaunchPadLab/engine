@@ -2,7 +2,7 @@ module Locomotive
   class Meritas::Api::EventSeries
 
     attr_reader :event, :params
-    attr_accessor :end_date, :date_range_start, :date_range_stop, :events
+    attr_accessor :end_date, :date_range_start, :date_range_stop, :events, :date_generator
 
     NON_PROPAGATED_ATTRIBUTES = ["_id", "_position", "_visible", "position_in_function", "position_in_group", "position_in_grade", "position_in_venue", "start_time", "end_time", "parent_id", "_slug", "version", "model_name", "updated_at", "created_at", "_type", "content_type_id", "site_id", "_translated", "__label_field_name", "recurring"]
 
@@ -15,6 +15,7 @@ module Locomotive
       @end_date = set_end_date
       @date_range_start = set_date_range_start
       @date_range_stop = set_date_range_stop
+      @date_generator = frequency_klass.new(event_series: self)
     end
 
 
@@ -30,8 +31,20 @@ module Locomotive
       create_new_events
     end
 
+    def event_start_date
+      @event_start_date ||= event.start_time.to_date
+    end
+
+    def weekdays
+      @weekdays ||= event.weekdays.map(&:number)
+    end
 
     private
+
+      def frequency_klass
+        "Locomotive::Meritas::Api::EventSeries::Frequency::#{event.frequency.capitalize}".constantize
+      end
+
 
       # SET VARIABLES / DEFAULTS
 
@@ -59,42 +72,9 @@ module Locomotive
         event.stop_date <= end_date ? event.stop_date : end_date
       end
 
-      def event_start_date
-        @event_start_date ||= event.start_time.to_date
-      end
-
-      def weekdays
-        @weekdays ||= event.weekdays.map(&:number)
-      end
-
-
-      # GENERATE ALL RECURRING EVENT DATES
-
       def dates
-        @dates ||= (
-          date = event_start_date
-          dates = [event_start_date]
-
-          while date < date_range_start
-            date += 1.day
-          end
-
-          while date <= date_range_stop
-            next_weekday = weekdays.detect {|d| d > date.wday}
-            if next_weekday
-              date += (next_weekday - date.wday).days
-            else
-              # go back to start of week then add frequency in days to get to next active day
-              date -= date.wday - weekdays.first
-              date += (event.frequency * 7).days
-            end
-            dates << date if date <= date_range_stop
-          end
-          return dates unless date_range_start
-          dates.find_all {|d| d >= date_range_start }
-        )
+        date_generator.generate_dates
       end
-
 
       # GENERATE NON-SAVED EVENT OBJECTS
 

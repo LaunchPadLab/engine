@@ -325,7 +325,9 @@ en:
         title: '%{type} &mdash; new entry'
       edit:
         destroy: delete entry
+        destroy_series: delete series
         confirm_destroy: Are you sure you want to delete this entry?
+        confirm_destroy_series: This event is part of a series. Are you sure you want to delete all events in this series?
         title: '%{type} &mdash; editing entry'
       form:
         edit_select_options: edit options

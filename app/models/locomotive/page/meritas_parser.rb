@@ -20,8 +20,8 @@ module Locomotive
         # EMBED SELECTED TEMPLATE NAME IN RAW TEMPLATE
         # i.e. {% extends 'template-name-here' %}
         def update_template_name
-          return unless selected_template_name.present?
           raw_template = params[:page][:raw_template]
+          return unless selected_template_name.present? && raw_template.present?
           string_to_replace = raw_template[/\{\% extends (.*?) %/,1]
           raw_template.sub!(string_to_replace, template_name)
         end

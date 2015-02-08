@@ -50,6 +50,18 @@ module Locomotive
       (Locomotive::User.where(is_super_admin: true) + Locomotive::User.where(site: self)).uniq
     end
 
+    def functions
+      content_type = content_types.functions.first
+      return [] unless content_type.present?
+      content_type.entries
+    end
+
+    def grades
+      content_type = content_types.grades.first
+      return [] unless content_type.present?
+      content_type.entries
+    end
+
     def has_user?(user)
       return false if user.nil?
       all_users.detect { |u| u._id.to_s == user._id.to_s }.present?

@@ -377,3 +377,14 @@ p span.code {
   width: 696px !important;
   float: right;
 }
+
+form.formtastic fieldset ol > li.input {
+  background: none !important;
+  border-top: 2px solid #ccc;
+  &:first-child {
+    border-top: none;
+  }
+  &.has-parent {
+    border-top: none;
+  }
+}

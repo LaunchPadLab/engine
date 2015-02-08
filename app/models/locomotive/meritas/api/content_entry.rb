@@ -2,13 +2,18 @@ module Locomotive
   class Meritas::Api::ContentEntry
 
     attr_reader :params, :content_type, :site
-    attr_accessor :content_entries, :unpaginated_entries
+    attr_accessor :content_entries, :unpaginated_entries, :functions, :grades, :groups, :default_filter_setting
 
     MERITAS_CUSTOM_CONTENT_TYPES = %w(events)
 
     module LogicOperators
       EXCLUSIVE = 'exclusive' # excludes entries tagged 'all'
       INCLUSIVE = 'inclusive' # includes entries tagged 'all'
+    end
+
+    module FilterOperators
+      SELECTED = 'selected' # defaults to all filters are selected (i.e. included)
+      UNSELECTED = 'unselected'# defaults to all filters unselected (i.e. excluded)
     end
 
     def initialize(args = {})
@@ -18,6 +23,7 @@ module Locomotive
       @content_type = args[:content_type]
       @site = args[:site]
       @items_per_page = (params[:items_per_page] || 6).to_f
+      @default_filter_setting = params.fetch(:default_filter_setting, FilterOperators::UNSELECTED)
     end
 
     def entries
@@ -37,15 +43,32 @@ module Locomotive
       end
 
       def events_entries
-        filter_by_function if params[:function_id].present?
-        filter_by_group if params[:group_id].present?
-        filter_by_grade if params[:grade_id].present?
+        set_event_categories
+        filter_by_functions if functions.present? || defaults_to_selected?
+        filter_by_grades if grades.present? || defaults_to_selected?
+        filter_by_groups if groups.present? || defaults_to_selected?
         filter_by_publish_to if params[:calendar].present?
         filter_by_user if params[:calendar] == 'portal' && @user
         filter_by_date
         filter_out_recurring_event_parents
         filter_by_page if params[:page].present?
         @content_entries
+      end
+
+      # set functions, grades, and groups to filter by
+      def set_event_categories
+        ["function", "grade", "group"].each do |type|
+          singular = "#{type}_id" # function_id, grade_id, group_id
+          plural = "#{type.pluralize}" # functions, grades, groups
+          plural_ids = params[plural].present? ? JSON.parse(params[plural]) : []
+          plural_ids.reject! {|id| id.blank? }
+          if params[singular].present? || plural_ids.any?
+            ids = params[singular].present? ? [params[singular]] : plural_ids
+          else
+            ids = []
+          end
+          instance_variable_set("@#{plural}", ids)
+        end
       end
 
       def filter_by_date
@@ -77,13 +100,14 @@ module Locomotive
       end
 
       # GRADE
-      def filter_by_grade
+
+      def filter_by_grades
         all_school = @site.content_types.grades.first.entries.where(name: "All School").first
         unless params[:grade_logic_operator] && params[:grade_logic_operator] == LogicOperators::EXCLUSIVE
-          criteria = [params[:grade_id], nil] # defaults to include events tagged with grade level of "All"
-          criteria << all_school.id if all_school.present?
+          grades << nil # defaults to include events tagged with grade level of "All"
+          grades << all_school.id if all_school.present? # defaults to include events tagged with grade level of "All School"
         end
-        @content_entries = @content_entries.where(:grade.in => criteria)
+        @content_entries = @content_entries.where(:grade.in => grades)
       end
 
       def grade_content_type
@@ -91,8 +115,9 @@ module Locomotive
       end
 
       # GROUP
-      def filter_by_group
-        @content_entries = @content_entries.where(group: params[:group_id])
+      def filter_by_groups
+        groups << nil if defaults_to_selected?
+        @content_entries = @content_entries.where(:group.in => groups)
       end
 
       def group_content_type
@@ -100,8 +125,8 @@ module Locomotive
       end
 
       # FUNCTION
-      def filter_by_function
-        @content_entries = @content_entries.where(function: params[:function_id])
+      def filter_by_functions
+        @content_entries = @content_entries.where(:function.in => functions)
       end
 
       def function_content_type
@@ -134,5 +159,8 @@ module Locomotive
         @content_entries = @content_entries.where(:publish_to_id.in => ids)
       end
 
+      def defaults_to_selected?
+        default_filter_setting == FilterOperators::SELECTED
+      end
   end
 end

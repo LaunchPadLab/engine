@@ -7,6 +7,7 @@ module Locomotive
     include ::CustomFields::Target
     include Extensions::ContentEntry::Csv
     include Extensions::ContentEntry::Localized
+    include Extensions::ContentEntry::Event
     include Extensions::Shared::Seo
 
     ## fields ##
@@ -18,7 +19,7 @@ module Locomotive
     ## validations ##
     validates_presence_of     :_slug
     validates_uniqueness_of   :_slug, scope: :content_type_id, allow_blank: true
-    # validate                  :recurring_event_fields, if: :event_series?
+
 
     ## associations ##
     belongs_to  :site,          class_name: 'Locomotive::Site', validate: false, autosave: false
@@ -33,9 +34,6 @@ module Locomotive
     before_save       :set_label_field_name
     before_create     :add_to_list_bottom
     after_create      :send_notifications
-    # after_create      :generate_event_series, if: :event_series?
-    # after_update      :propagate_event_series_changes, if: :event_series?
-    # before_update     :disconnect_from_series, if: :part_of_event_series?
 
     ## named scopes ##
     scope :visible, where(_visible: true)
@@ -124,14 +122,6 @@ module Locomotive
     #
     def self.drop_class
       Locomotive::Liquid::Drops::ContentEntry
-    end
-
-    def event_series?
-      content_type.slug == "events" && respond_to?(:recurring)
-    end
-
-    def part_of_event_series?
-      content_type.slug == "events" && parent_id.present?
     end
 
     protected
@@ -234,32 +224,6 @@ module Locomotive
       end
     end
 
-
-    # EVENT SERIES
-
-    def generate_event_series
-      Locomotive::Meritas::Api::EventSeries.new(event: self).create
-    end
-
-    def propagate_event_series_changes
-      Locomotive::Meritas::Api::EventSeries.new(event: self).update
-    end
-
-    def disconnect_from_series
-      self.parent_id = nil
-    end
-
-    def recurring_event_fields
-      unless weekdays && weekdays.count >= 1
-        errors.add(:weekdays, "are required for repeating events")
-      end
-      unless frequency && frequency >= 1
-        errors.add(:frequency, "is required for repeating events")
-      end
-      unless stop_date && stop_date > start_time.to_date
-        errors.add(:formatted_stop_date, "is required for repeating events and must be greater than the start date")
-      end
-    end
 
   end
 end

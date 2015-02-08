@@ -42,6 +42,7 @@ Locomotive::Engine.routes.draw do
     end
   end
 
+  get 'imports/template' => 'imports#template', as: :csv_template
   namespace :import do
     resources :users
     resources :events

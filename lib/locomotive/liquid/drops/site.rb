@@ -17,8 +17,12 @@ module Locomotive
           @_source.domains
         end
 
-        def portal_name
-          @_source.portal_name
+        def functions
+          @_source.functions
+        end
+
+        def grades
+          @_source.grades
         end
 
         protected

@@ -46,6 +46,7 @@ module Locomotive
     scope :groups, where(slug: "groups")
     scope :venues, where(slug: "venues")
     scope :grades, where(slug: "grades")
+    scope :weekdays, where(slug: "weekdays")
 
     ## indexes ##
     index site_id: 1, slug: 1

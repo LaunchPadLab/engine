@@ -6,7 +6,7 @@ module Locomotive
 
         included do
           validate :recurring_event_fields, if: :event_series?
-          validate :unique_color, if: :has_color?
+          # validate :unique_color, if: :has_color?
 
           after_create      :generate_event_series, if: :event_series?
           after_update      :propagate_event_series_changes, if: :event_series?

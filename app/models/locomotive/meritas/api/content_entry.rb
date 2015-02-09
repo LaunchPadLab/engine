@@ -58,8 +58,8 @@ module Locomotive
       # set functions, grades, and groups to filter by
       def set_event_categories
         ["function", "grade", "group"].each do |type|
-          singular = "#{type}_id" # function_id, grade_id, group_id
-          plural = "#{type.pluralize}" # functions, grades, groups
+          singular = "#{type}_id".to_sym # :function_id, :grade_id, :group_id
+          plural = "#{type.pluralize}".to_sym # :functions, :grades, :groups
           plural_ids = params[plural].present? ? JSON.parse(params[plural]) : []
           plural_ids.reject! {|id| id.blank? }
           if params[singular].present? || plural_ids.any?

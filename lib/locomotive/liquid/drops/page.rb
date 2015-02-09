@@ -49,6 +49,10 @@ module Locomotive
           @_source.templatized?
         end
 
+        def calendar_url
+          "/calendar?function_id=#{@_source.group_id}&group_id=#{@_source.group_id}&grade_id=#{@_source.grade_id}"
+        end
+
         def content_type
           if @_source.content_type
             ContentTypeProxyCollection.new(@_source.content_type)

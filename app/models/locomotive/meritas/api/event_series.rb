@@ -73,7 +73,7 @@ module Locomotive
       end
 
       def dates
-        date_generator.generate_dates
+        @dates ||= date_generator.dates_needed
       end
 
       # GENERATE NON-SAVED EVENT OBJECTS

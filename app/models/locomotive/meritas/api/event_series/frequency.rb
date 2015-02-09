@@ -15,20 +15,26 @@ module Locomotive
 
       # GENERATE ALL RECURRING EVENT DATES
 
-    def generate_dates
-      @dates = [event_start_date]
-
-      while @current_date < date_range_start
-        @current_date += 1.day
-      end
-
-      dates_from_frequency
-
-      return @dates unless date_range_start
-      @dates = @dates.find_all {|d| d >= date_range_start }
+    def dates_needed
+      @dates_needed ||= generate_dates
     end
 
     private
+
+
+      def generate_dates
+        @dates = [event_start_date]
+
+        while @current_date < date_range_start
+          @current_date += 1.day
+        end
+
+        dates_from_frequency
+
+        return @dates unless date_range_start
+        @dates = @dates.find_all {|d| d >= date_range_start }
+      end
+
 
       def weekly_dates(freq_in_weeks)
         while @current_date <= @date_range_stop

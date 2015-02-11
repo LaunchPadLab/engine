@@ -11,7 +11,6 @@ module Locomotive
 
       def index
         @content_entries = @content_entries.order_by([get_content_type.order_by_definition])
-        @content_entries = Locomotive::Meritas::Api::ContentEntry.new(content_entries: @content_entries, params: params, content_type: @content_type, site: current_site).entries
         respond_with @content_entries
       end
 

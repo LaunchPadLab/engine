@@ -50,7 +50,7 @@ module Locomotive
         end
 
         def calendar_url
-          "/calendar?function_id=#{@_source.group_id}&group_id=#{@_source.group_id}&grade_id=#{@_source.grade_id}"
+          "/calendar?function_id=#{@_source.function_id}&group_id=#{@_source.group_id}&grade_id=#{@_source.grade_id}"
         end
 
         def content_type

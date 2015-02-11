@@ -26,7 +26,11 @@ module Locomotive
         end
 
         def grades
-          @_source.grades
+          @grades ||= @_source.grades
+        end
+
+        def has_all_school_grade?
+          grades.detect {|g| g.name.downcase == "all school"}.present?
         end
 
         protected

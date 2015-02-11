@@ -5,6 +5,7 @@ module Locomotive
     attr_accessor :content_entries, :unpaginated_entries, :functions, :grades, :groups, :default_filter_setting
 
     MERITAS_CUSTOM_CONTENT_TYPES = %w(events)
+    UNCATEGORIZED = "uncategorized"
 
     module LogicOperators
       EXCLUSIVE = 'exclusive' # excludes entries tagged 'all'
@@ -60,15 +61,37 @@ module Locomotive
         ["function", "grade", "group"].each do |type|
           singular = "#{type}_id".to_sym # :function_id, :grade_id, :group_id
           plural = "#{type.pluralize}".to_sym # :functions, :grades, :groups
-          plural_ids = params[plural].present? ? JSON.parse(params[plural]) : []
+          plural_ids = params[plural].present? ? parse_plural(plural) : []
           plural_ids.reject! {|id| id.blank? }
           if params[singular].present? || plural_ids.any?
             ids = params[singular].present? ? [params[singular]] : plural_ids
+            # look up events with nil for function/group/grade, if uncategorized is selected
+            ids = add_uncategorized_events(ids, plural)
           else
             ids = []
           end
           instance_variable_set("@#{plural}", ids)
         end
+      end
+
+      def parse_plural(plural)
+        # take into account need to parse JSON or just accept normal array of values
+        # Ruby example: functions = ["10lkjsdflkjs", "1o998sdfl2io"]
+        # JSON example: functions = "[\"5485e13b11f029558a006b14\",\"54887f90acc36f880800a228\"]"
+        params[plural].is_a?(String) ? JSON.parse(params[plural]) : params[plural]
+      end
+
+      def add_uncategorized_events(ids, plural)
+        # if user wants uncategorized events for this category type, need to add both nil and "All School" to array of category ids
+        ids.map! {|id| id == UNCATEGORIZED ? nil : id }
+        all_school = @site.content_types.send(plural).first.entries.where(name: "All School").first
+        return ids unless all_school.present?
+        if ids.include?(all_school.id.to_s) && ids.exclude?(nil)
+          ids << nil
+        elsif ids.exclude?(all_school.id.to_s) && ids.include?(nil)
+          ids << all_school.id.to_s
+        end
+        ids
       end
 
       def filter_by_date

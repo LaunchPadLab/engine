@@ -18,11 +18,19 @@ module Locomotive
         end
 
         def functions
-          @_source.functions
+          @functions ||= @_source.functions
+        end
+
+        def has_all_school_function?
+          functions.detect {|f| f.name.downcase == "all school"}.present?
         end
 
         def grades
-          @_source.grades
+          @grades ||= @_source.grades
+        end
+
+        def has_all_school_grade?
+          grades.detect {|g| g.name.downcase == "all school"}.present?
         end
 
         protected

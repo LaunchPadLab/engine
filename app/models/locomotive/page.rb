@@ -4,12 +4,13 @@ module Locomotive
     include Locomotive::Mongoid::Document
 
     MINIMAL_ATTRIBUTES = %w(_id title slug fullpath position depth published templatized target_klass_name redirect listed response_type parent_id parent_ids site_id created_at updated_at)
-    PORTAL_HOME_HANDLE = "portal"
 
     ## Extensions ##
     include Extensions::Page::Tree
     include Extensions::Page::EditableElements
     include Extensions::Page::Albums
+    include Extensions::Page::Portal
+    include Extensions::Page::Calendar
     include Extensions::Page::Parse
     include Extensions::Page::Render
     include Extensions::Page::Templatized
@@ -30,9 +31,6 @@ module Locomotive
     field :raw_template,        localize: true
     field :locales,             type: Array
     field :published,           type: Boolean, default: false
-    field :grade_id
-    field :group_id
-    field :function_id
     field :cache_strategy,      default: 'none'
     field :response_type,       default: 'text/html'
 
@@ -71,23 +69,11 @@ module Locomotive
     scope :dependent_from,      ->(id) { where(:template_dependencies.in => [id]) }
 
     ## methods ##
-    def self.portal_home(site)
-      site.pages.where(handle: PORTAL_HOME_HANDLE).first || site.pages.where(fullpath: PORTAL_HOME_HANDLE).first
-    end
 
     def self.find_template(args = {})
       site = args[:site]
       fullpath = args[:fullpath]
       site.pages.where(fullpath: fullpath).first
-    end
-
-    def group
-      return nil unless group_id.present?
-      site.content_types.groups.first
-    end
-
-    def events
-      Locomotive::Page::Events.new(page: self).events
     end
 
     def render(context, options = {})
@@ -139,21 +125,6 @@ module Locomotive
     def template_name
       t = raw_template[/\{\% extends (.*?) %/,1]
       t.gsub("'", "").gsub('"', "") if t
-    end
-
-    def portal_home?
-      self.handle.try(:downcase) == PORTAL_HOME_HANDLE || self.slug.try(:downcase) == PORTAL_HOME_HANDLE
-    end
-
-    def belongs_to_portal?
-      return true if self.portal_home?
-      top_level_parent_page_id = self.parent_ids[1]
-      return false unless top_level_parent_page_id
-      top_level_parent_page_id.to_s == site.portal_home_id
-    end
-
-    def does_not_belong_to_portal?
-      !belongs_to_portal?
     end
 
     protected

@@ -18,6 +18,8 @@ module Locomotive
 
       before_filter :authenticate_portal_user, only: [:show], unless: :public_page?
 
+      before_filter :redirect_to_calendar, only: [:show], if: :links_to_calendar?
+
       helper Locomotive::BaseHelper
 
       def show_toolbar
@@ -39,6 +41,14 @@ module Locomotive
         page = locomotive_page
         return true unless page
         page.does_not_belong_to_portal?
+      end
+
+      def links_to_calendar?
+        locomotive_page.links_to_calendar?
+      end
+
+      def redirect_to_calendar
+        return redirect_to locomotive_page.calendar_path
       end
 
       def set_toolbar_locale

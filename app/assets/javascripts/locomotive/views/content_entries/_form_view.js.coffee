@@ -304,13 +304,12 @@ class Locomotive.Views.ContentEntries.FormView extends Locomotive.Views.Shared.F
     else
       @show_time_fields()
       start_time = @get_date(@start_time())
-      console.log start_time
       start_minute = start_time.getHours()
       start_hour = start_time.getMinutes()
       end_time = @get_date(@end_time())
       end_hour = end_time.getHours()
       end_minute = end_time.getMinutes()
-      sum = start_hour + start_minute + end_hour + end_minute
-      if (sum == 0)
-        console.log "triggering all day click"
+      sum_start = (start_hour + start_minute)
+      sum_end = (end_hour + end_minute)
+      if (sum_start == 0 && (sum_end == 0 || sum_end == (23 + 59)))
         @all_day().find(".switchHandle").trigger("click")

@@ -33,6 +33,10 @@ module Locomotive
           grades.detect {|g| g.name.downcase == "all school"}.present?
         end
 
+        def portal_name
+          @_source.portal_name
+        end
+
         protected
 
         def scoped_pages

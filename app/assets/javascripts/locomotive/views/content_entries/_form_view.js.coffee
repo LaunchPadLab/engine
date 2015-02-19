@@ -16,8 +16,18 @@ class Locomotive.Views.ContentEntries.FormView extends Locomotive.Views.Shared.F
 
   _many_to_many_field_views: []
 
+  all_day_id = "#content_entry_all_day_input"
+  start_date_id = "#content_entry_formatted_start_date_input"
+  end_date_id = "#content_entry_formatted_end_date_input"
+  start_time_id = "#content_entry_formatted_start_time_input"
+  end_time_id = "#content_entry_formatted_end_time_input"
+
+  all_day_fields = [start_date_id, end_date_id]
+  time_fields = [start_time_id, end_time_id]
+
   events:
     'submit': 'save'
+    'change #content_entry_all_day_input input': 'update_all_day'
 
   initialize: ->
     @content_type ||= new Locomotive.Models.ContentType(@options.content_type)
@@ -52,6 +62,8 @@ class Locomotive.Views.ContentEntries.FormView extends Locomotive.Views.Shared.F
     @enable_many_to_many_fields()
 
     @slugify_label_field()
+
+    @set_all_day()
 
     return @
 
@@ -177,3 +189,127 @@ class Locomotive.Views.ContentEntries.FormView extends Locomotive.Views.Shared.F
   tinyMCE_settings: ->
     window.Locomotive.tinyMCE.defaultSettings
 
+  start_time: ->
+    $(start_time_id)
+
+  end_time: ->
+    $(end_time_id)
+
+  start_date: ->
+    $(start_date_id)
+
+  end_date: ->
+    $(end_date_id)
+
+  all_day: ->
+    $("li" + all_day_id)
+
+  is_all_day: ->
+    $("li" + all_day_id + " input")
+
+  all_day_fields: ->
+    $(all_day_fields.join(", "))
+
+  time_fields: ->
+    $(time_fields.join(", "))
+
+  is_valid_date: (d) ->
+    if Object::toString.call(d) != '[object Date]'
+      return false
+    !isNaN(d.getTime())
+
+  get_date: ($field) ->
+    $input = $field.find("input")
+    date_string = $input.val()
+    date = new Date(Date.parse(date_string))
+    return date
+
+  get_name: ($input) ->
+    name = $input.attr('name')
+    parsed_name = name.substr(14)
+    parsed_name = parsed_name.substr(0, parsed_name.length - 1);
+
+  to_parsed_date: (date) ->
+    # m_names = new Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')
+    curr_date = date.getDate()
+    curr_month = date.getMonth() + 1
+    curr_year = date.getFullYear()
+    if (curr_month < 10)
+      curr_month = "0" + curr_month
+    if (curr_date < 10)
+        curr_date = "0" + curr_date
+    return curr_month + '/' + curr_date + '/' + curr_year
+
+  paste_date: (date, $field, to_time) ->
+    date_string = @to_parsed_date(date)
+    $input = $field.find("input")
+    if to_time
+      date_string = date_string + " 00:00"
+      $input.datetimepicker("setDate", date_string)
+    else
+      $input.datepicker("setDate", date_string)
+    name = @get_name($input)
+    @model.set(name, date_string)
+
+  copy_date: ($from_date, $to_date, to_time) ->
+    date = @get_date($from_date)
+    if @is_valid_date(date)
+      @paste_date(date, $to_date, to_time)
+
+  copy_start_time_date: ->
+    @copy_date(@start_time(), @start_date(), false)
+
+  copy_end_time_date: ->
+    @copy_date(@end_time(), @end_date(), false)
+
+  copy_start_date: ->
+    @copy_date(@start_date(), @start_time(), true)
+
+  copy_end_date: ->
+    @copy_date(@end_date(), @end_time(), true)
+
+  copy_dates_from_times: ->
+    @copy_start_time_date()
+    @copy_end_time_date()
+
+  copy_dates: ->
+    @copy_start_date()
+    @copy_end_date()
+
+  show_date_fields: ->
+    @all_day_fields().show()
+    @time_fields().hide()
+
+  show_time_fields: ->
+    @all_day_fields().hide()
+    @time_fields().show()
+
+  all_day_checked: ->
+    @copy_dates_from_times()
+    @show_date_fields()
+
+  all_day_not_checked: ->
+    @copy_dates()
+    @show_time_fields()
+
+  update_all_day: ->
+    if @is_all_day().is(":checked")
+      @all_day_checked()
+    else
+      @all_day_not_checked()
+
+  set_all_day: ->
+    if @is_all_day().is(":checked")
+      @show_date_fields()
+    else
+      @show_time_fields()
+      start_time = @get_date(@start_time())
+      start_minute = start_time.getHours()
+      start_hour = start_time.getMinutes()
+      end_time = @get_date(@end_time())
+      end_hour = end_time.getHours()
+      end_minute = end_time.getMinutes()
+      sum_start = (start_hour + start_minute)
+      sum_end = (end_hour + end_minute)
+      if (sum_start == 0 && (sum_end == 0 || sum_end == (23 + 59)))
+        @all_day().find(".switchHandle").trigger("click")

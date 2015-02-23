@@ -4,6 +4,7 @@ module Locomotive
 
     GLOBAL_ADMIN = "admin"
     DEFAULT_ROLE = "beginner_user"
+    SITE_ADMIN_ROLES = %w(site_admin site_admin_w_email)
     REQUIRE_PAGE_PERMISSION = ["beginner_user", "advanced_user"]
 
     ROLES = %w(admin site_admin site_admin_w_email advanced_user beginner_user)

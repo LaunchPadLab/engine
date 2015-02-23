@@ -164,6 +164,7 @@ Rails.application.routes.draw do
 
     namespace :public_api do
       resources :content_entries, path: 'content_types/:slug/entries'
+      resources :calendar_feeds
       get 'content_types/:slug/entries_page_count', to: 'content_entries#page_count'
     end
   end

@@ -23,6 +23,7 @@ module Locomotive
     has_many    :content_assets,          class_name: 'Locomotive::ContentAsset',       dependent: :destroy, validate: false, autosave: false
     has_many    :content_types,           class_name: 'Locomotive::ContentType',        dependent: :destroy, validate: false, autosave: false
     has_many    :content_entries,         class_name: 'Locomotive::ContentEntry',       dependent: :destroy, validate: false, autosave: false
+    has_many    :calendar_feeds,          class_name: 'Locomotive::CalendarFeed',       dependent: :destroy, validate: false, autosave: false
     has_many    :translations,            class_name: 'Locomotive::Translation',        dependent: :destroy, validate: false, autosave: false
     embeds_many :memberships,             class_name: 'Locomotive::Membership'
 
@@ -93,6 +94,14 @@ module Locomotive
 
     def extendable_pages
       self.pages.where(extendable: true)
+    end
+
+    def site_admins
+      memberships.where(:role.in => Locomotive::Ability::SITE_ADMIN_ROLES).includes(:account).map(&:account)
+    end
+
+    def super_admins
+      memberships.where(:role => Locomotive::Ability::GLOBAL_ADMIN).includes(:account).map(&:account)
     end
 
     protected

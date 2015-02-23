@@ -96,6 +96,14 @@ module Locomotive
       self.pages.where(extendable: true)
     end
 
+    def site_admins
+      memberships.where(:role.in => Locomotive::Ability::SITE_ADMIN_ROLES).includes(:account).map(&:account)
+    end
+
+    def super_admins
+      memberships.where(:role => Locomotive::Ability::GLOBAL_ADMIN).includes(:account).map(&:account)
+    end
+
     protected
 
     # FIXME: Currently there is no t/translate method on the I18n module

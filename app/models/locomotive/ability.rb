@@ -58,6 +58,9 @@ module Locomotive
 
     def setup_advanced_user_permissions!
       cannot :manage, Page
+
+      can :manage, Import
+
       can :touch, ThemeAsset
 
       can [:edit, :read, :customize, :update], Page do |page|
@@ -81,6 +84,8 @@ module Locomotive
 
     def setup_site_admin_permissions!
       can :manage, Page
+
+      can :manage, Import
 
       can :move, Page
 
@@ -125,6 +130,8 @@ module Locomotive
 
     def setup_site_admin_w_email_permissions!
       can :manage, Page
+
+      can :manage, Import
 
       can :move, Page
 

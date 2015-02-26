@@ -99,6 +99,10 @@ module Locomotive
           @_source.events
         end
 
+        def form
+          @_source.form
+        end
+
       end
     end
   end

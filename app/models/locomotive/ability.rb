@@ -94,7 +94,7 @@ module Locomotive
 
       can :manage, ContentEntry
 
-      can :read, ContentType
+      can :manage, ContentType
 
       can :manage, Snippet
 

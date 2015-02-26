@@ -16,27 +16,30 @@ module Locomotive
       current_site.content_types.ordered.only(:site_id, :name, :slug, :label_field_name).each_with_index do |content_type, index|
         next if !content_type.persisted?
 
-        if index >= Locomotive.config.ui[:max_content_types]
-          if self.is_content_type_selected(content_type)
-            others << visible.delete_at(Locomotive.config.ui[:max_content_types] - 1) # swap content types
-            visible.insert(0, content_type)
-          else
-            others << content_type # fills the "..." menu
-          end
-          next
-        end
+        # if index >= Locomotive.config.ui[:max_content_types]
+        #   if self.is_content_type_selected(content_type)
+        #     others << visible.delete_at(Locomotive.config.ui[:max_content_types] - 1) # swap content types
+        #     visible.insert(0, content_type)
+        #   else
+        #     others << content_type # fills the "..." menu
+        #   end
+        #   next
+        # end
 
-        visible << content_type
+        # visible << content_type
+        others << content_type
 
       end.each do |content_type|
         # make sure to have a fresh copy of the content types because for now we don't have the full content types (ie: content_types.only(...))
         ::Mongoid::IdentityMap.remove(content_type)
       end
 
-      if visible.size > 0
-        visible.map { |c| yield(c) }
-        yield(others) if others.size > 0
-      end
+      yield(others)
+
+      # if visible.size > 0
+      #   visible.map { |c| yield(c) }
+      #   yield(others) if others.size > 0
+      # end
     end
 
     def is_content_type_selected(content_type)

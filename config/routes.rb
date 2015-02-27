@@ -53,6 +53,7 @@ Locomotive::Engine.routes.draw do
   resources :announcements
   resources :portal_resources
   resources :public_resources
+  resources :custom_forms
 
   # lyris resources
   namespace :lyris do

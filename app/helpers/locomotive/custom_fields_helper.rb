@@ -2,7 +2,9 @@ module Locomotive
   module CustomFieldsHelper
 
     def options_for_custom_field_type
-      %w(string text integer float boolean email date date_time file tags select belongs_to has_many many_to_many).map do |type|
+      options = %w(string text integer float boolean email date date_time file tags select belongs_to has_many many_to_many)
+      options = options.keep_if {|o| Locomotive::ContentType::OPTION_TYPES.include?(o.to_sym) } if @content_type.is_custom_form || params["custom_form"]
+      options.map do |type|
         [t("custom_fields.type.#{type}"), type]
       end
     end

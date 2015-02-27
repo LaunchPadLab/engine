@@ -16,6 +16,8 @@
 
   = f.input :portal_only, as: :'Locomotive::Toggle', input_html: { class: 'simple-toggle' }
 
+  = f.input :is_custom_form, as: :'Locomotive::Toggle'
+
 = f.inputs name: :custom_fields, class: "inputs foldable" do
 
   = f.input :entries_custom_fields, as: :'Locomotive::Empty', label: false, wrapper_html: { id: 'custom_fields_input' }

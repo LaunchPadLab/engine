@@ -77,6 +77,13 @@ module Locomotive
       base_models + Locomotive.config.models_for_templatization.map { |name| [name.underscore.humanize, name] }
     end
 
+    def options_for_custom_form
+      base_models = current_site.content_types.custom_forms.map do |type|
+        [type.name.humanize, type.klass_with_custom_fields(:entries)]
+      end
+      base_models + Locomotive.config.models_for_templatization.map { |name| [name.underscore.humanize, name] }
+    end
+
     def options_for_page_cache_strategy
       [
         [t('.cache_strategy.none'), 'none'],

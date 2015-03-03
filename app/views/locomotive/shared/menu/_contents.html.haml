@@ -21,7 +21,7 @@
   = submenu_entry 'Portal Resources', public_resources_path(access_type: Locomotive::PublicResource::AccessTypes::PORTAL)
 
 = submenu_entry 'Events', '/locomotive/content_types/events/entries'
-= submenu_entry 'Custom Forms', '/locomotive/custom_forms'
+/ = submenu_entry 'Custom Forms', '/locomotive/custom_forms'
 
 - each_content_type do |menu_item|
   -if menu_item.is_a?(Array)

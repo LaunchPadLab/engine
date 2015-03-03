@@ -13,7 +13,7 @@ module Locomotive
       respond_to :html, :json
 
       def create
-        @entry = @content_type.entries.safe_create(params[:entry] || params[:content])
+        @entry = @content_type.entries.create(params[:entry] || params[:content])
 
         respond_with @entry, {
           location:   self.callback_url,

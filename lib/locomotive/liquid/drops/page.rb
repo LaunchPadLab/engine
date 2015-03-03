@@ -99,6 +99,22 @@ module Locomotive
           @_source.events
         end
 
+        def custom_form
+          @custom_form ||= @_source.custom_form
+        end
+
+        def custom_form_content_type
+          @custom_form_content_type ||= @_source.custom_form_content_type
+        end
+
+        def custom_form_url
+          @custom_form_url ||= @context.registers[:controller].main_app.locomotive_entry_submissions_path(custom_form_content_type.slug)
+        end
+
+        def has_custom_form?
+          custom_form.present?
+        end
+
       end
     end
   end

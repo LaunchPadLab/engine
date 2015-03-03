@@ -17,6 +17,7 @@ module Locomotive
       presenter.properties  :group_by_field_id, :group_by_field_name
 
       presenter.property    :public_submission_enabled,         type: 'Boolean'
+      presenter.property    :is_custom_form,                    type: 'Boolean'
       presenter.property    :public_submission_account_emails,  type: 'Array'
 
       presenter.property    :raw_item_template

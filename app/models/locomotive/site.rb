@@ -51,6 +51,10 @@ module Locomotive
       (Locomotive::User.where(is_super_admin: true) + Locomotive::User.where(site: self)).uniq
     end
 
+    def custom_content_types
+      [content_types.events.first] + content_types.custom_forms
+    end
+
     def functions
       content_type = content_types.functions.first
       return [] unless content_type.present?

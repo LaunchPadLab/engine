@@ -62,6 +62,8 @@ module Locomotive
 
       can :manage, Import
 
+      can :manage, CustomForm
+
       can :touch, ThemeAsset
 
       can [:edit, :read, :customize, :update], Page do |page|
@@ -88,13 +90,15 @@ module Locomotive
 
       can :manage, Import
 
+      can :manage, CustomForm
+
       can :move, Page
 
       can :manage, Preview
 
       can :manage, ContentEntry
 
-      can :read, ContentType
+      can :manage, ContentType
 
       can :manage, Snippet
 
@@ -133,6 +137,8 @@ module Locomotive
       can :manage, Page
 
       can :manage, Import
+
+      can :manage, CustomForm
 
       can :move, Page
 

@@ -8,6 +8,7 @@ module Locomotive
     include Extensions::ContentType::DefaultValues
     include Extensions::ContentType::ItemTemplate
     include Extensions::ContentType::Sync
+    include Extensions::ContentType::CustomForm
 
     ## fields ##
     field :name
@@ -47,6 +48,7 @@ module Locomotive
     scope :venues, where(slug: "venues")
     scope :grades, where(slug: "grades")
     scope :weekdays, where(slug: "weekdays")
+    scope :custom_forms, where(is_custom_form: true)
 
     ## indexes ##
     index site_id: 1, slug: 1

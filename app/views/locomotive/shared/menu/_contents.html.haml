@@ -21,6 +21,7 @@
   = submenu_entry 'Portal Resources', public_resources_path(access_type: Locomotive::PublicResource::AccessTypes::PORTAL)
 
 = submenu_entry 'Events', '/locomotive/content_types/events/entries'
+/ = submenu_entry 'Custom Forms', '/locomotive/custom_forms'
 
 - each_content_type do |menu_item|
   -if menu_item.is_a?(Array)
@@ -30,12 +31,12 @@
         .inner
           %ul.big-links
             - content_types.each do |content_type|
-              - unless ["events"].include?(content_type.slug)
+              - unless current_site.custom_content_types.map(&:slug).include?(content_type.slug)
                 %li
                   = link_to truncate(content_type.name, length: 20), content_entries_path(content_type.slug)
   - else
     - content_type = menu_item
-    - unless ["events"].include?(content_type.slug)
+    - unless current_site.custom_content_types.map(&:slug).include?(content_type.slug)
       = submenu_entry truncate(content_type.name, length: 15), content_entries_path(content_type.slug), i18n: false, css: "#{'on' if is_content_type_selected(content_type)}" do
         .wrapper
           .header

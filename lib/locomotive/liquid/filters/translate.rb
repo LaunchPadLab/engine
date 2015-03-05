@@ -15,16 +15,7 @@ module Locomotive
           locale ||= I18n.locale.to_s
 
           if scope.blank?
-            # scope translations to the site.
-            site = @context.scopes.detect{|s| s.has_key?("site")}
-            site_id = site && site["site"] ? site["site"].id : nil
-
-            if site_id
-              translation = Locomotive::Translation.where(key: input, site_id: site_id).first
-            else
-              translation = Locomotive::Translation.where(key: input).first
-            end
-
+            translation = @context.registers[:site].translations.where(key: input).first
             # key not found
             return input if translation.nil?
 

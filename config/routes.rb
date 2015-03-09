@@ -51,7 +51,7 @@ Locomotive::Engine.routes.draw do
   resources :users
   resources :events
   resources :announcements
-  resources :portal_resources
+  resources :public_resources, path: "/downloads"
   resources :public_resources
   resources :custom_forms
 
@@ -180,6 +180,7 @@ Rails.application.routes.draw do
   resources :locomotive_entry_submissions, controller: 'locomotive/public/content_entries', path: 'entry_submissions/:slug'
 
   # magic urls
+  match '/downloads/:id'        => 'locomotive/public_resources#show'
   match '/_admin'               => 'locomotive/public/pages#show_toolbar'
   match ':locale/_admin'        => 'locomotive/public/pages#show_toolbar', locale: /(#{Locomotive.config.site_locales.join('|')})/
   match ':locale/*path/_admin'  => 'locomotive/public/pages#show_toolbar', locale: /(#{Locomotive.config.site_locales.join('|')})/

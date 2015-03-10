@@ -8,6 +8,7 @@ module Locomotive
     end
 
     def filename
+      return if model.format_type != Locomotive::PublicResource::FormatTypes::FILE
       return original_filename unless model.name.present?
       "#{model.name.downcase.parameterize}.#{file.extension}"
     end

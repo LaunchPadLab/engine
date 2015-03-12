@@ -7,7 +7,7 @@ module Locomotive
     SITE_ADMIN_ROLES = %w(site_admin site_admin_w_email)
     REQUIRE_PAGE_PERMISSION = ["beginner_user", "advanced_user"]
 
-    ROLES = %w(admin site_admin site_admin_w_email advanced_user beginner_user)
+    ROLES = %w(admin site_admin site_admin_w_email advanced_user beginner_user lyris_user)
 
     def initialize(account, site)
       @account, @site = account, site
@@ -37,6 +37,9 @@ module Locomotive
       cannot :manage, :all
 
       can :manage, PublicResource
+      can :manage, "Contents"
+      can :manage, "Settings"
+      can :manage, "Portal"
     end
 
     def setup_beginner_user_permissions!
@@ -55,6 +58,13 @@ module Locomotive
       can :touch, Site, _id: @site._id
 
       can :read, ContentType
+    end
+
+    def setup_lyris_user_permissions!
+      can :manage, "Lyris"
+      cannot :manage, "Contents"
+      cannot :manage, "Settings"
+      cannot :manage, "Portal"
     end
 
     def setup_advanced_user_permissions!

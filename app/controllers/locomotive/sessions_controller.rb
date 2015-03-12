@@ -14,7 +14,7 @@ module Locomotive
     protected
 
     def after_sign_in_path_for(resource)
-      resource.lyris_user? ? lyris_lists_path : pages_path
+      user_root_path(resource)
     end
 
     def after_sign_out_path_for(resource)

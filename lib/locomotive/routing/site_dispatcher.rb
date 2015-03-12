@@ -8,7 +8,7 @@ module Locomotive
         if self.respond_to?(:before_filter)
           before_filter :fetch_site
 
-          helper_method :current_site
+          helper_method :current_site, :user_root_path
         end
       end
 
@@ -26,6 +26,10 @@ module Locomotive
 
       def current_site
         @current_site || fetch_site
+      end
+
+      def user_root_path(resource=current_locomotive_account)
+        @user_root_path ||= resource.lyris_user? ? lyris_lists_path : pages_path
       end
 
       def require_site

@@ -14,7 +14,7 @@ module Locomotive
     protected
 
     def after_sign_in_path_for(resource)
-      pages_path
+      user_root_path(resource)
     end
 
     def after_sign_out_path_for(resource)

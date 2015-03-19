@@ -2,6 +2,7 @@ en:
   formtastic:
     titles:
       information: General information
+      widgets: Widgets
       advanced_options: Advanced options
       portal: Portal
       meta: SEO Metadata

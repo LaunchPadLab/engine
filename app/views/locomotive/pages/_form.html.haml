@@ -20,17 +20,28 @@
 
   = f.input :slug, required: false, hint: @page.slug.blank? ? t('.empty_slug') : public_page_url(@page, locale: current_content_locale), input_html: { :'data-url' => get_path_pages_path, disabled: @page.index? || @page.not_found? }, wrapper_html: { style: "#{'display: none' if @page.templatized? && !@page.templatized_from_parent?};", class: 'em-inline-hints' }
 
-  = f.input :custom_form_content_type, as: :select, label: "Custom Form", collection: options_from_collection_for_select(current_site.content_types.custom_forms, :id, :name, f.object.custom_form_content_type_id)
+= f.inputs name: :widgets do
 
   - if functions_for_select.any?
-    = f.input :function_id, as: :select, label: "Category", collection: options_for_select(functions_for_select, selected: f.object.function_id), input_html: { class: 'simple-toggle' }
+    = f.input :function_id, as: :select, label: "Category", collection: options_for_select(functions_for_select, selected: f.object.function_id), input_html: { class: 'simple-toggle' }, hint: "This is used by the events widget."
 
   - if groups_for_select.any?
-    = f.input :group_id, as: :select, label: "Group / Team", collection: options_for_select(groups_for_select, selected: f.object.group_id), input_html: { class: 'simple-toggle' }
+    = f.input :group_id, as: :select, label: "Group / Team", collection: options_for_select(groups_for_select, selected: f.object.group_id), input_html: { class: 'simple-toggle' }, hint: "This is used by the events widget."
 
   - if grades_for_select.any?
-    = f.input :grade_id, as: :select, label: "Grade Level", collection: options_for_select(grades_for_select, selected: f.object.grade_id), input_html: { class: 'simple-toggle' }
+    = f.input :grade_id, as: :select, label: "Grade Level", collection: options_for_select(grades_for_select, selected: f.object.grade_id), input_html: { class: 'simple-toggle' }, hint: "This is used by the events widget."
 
+  = f.input :custom_form_content_type, as: :select, label: "Custom Form", collection: options_from_collection_for_select(current_site.content_types.custom_forms, :id, :name, f.object.custom_form_content_type_id)
+
+  = f.input :show_staff_directory, as: :'Locomotive::Toggle', input_html: { class: 'simple-toggle' }
+
+  - if departments_for_select.any?
+
+    = f.input :department_id, as: :select, label: "Department", collection: options_for_select(departments_for_select, selected: f.object.department_id), input_html: { class: 'simple-toggle' }, hint: "This is used by the staff directory."
+
+  - if subdepartments_for_select.any?
+
+    = f.input :subdepartment_id, as: :select, label: "Sub-department", collection: options_for_select(subdepartments_for_select, selected: f.object.subdepartment_id), input_html: { class: 'simple-toggle' }, hint: "This is used by the staff directory."
 
 = f.inputs name: :seo, class: "inputs foldable #{'folded' if inputs_folded?(@page)}" do
 

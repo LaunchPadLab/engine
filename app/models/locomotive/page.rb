@@ -12,6 +12,7 @@ module Locomotive
     include Extensions::Page::Portal
     include Extensions::Page::Calendar
     include Extensions::Page::CustomForm
+    include Extensions::Page::StaffDirectory
     include Extensions::Page::Parse
     include Extensions::Page::Render
     include Extensions::Page::Templatized

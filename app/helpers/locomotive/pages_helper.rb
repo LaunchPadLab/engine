@@ -34,6 +34,22 @@ module Locomotive
       return hash
     end
 
+    def departments_for_select
+      @department_content_type ||= current_site.content_types.departments.first
+      hash = {}
+      return hash unless @department_content_type.present?
+      @department_content_type.entries.each {|e| hash[e.name] = e._id }
+      return hash
+    end
+
+    def subdepartments_for_select
+      @subdepartment_content_type ||= current_site.content_types.subdepartments.first
+      hash = {}
+      return hash unless @subdepartment_content_type.present?
+      @subdepartment_content_type.entries.each {|e| hash[e.name] = e._id }
+      return hash
+    end
+
     def css_for_page(page)
       classes = %w(index not_found templatized redirect unpublished).inject([]) do |memo, state|
         memo << state.dasherize if page.send(:"#{state}?")

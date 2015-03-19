@@ -115,6 +115,10 @@ module Locomotive
           custom_form.present?
         end
 
+        def show_staff_directory
+          @_source.show_staff_directory
+        end
+
       end
     end
   end

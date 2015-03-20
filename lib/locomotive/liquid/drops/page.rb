@@ -119,6 +119,18 @@ module Locomotive
           @_source.show_staff_directory
         end
 
+        def department_id
+          @_source.department_id
+        end
+
+        def subdepartment_id
+          @_source.subdepartment_id
+        end
+
+        def grade_id
+          @_source.grade_id
+        end
+
       end
     end
   end

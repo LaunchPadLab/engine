@@ -26,7 +26,7 @@ class Locomotive.Views.ContentEntries.FormView extends Locomotive.Views.Shared.F
   time_fields = [start_time_id, end_time_id]
 
   events:
-    'submit': 'save'
+    'submit': 'customSave'
     'change #content_entry_all_day_input input': 'update_all_day'
 
   initialize: ->
@@ -64,6 +64,8 @@ class Locomotive.Views.ContentEntries.FormView extends Locomotive.Views.Shared.F
     @slugify_label_field()
 
     @set_all_day()
+
+    @setup_image_repository_inputs()
 
     return @
 
@@ -313,3 +315,34 @@ class Locomotive.Views.ContentEntries.FormView extends Locomotive.Views.Shared.F
       sum_end = (end_hour + end_minute)
       if (sum_start == 0 && (sum_end == 0 || sum_end == (23 + 59)))
         @all_day().find(".switchHandle").trigger("click")
+
+  setup_image_repository_inputs: ->
+    $(".image-repository").each () ->
+      $input = $(this).find("input")
+      field_id = $(this).attr("id")
+      name = field_id.replace("_input", "").replace("content_entry_", "")
+      ckeditor_id = "#{name}_ckeditor"
+      ckeditor_url = "/ckeditor/folders?CKEditor=#{ckeditor_id}&content_entry_field_id=#{field_id}&CKEditorFuncNum=1&langCode=en"
+      value = $input.val()
+
+      $input.hide()
+
+      if value.length > 0
+        path_parts = value.split("/")
+        filename = path_parts[path_parts.length - 1]
+      else
+        filename = ""
+        display_filename = "display:none;"
+
+      $(this).append(
+        "<p><a class='change' href='#{ckeditor_url}' target='_blank'>Choose Image From Repository</a><span #{display_filename} class='image-filename-area'>    (Currently Selected Image: <a class='image-filename' href='#{value}' target='_blank'>" + filename + "</a>)</span></p>")
+      $(this).append("<p></p>")
+
+
+  customSave: (event) ->
+    that = @
+    $(".image-repository").each () ->
+      $input = $(this).find("input")
+      name = that.get_name($input)
+      that.model.set(name, $input.val())
+    @save(event)

@@ -49,6 +49,8 @@ module Locomotive
     scope :grades, where(slug: "grades")
     scope :weekdays, where(slug: "weekdays")
     scope :custom_forms, where(is_custom_form: true)
+    scope :departments, where(slug: "departments")
+    scope :subdepartments, where(slug: "subdepartments")
 
     ## indexes ##
     index site_id: 1, slug: 1

@@ -9,6 +9,7 @@ module Locomotive
     include Extensions::ContentType::ItemTemplate
     include Extensions::ContentType::Sync
     include Extensions::ContentType::CustomForm
+    include Extensions::ContentType::Meritas
 
     ## fields ##
     field :name
@@ -42,15 +43,6 @@ module Locomotive
 
     ## named scopes ##
     scope :ordered, order_by(updated_at: :desc)
-    scope :events, where(slug: "events")
-    scope :functions, where(slug: "functions")
-    scope :groups, where(slug: "groups")
-    scope :venues, where(slug: "venues")
-    scope :grades, where(slug: "grades")
-    scope :weekdays, where(slug: "weekdays")
-    scope :custom_forms, where(is_custom_form: true)
-    scope :departments, where(slug: "departments")
-    scope :subdepartments, where(slug: "subdepartments")
 
     ## indexes ##
     index site_id: 1, slug: 1

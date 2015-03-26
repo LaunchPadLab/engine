@@ -167,6 +167,7 @@ Rails.application.routes.draw do
       resources :content_entries, path: 'content_types/:slug/entries'
       resources :calendar_feeds
       get 'content_types/:slug/entries_page_count', to: 'content_entries#page_count'
+      get 'content_types/:slug/pagination', to: 'content_entries#pagination'
     end
   end
 

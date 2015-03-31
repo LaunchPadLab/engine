@@ -23,6 +23,10 @@ module CustomFields
       self.type == "belongs_to" && ["group"].include?(self.name)
     end
 
+    def image_repository?
+      name.to_s.include?("image_repository")
+    end
+
     def parent
       return '' unless has_parent_dependency?
       "functions"

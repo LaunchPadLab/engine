@@ -27,11 +27,12 @@ module Locomotive
       respond_with @content_entries
     end
 
+
     def export
       @content_entries = @content_type.ordered_entries
       respond_with @content_entries, {
         filename:     @content_type.slug,
-        col_sep:      ';',
+        col_sep:      ',',
         content_type: @content_type,
         host:         request.host_with_port
       }

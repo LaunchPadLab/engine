@@ -91,6 +91,10 @@ module Locomotive
           @_source.no_follow
         end
 
+        def optimizely_project_id
+          @_source.optimizely_project_id
+        end
+
         def group
           @_source.group
         end

@@ -22,19 +22,20 @@ module Locomotive
     include Extensions::Shared::Seo
 
     ## fields ##
-    field :title,               localize: true
-    field :slug,                localize: true
-    field :fullpath,            localize: true
+    field :title,                 localize: true
+    field :slug,                  localize: true
+    field :fullpath,              localize: true
     field :handle
-    field :extendable,          type: Boolean, default: false
-    field :no_index,            type: Boolean, default: false
-    field :no_follow,           type: Boolean, default: false
-    field :user_type,           default: Locomotive::User::ALL
-    field :raw_template,        localize: true
-    field :locales,             type: Array
-    field :published,           type: Boolean, default: false
-    field :cache_strategy,      default: 'none'
-    field :response_type,       default: 'text/html'
+    field :extendable,            type: Boolean, default: false
+    field :no_index,              type: Boolean, default: false
+    field :no_follow,             type: Boolean, default: false
+    field :user_type,             default: Locomotive::User::ALL
+    field :raw_template,          localize: true
+    field :locales,               type: Array
+    field :published,             type: Boolean, default: false
+    field :optimizely_project_id, default: ''
+    field :cache_strategy,        default: 'none'
+    field :response_type,         default: 'text/html'
 
     ## associations ##
     belongs_to :site, class_name: 'Locomotive::Site', validate: false, autosave: false

@@ -66,6 +66,8 @@
   - if can?(:customize, @page)
     = f.input :handle
 
+    = f.input :optimizely_project_id
+
     = f.input :response_type, as: :select, collection: options_for_page_response_type, include_blank: false
 
     = f.input :extendable, as: :'Locomotive::Toggle', input_html: { class: 'simple-toggle' }

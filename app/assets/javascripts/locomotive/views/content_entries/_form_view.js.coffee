@@ -319,13 +319,18 @@ class Locomotive.Views.ContentEntries.FormView extends Locomotive.Views.Shared.F
   setup_image_repository_inputs: ->
     $(".image-repository").each () ->
       $input = $(this).find("input")
+      input_name = $input.attr("name")
+      CKEDITOR.replace(input_name)
+      CKEDITOR.on('instanceReady', ->
+        $(".cke").hide()
+      )
+
       field_id = $(this).attr("id")
       name = field_id.replace("_input", "").replace("content_entry_", "")
-      ckeditor_id = "#{name}_ckeditor"
+      ckeditor_id = "content_entry_#{name}"
       ckeditor_url = "/ckeditor/folders?CKEditor=#{ckeditor_id}&content_entry_field_id=#{field_id}&CKEditorFuncNum=1&langCode=en"
-      value = $input.val()
 
-      $input.hide()
+      value = $input.val()
 
       if value.length > 0
         path_parts = value.split("/")

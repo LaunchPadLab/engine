@@ -9,6 +9,7 @@ module Locomotive
     include Extensions::Shared::Seo
     include Extensions::Site::Locales
     include Extensions::Site::Timezone
+    include Extensions::Site::Mailer
 
     ## fields ##
     field :name
